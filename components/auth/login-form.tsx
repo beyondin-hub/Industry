@@ -34,7 +34,7 @@ export function LoginForm() {
       const res = await loginAction(values);
       if (res.ok) {
         toast({ type: "success", title: "Bienvenido de vuelta" });
-        router.push("/dashboard");
+        router.push(res.redirectTo ?? "/dashboard");
         router.refresh();
       } else {
         toast({ type: "error", title: "No pudimos iniciar sesión", description: res.error });

@@ -4,11 +4,13 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { loginSchema, magicLinkSchema, signupSchema } from "@/lib/validations";
+import { homeForRole, roleFromUser } from "@/lib/auth";
 
 export interface ActionResult {
   ok: boolean;
   error?: string;
   message?: string;
+  redirectTo?: string;
 }
 
 /** Inicio de sesión con email/contraseña. En demo (sin config) responde ok. */
@@ -17,11 +19,11 @@ export async function loginAction(input: unknown): Promise<ActionResult> {
   if (!parsed.success) return { ok: false, error: "Revisa los datos ingresados." };
 
   const supabase = createClient();
-  if (!supabase) return { ok: true }; // modo demo
+  if (!supabase) return { ok: true, redirectTo: "/dashboard" }; // modo demo
 
-  const { error } = await supabase.auth.signInWithPassword(parsed.data);
+  const { data, error } = await supabase.auth.signInWithPassword(parsed.data);
   if (error) return { ok: false, error: "Correo o contraseña incorrectos." };
-  return { ok: true };
+  return { ok: true, redirectTo: homeForRole(roleFromUser(data.user)) };
 }
 
 /** Enlace mágico (magic link) por email. */
@@ -54,7 +56,10 @@ export async function signUpAction(input: unknown): Promise<ActionResult> {
   const { data: signUp, error: signErr } = await supabase.auth.signUp({
     email: d.email,
     password: d.password,
-    options: { emailRedirectTo: `${appUrl}/auth/callback?next=/dashboard` },
+    options: {
+      emailRedirectTo: `${appUrl}/auth/callback?next=/dashboard`,
+      data: { role: "comprador" },
+    },
   });
   if (signErr || !signUp.user) {
     return { ok: false, error: signErr?.message ?? "No se pudo crear la cuenta." };

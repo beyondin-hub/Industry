@@ -12,7 +12,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/components/ui/toast";
 import { CATEGORIAS, categoriaNombre } from "@/lib/constants";
-import { publishProducts } from "@/app/(dashboard)/proveedor/actions";
+import { publishProducts } from "@/app/(proveedor)/proveedor/actions";
 import { cn } from "@/lib/utils";
 
 interface Draft {

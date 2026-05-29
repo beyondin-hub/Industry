@@ -36,6 +36,7 @@ export async function registerProvider(input: unknown): Promise<ProviderSignupRe
       email: d.email,
       password: d.password,
       email_confirm: true,
+      app_metadata: { role: "proveedor" },
     });
     if (userErr || !created.user) {
       return { ok: false, error: userErr?.message ?? "No se pudo crear la cuenta (¿correo ya registrado?)." };
