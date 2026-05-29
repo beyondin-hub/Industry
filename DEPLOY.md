@@ -44,6 +44,15 @@ Sin estas, Novak funciona con datos demo. Para producción real, agrégalas en
 > Antes de usar Supabase aplica las migraciones de `supabase/migrations/`
 > (schema, RLS y seed) en tu proyecto.
 
+### Configuración de Auth en Supabase (para magic link / confirmación)
+En el dashboard de Supabase → **Authentication → URL Configuration**:
+- **Site URL**: tu URL pública (ej. `https://novak-red.vercel.app` o `https://heynovak.com`).
+- **Redirect URLs**: agrega `https://<tu-url>/auth/callback` y
+  `http://localhost:3000/auth/callback`.
+
+Sin esto, el enlace mágico y la confirmación de correo no cierran la sesión. La app
+ya incluye la ruta `/auth/callback` que intercambia el código por la sesión.
+
 ## 4. Verificación local del build de producción
 
 ```bash

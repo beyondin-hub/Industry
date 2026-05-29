@@ -35,7 +35,7 @@ export async function magicLinkAction(input: unknown): Promise<ActionResult> {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
   const { error } = await supabase.auth.signInWithOtp({
     email: parsed.data.email,
-    options: { emailRedirectTo: `${appUrl}/dashboard` },
+    options: { emailRedirectTo: `${appUrl}/auth/callback?next=/dashboard` },
   });
   if (error) return { ok: false, error: "No se pudo enviar el enlace." };
   return { ok: true, message: "Te enviamos un enlace de acceso a tu correo." };
@@ -50,9 +50,11 @@ export async function signUpAction(input: unknown): Promise<ActionResult> {
   const supabase = createClient();
   if (!supabase) return { ok: true }; // modo demo
 
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
   const { data: signUp, error: signErr } = await supabase.auth.signUp({
     email: d.email,
     password: d.password,
+    options: { emailRedirectTo: `${appUrl}/auth/callback?next=/dashboard` },
   });
   if (signErr || !signUp.user) {
     return { ok: false, error: signErr?.message ?? "No se pudo crear la cuenta." };

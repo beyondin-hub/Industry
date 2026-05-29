@@ -21,7 +21,7 @@ import { ProductTabs } from "@/components/catalog/product-tabs";
 import { PriceHistoryChart } from "@/components/catalog/price-history-chart";
 import { PRODUCTS } from "@/lib/data/products";
 import { fetchProduct, fetchRelated } from "@/lib/repos/products";
-import { getProvider } from "@/lib/data/providers";
+import { fetchProvider } from "@/lib/repos/providers";
 import { categoriaNombre, categoriaEmoji } from "@/lib/constants";
 import { entregaLabel, num } from "@/lib/utils";
 
@@ -40,7 +40,7 @@ export default async function ProductPage({ params }: { params: { id: string } }
   const product = await fetchProduct(params.id);
   if (!product) notFound();
 
-  const prov = getProvider(product.provider_id);
+  const prov = await fetchProvider(product.provider_id);
   const enStock = product.stock_actual > 0;
   const relacionados = await fetchRelated(product.categoria, product.id);
 
