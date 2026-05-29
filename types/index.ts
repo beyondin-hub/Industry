@@ -180,6 +180,9 @@ export interface Order {
   total: number;
   es_credito: boolean;
   fecha_vencimiento_credito?: string;
+  pagado?: boolean;
+  fecha_pago?: string;
+  metodo_pago?: string;
   tracking_url?: string;
   cfdi_url?: string;
   cfdi_uuid?: string;

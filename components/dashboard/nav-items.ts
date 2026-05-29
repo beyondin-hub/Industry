@@ -2,6 +2,7 @@ import {
   LayoutDashboard,
   PackageSearch,
   FileSpreadsheet,
+  FileCheck2,
   Truck,
   BarChart3,
   Repeat,
@@ -11,6 +12,7 @@ import {
   ClipboardList,
   Bell,
   ScanBarcode,
+  CreditCard,
   type LucideIcon,
 } from "lucide-react";
 
@@ -25,7 +27,9 @@ export const COMPRADOR_NAV: NavItem[] = [
   { href: "/catalogo", label: "Catálogo MRO", icon: PackageSearch },
   { href: "/quick-order", label: "Quick Order", icon: ScanBarcode },
   { href: "/cotizar", label: "Cotizar (RFQ)", icon: FileSpreadsheet },
+  { href: "/cotizaciones", label: "Cotizaciones", icon: FileCheck2 },
   { href: "/ordenes", label: "Órdenes", icon: Truck },
+  { href: "/credito", label: "Crédito y facturación", icon: CreditCard },
   { href: "/listas", label: "Mis listas", icon: ListChecks },
   { href: "/reordenes", label: "Reorden auto", icon: Repeat },
   { href: "/analytics", label: "Spend analytics", icon: BarChart3 },

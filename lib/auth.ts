@@ -20,7 +20,9 @@ export function homeForRole(role?: string | null): string {
 const BUYER_PREFIXES = [
   "/dashboard",
   "/cotizar",
+  "/cotizaciones",
   "/ordenes",
+  "/credito",
   "/listas",
   "/reordenes",
   "/analytics",
