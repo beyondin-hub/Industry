@@ -1,8 +1,9 @@
-import { TrendingUp, ShoppingCart, Package, Wallet } from "lucide-react";
+import { TrendingUp, ShoppingCart, Package, Wallet, Sparkles, Lightbulb } from "lucide-react";
 import { PageHeader } from "@/components/dashboard/page-header";
 import { StatCard } from "@/components/dashboard/stat-card";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { ExportButton } from "@/components/analytics/export-button";
 import { SPEND_BY_CATEGORY, SPEND_BY_MONTH } from "@/lib/data/account";
 import { PROVIDERS } from "@/lib/data/providers";
 import { categoriaNombre, categoriaEmoji } from "@/lib/constants";
@@ -22,7 +23,29 @@ export default function AnalyticsPage() {
       <PageHeader
         title="Spend analytics"
         description="Visibilidad de gasto MRO de los últimos 6 meses · inteligencia para negociar mejor"
-      />
+      >
+        <ExportButton rows={SPEND_BY_CATEGORY.map((c) => ({ categoria: categoriaNombre(c.categoria as any), total: c.total, ordenes: c.ordenes }))} />
+      </PageHeader>
+
+      {/* Insights AI-powered */}
+      <Card className="border-safety/30 bg-safety-50/40">
+        <CardContent className="p-5">
+          <p className="mb-3 flex items-center gap-2 text-sm font-semibold text-ink-900">
+            <Sparkles className="size-4 text-safety" /> Insights de tu gasto
+          </p>
+          <div className="grid gap-3 md:grid-cols-3">
+            {[
+              "Compraste rodamientos 9 veces este semestre — un acuerdo de volumen te ahorraría ~$8,400 MXN.",
+              "Tu gasto en EPP es el 30% del total; consolidarlo con un solo proveedor bajaría el precio ~12%.",
+              "El gasto de mayo subió 12% vs. abril, impulsado por neumática. Revisa reorden automático.",
+            ].map((t, i) => (
+              <div key={i} className="flex gap-2 rounded-lg border bg-card p-3 text-sm text-ink-700">
+                <Lightbulb className="size-4 shrink-0 text-gold" /> {t}
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard label="Gasto total (6 meses)" value={mxn(totalGasto)} icon={Wallet} accent="text-emerald-600" />

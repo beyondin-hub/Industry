@@ -1,8 +1,9 @@
-import { Repeat, Calendar, Percent, Plus } from "lucide-react";
+import { Repeat, Calendar, Plus } from "lucide-react";
 import { PageHeader } from "@/components/dashboard/page-header";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { ReorderSuggestion } from "@/components/reorder/reorder-suggestion";
 import { AUTO_REORDERS } from "@/lib/data/account";
 import { getProduct } from "@/lib/data/products";
 import { mxn, num, fechaCorta } from "@/lib/utils";
@@ -19,17 +20,7 @@ export default function ReordenesPage() {
         <Button variant="accent"><Plus className="size-4" /> Nueva suscripción</Button>
       </PageHeader>
 
-      <Card className="border-emerald-200 bg-emerald-50/40">
-        <CardContent className="flex flex-wrap items-center gap-4 p-5">
-          <Percent className="size-8 text-emerald-600" />
-          <div>
-            <p className="font-semibold text-steel-900">Ahorra automáticamente cada mes</p>
-            <p className="text-sm text-steel-600">
-              Programa la frecuencia y MROLink genera el RFQ por ti antes de que te quedes sin stock.
-            </p>
-          </div>
-        </CardContent>
-      </Card>
+      <ReorderSuggestion />
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {AUTO_REORDERS.map((ar) => {

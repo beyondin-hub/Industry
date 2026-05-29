@@ -38,12 +38,24 @@ export async function sendWhatsApp({ to, body }: WhatsAppMessage): Promise<{ ok:
   return { ok: res.ok, sid: data.sid };
 }
 
-// Plantillas de notificación reutilizables.
+// Plantillas de los 5 flujos automatizados de WhatsApp.
 export const waTemplates = {
-  cotizacionLista: (folio: string, resumen: string) =>
-    `🔧 MROLink: Tu cotización ${folio} está lista. ${resumen} Entra a la plataforma para aprobar.`,
+  // 1. Bienvenida al registrarse.
+  bienvenida: (nombre: string) =>
+    `👋 ¡Hola ${nombre}! Bienvenido a MROLink, tu equipo de compras externo. Mándanos un número de parte o una foto del componente y te cotizamos en menos de 2 horas hábiles.`,
+  // RFQ recibido (confirmación inmediata).
   rfqRecibido: (folio: string) =>
-    `✅ MROLink recibió tu solicitud ${folio}. Cotización garantizada en menos de 2 horas hábiles.`,
+    `✅ MROLink recibió tu solicitud ${folio}. Cotización garantizada en menos de 2 horas hábiles o tu siguiente orden va con 0% de comisión.`,
+  // 2. Cotización lista.
+  cotizacionLista: (folio: string, total: string) =>
+    `🔧 MROLink: Tu cotización ${folio} está lista. Total: ${total}. Entra a la plataforma para aprobar 👉`,
+  // 3. Orden en tránsito.
   ordenEnTransito: (folio: string, eta: string) =>
-    `🚚 MROLink: Tu orden ${folio} va en camino. Entrega estimada: ${eta}.`,
+    `🚚 MROLink: Tu orden ${folio} ya va en camino. ETA: ${eta}.`,
+  // 4. Reorden (recordatorio antes de quedarse sin stock).
+  reorden: (producto: string, vence: string) =>
+    `🔁 ¡Hola! Tus ${producto} se agotan ~${vence}. ¿Reordenamos con 5% de descuento? Responde SÍ para confirmar.`,
+  // 5. Crédito por vencer.
+  creditoVence: (monto: string, dias: number) =>
+    `💳 MROLink: Tu línea de crédito de ${monto} vence en ${dias} días. Programa tu pago para conservar el cupo.`,
 };
