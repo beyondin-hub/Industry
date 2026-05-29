@@ -10,12 +10,15 @@ import {
   MapPin,
   Star,
   Download,
+  MessageCircle,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ProductBuyBox } from "@/components/catalog/product-buybox";
 import { ProductCard } from "@/components/catalog/product-card";
+import { ProductTabs } from "@/components/catalog/product-tabs";
+import { PriceHistoryChart } from "@/components/catalog/price-history-chart";
 import { PRODUCTS } from "@/lib/data/products";
 import { fetchProduct, fetchRelated } from "@/lib/repos/products";
 import { getProvider } from "@/lib/data/providers";
@@ -102,34 +105,8 @@ export default async function ProductPage({ params }: { params: { id: string } }
             </div>
           </div>
 
-          {/* Especificaciones técnicas (McMaster style) */}
-          <Card>
-            <CardContent className="p-0">
-              <div className="border-b px-5 py-3 font-semibold text-steel-900">
-                Especificaciones técnicas
-              </div>
-              <table className="w-full text-sm">
-                <tbody>
-                  {Object.entries(product.especificaciones).map(([k, v], i) => (
-                    <tr key={k} className={i % 2 ? "bg-steel-50/50" : ""}>
-                      <td className="w-1/2 px-5 py-2.5 font-medium text-steel-600">{k}</td>
-                      <td className="px-5 py-2.5 text-steel-900">{v}</td>
-                    </tr>
-                  ))}
-                  <tr className="bg-steel-50/50">
-                    <td className="px-5 py-2.5 font-medium text-steel-600">Categoría</td>
-                    <td className="px-5 py-2.5 text-steel-900">
-                      {categoriaEmoji(product.categoria)} {categoriaNombre(product.categoria)} · {product.subcategoria}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="px-5 py-2.5 font-medium text-steel-600">Unidad de venta</td>
-                    <td className="px-5 py-2.5 text-steel-900">{product.unidad}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </CardContent>
-          </Card>
+          {/* Tabs: specs / certificaciones / documentos / reseñas (McMaster style) */}
+          <ProductTabs product={product} />
 
           {/* Proveedor */}
           {prov && (
@@ -162,9 +139,23 @@ export default async function ProductPage({ params }: { params: { id: string } }
           )}
         </div>
 
-        {/* Buy box */}
-        <div className="lg:sticky lg:top-20 lg:self-start">
+        {/* Buy box + historial de precio */}
+        <div className="space-y-4 lg:sticky lg:top-20 lg:self-start">
           <ProductBuyBox product={product} />
+          <Card>
+            <CardContent className="p-4">
+              <PriceHistoryChart base={product.precio_base} id={product.id} />
+            </CardContent>
+          </Card>
+          <Card className="bg-secondary/40">
+            <CardContent className="p-4 text-sm">
+              <p className="font-semibold text-ink-900">¿No encontraste lo que buscas?</p>
+              <p className="mt-1 text-ink-600">Nuestro equipo lo consigue y cotiza en 2h.</p>
+              <a href="https://wa.me/526640000000" className="mt-2 inline-flex items-center gap-1.5 font-semibold text-emerald-700 hover:underline">
+                <MessageCircle className="size-4" /> Escríbenos por WhatsApp
+              </a>
+            </CardContent>
+          </Card>
         </div>
       </div>
 

@@ -9,6 +9,7 @@ import {
   Repeat,
   RotateCw,
   Plus,
+  Sparkles,
 } from "lucide-react";
 import { PageHeader } from "@/components/dashboard/page-header";
 import { StatCard } from "@/components/dashboard/stat-card";
@@ -16,7 +17,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { RFQStatus, OrdenStatus, UrgenciaBadge } from "@/components/shared/status-badge";
-import { AUTO_REORDERS } from "@/lib/data/account";
+import { AUTO_REORDERS, SPEND_BY_MONTH } from "@/lib/data/account";
+import { SpendChart } from "@/components/dashboard/spend-chart";
 import { getProduct } from "@/lib/data/products";
 import { getProvider } from "@/lib/data/providers";
 import { getContext } from "@/lib/repos/context";
@@ -76,6 +78,40 @@ export default async function DashboardPage() {
           icon={TrendingUp}
           accent="text-steel-700"
         />
+      </div>
+
+      {/* Gasto mensual (recharts) + alertas inteligentes */}
+      <div className="grid gap-6 lg:grid-cols-3">
+        <Card className="lg:col-span-2">
+          <CardHeader className="flex-row items-center justify-between">
+            <CardTitle>Gasto mensual</CardTitle>
+            <Link href="/analytics" className="text-sm font-medium text-safety hover:underline">
+              Ver análisis
+            </Link>
+          </CardHeader>
+          <CardContent>
+            <SpendChart data={SPEND_BY_MONTH} />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Sparkles className="size-4 text-safety" /> Alertas inteligentes
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2.5">
+            {[
+              { c: "border-amber-300 bg-amber-50 text-amber-800", t: "El aceite ISO 46 que ordenas cada 45 días vence el próximo martes." },
+              { c: "border-orange-300 bg-orange-50 text-orange-800", t: "Stock de guantes bajo — 30 pares disponibles de tu proveedor habitual." },
+              { c: "border-info/30 bg-blue-50 text-info", t: "Nueva cotización de proveedor alternativo 12% más barata en rodamientos." },
+            ].map((a, i) => (
+              <div key={i} className={`rounded-lg border px-3 py-2.5 text-xs ${a.c}`}>
+                {a.t}
+              </div>
+            ))}
+          </CardContent>
+        </Card>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
