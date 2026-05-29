@@ -1,0 +1,67 @@
+# ───────────────────────────────────────────────────────────────
+# Auto-deploy de Novak a Vercel (producción) en cada push a main.
+#
+# REQUISITOS — agrega estos GitHub Secrets (Settings → Secrets and variables
+# → Actions) tomados de tu cuenta Vercel:
+#   VERCEL_TOKEN        → Vercel → Account Settings → Tokens
+#   VERCEL_ORG_ID       → en el proyecto, .vercel/project.json o Settings
+#   VERCEL_PROJECT_ID   → idem
+#
+# NOTA: si dejaste activada la integración nativa Git de Vercel (deploy
+# automático al importar el repo), ESTE workflow es opcional y causaría un
+# segundo deploy. Usa UNO de los dos:
+#   • Integración nativa de Vercel (recomendado, ya activa), o
+#   • Este workflow (desactiva el auto-deploy nativo en Vercel → Settings → Git).
+# Si faltan los secrets, el job se omite sin marcar error.
+# ───────────────────────────────────────────────────────────────
+name: Deploy Production (Vercel)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+    steps:
+      - name: Verificar secrets de Vercel
+        id: guard
+        run: |
+          if [ -z "$VERCEL_TOKEN" ] || [ -z "$VERCEL_PROJECT_ID" ]; then
+            echo "Faltan secrets (VERCEL_TOKEN / VERCEL_PROJECT_ID); se omite el deploy."
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Checkout
+        if: steps.guard.outputs.run == 'true'
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        if: steps.guard.outputs.run == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Instalar Vercel CLI
+        if: steps.guard.outputs.run == 'true'
+        run: npm install -g vercel@latest
+
+      - name: Vercel pull (entorno producción)
+        if: steps.guard.outputs.run == 'true'
+        run: vercel pull --yes --environment=production --token="$VERCEL_TOKEN"
+
+      - name: Vercel build (producción)
+        if: steps.guard.outputs.run == 'true'
+        run: vercel build --prod --token="$VERCEL_TOKEN"
+
+      - name: Vercel deploy (prebuilt, producción)
+        if: steps.guard.outputs.run == 'true'
+        run: vercel deploy --prebuilt --prod --token="$VERCEL_TOKEN"
