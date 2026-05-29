@@ -14,8 +14,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { OrdenStatus } from "@/components/shared/status-badge";
-import { ORDERS } from "@/lib/data/account";
 import { getProvider } from "@/lib/data/providers";
+import { getContext } from "@/lib/repos/context";
+import { fetchOrders } from "@/lib/repos/orders";
 import { mxn, fechaCorta } from "@/lib/utils";
 import { categoriaNombre } from "@/lib/constants";
 import type { EstadoOrden } from "@/types";
@@ -68,9 +69,11 @@ function Tracking({ estado }: { estado: EstadoOrden }) {
   );
 }
 
-export default function OrdenesPage() {
-  const enCurso = ORDERS.filter((o) => o.estado !== "entregada" && o.estado !== "cancelada");
-  const historial = ORDERS.filter((o) => o.estado === "entregada" || o.estado === "cancelada");
+export default async function OrdenesPage() {
+  const { company } = await getContext();
+  const orders = await fetchOrders(company.id);
+  const enCurso = orders.filter((o) => o.estado !== "entregada" && o.estado !== "cancelada");
+  const historial = orders.filter((o) => o.estado === "entregada" || o.estado === "cancelada");
 
   return (
     <div className="space-y-6">

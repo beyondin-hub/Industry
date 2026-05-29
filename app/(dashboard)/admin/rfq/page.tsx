@@ -12,16 +12,18 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { RFQStatus, UrgenciaBadge } from "@/components/shared/status-badge";
-import { RFQS, CURRENT_COMPANY } from "@/lib/data/account";
+import { CURRENT_COMPANY } from "@/lib/data/account";
 import { PROVIDERS } from "@/lib/data/providers";
+import { fetchRFQs } from "@/lib/repos/rfqs";
 import { mxn, tiempoRestante, num, fechaHora } from "@/lib/utils";
 
 export const metadata = { title: "Mesa de operaciones" };
 
-export default function AdminRFQPage() {
-  const abiertos = RFQS.filter((r) => r.estado !== "cerrado");
-  const urgentes = RFQS.filter((r) => r.urgencia === "urgente_24h").length;
-  const enRiesgo = RFQS.filter(
+export default async function AdminRFQPage() {
+  const rfqs = await fetchRFQs();
+  const abiertos = rfqs.filter((r) => r.estado !== "cerrado");
+  const urgentes = rfqs.filter((r) => r.urgencia === "urgente_24h").length;
+  const enRiesgo = rfqs.filter(
     (r) => r.estado !== "cerrado" && tiempoRestante(r.deadline_cotizacion).vencido,
   ).length;
 
@@ -40,7 +42,7 @@ export default function AdminRFQPage() {
       </div>
 
       <div className="space-y-4">
-        {RFQS.map((rfq) => {
+        {rfqs.map((rfq) => {
           const t = tiempoRestante(rfq.deadline_cotizacion);
           const candidatos = PROVIDERS.filter((p) =>
             rfq.items.some((it) => {

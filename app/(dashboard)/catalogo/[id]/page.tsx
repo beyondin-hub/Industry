@@ -16,29 +16,30 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ProductBuyBox } from "@/components/catalog/product-buybox";
 import { ProductCard } from "@/components/catalog/product-card";
-import { PRODUCTS, getProduct } from "@/lib/data/products";
+import { PRODUCTS } from "@/lib/data/products";
+import { fetchProduct, fetchRelated } from "@/lib/repos/products";
 import { getProvider } from "@/lib/data/providers";
 import { categoriaNombre, categoriaEmoji } from "@/lib/constants";
 import { entregaLabel, num } from "@/lib/utils";
 
+// Pre-renderiza el catálogo demo; con DB, los SKUs reales se generan on-demand.
+export const dynamicParams = true;
 export function generateStaticParams() {
   return PRODUCTS.map((p) => ({ id: p.id }));
 }
 
-export function generateMetadata({ params }: { params: { id: string } }) {
-  const p = getProduct(params.id);
+export async function generateMetadata({ params }: { params: { id: string } }) {
+  const p = await fetchProduct(params.id);
   return { title: p ? `${p.nombre}` : "Producto" };
 }
 
-export default function ProductPage({ params }: { params: { id: string } }) {
-  const product = getProduct(params.id);
+export default async function ProductPage({ params }: { params: { id: string } }) {
+  const product = await fetchProduct(params.id);
   if (!product) notFound();
 
   const prov = getProvider(product.provider_id);
   const enStock = product.stock_actual > 0;
-  const relacionados = PRODUCTS.filter(
-    (p) => p.categoria === product.categoria && p.id !== product.id,
-  ).slice(0, 3);
+  const relacionados = await fetchRelated(product.categoria, product.id);
 
   return (
     <div className="space-y-6">

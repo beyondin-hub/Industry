@@ -3,7 +3,8 @@ import { PageHeader } from "@/components/dashboard/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { CURRENT_COMPANY, TEAM } from "@/lib/data/account";
+import { TEAM } from "@/lib/data/account";
+import { getContext } from "@/lib/repos/context";
 import { mxn } from "@/lib/utils";
 import { INDUSTRIAS } from "@/lib/constants";
 
@@ -15,7 +16,8 @@ const ROL_LABEL: Record<string, { label: string; variant: any }> = {
   comprador: { label: "Comprador", variant: "secondary" },
 };
 
-export default function PerfilPage() {
+export default async function PerfilPage() {
+  const { company: CURRENT_COMPANY } = await getContext();
   const industria = INDUSTRIAS.find((i) => i.slug === CURRENT_COMPANY.industria)?.nombre;
 
   return (

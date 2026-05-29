@@ -2,12 +2,24 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Bell, Search, ShieldCheck, CreditCard } from "lucide-react";
+import { Bell, Search, ShieldCheck, CreditCard, LogOut } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { mxn } from "@/lib/utils";
-import { CURRENT_BUYER, CURRENT_COMPANY, NOTIFICATIONS } from "@/lib/data/account";
+import {
+  CURRENT_BUYER,
+  CURRENT_COMPANY,
+  NOTIFICATIONS,
+} from "@/lib/data/account";
+import { logoutAction } from "@/app/(auth)/actions";
+import type { Buyer, Company } from "@/types";
 
-export function Topbar() {
+export function Topbar({
+  buyer = CURRENT_BUYER,
+  company = CURRENT_COMPANY,
+}: {
+  buyer?: Buyer;
+  company?: Company;
+}) {
   const [open, setOpen] = useState(false);
   const noLeidas = NOTIFICATIONS.filter((n) => !n.leida).length;
 
@@ -26,10 +38,10 @@ export function Topbar() {
       </form>
 
       <div className="ml-auto flex items-center gap-3">
-        {CURRENT_COMPANY.credito_aprobado && (
+        {company.credito_aprobado && (
           <div className="hidden items-center gap-1.5 rounded-lg bg-emerald-50 px-3 py-1.5 text-xs font-medium text-emerald-700 md:flex">
             <CreditCard className="size-3.5" />
-            Crédito {mxn(CURRENT_COMPANY.limite_credito)} · {CURRENT_COMPANY.dias_credito}d
+            Crédito {mxn(company.limite_credito)} · {company.dias_credito}d
           </div>
         )}
 
@@ -72,17 +84,29 @@ export function Topbar() {
         <Link href="/perfil" className="flex items-center gap-2.5">
           <div className="hidden text-right sm:block">
             <p className="text-sm font-semibold leading-tight text-steel-900">
-              {CURRENT_BUYER.nombre}
+              {buyer.nombre}
             </p>
             <p className="flex items-center justify-end gap-1 text-xs text-steel-500">
               <ShieldCheck className="size-3 text-emerald-600" />
-              {CURRENT_COMPANY.nombre}
+              {company.nombre}
             </p>
           </div>
           <div className="flex size-9 items-center justify-center rounded-full bg-steel-900 text-sm font-bold text-white">
-            {CURRENT_BUYER.nombre.split(" ").map((p) => p[0]).slice(0, 2).join("")}
+            {buyer.nombre.split(" ").map((p) => p[0]).slice(0, 2).join("")}
           </div>
         </Link>
+
+        {/* Logout */}
+        <form action={logoutAction}>
+          <button
+            type="submit"
+            className="flex size-9 items-center justify-center rounded-md text-steel-500 hover:bg-secondary hover:text-steel-800"
+            aria-label="Cerrar sesión"
+            title="Cerrar sesión"
+          >
+            <LogOut className="size-5" />
+          </button>
+        </form>
       </div>
     </header>
   );

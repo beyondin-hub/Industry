@@ -16,22 +16,24 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { RFQStatus, OrdenStatus, UrgenciaBadge } from "@/components/shared/status-badge";
-import {
-  CURRENT_BUYER,
-  CURRENT_COMPANY,
-  RFQS,
-  ORDERS,
-  AUTO_REORDERS,
-} from "@/lib/data/account";
+import { AUTO_REORDERS } from "@/lib/data/account";
 import { getProduct } from "@/lib/data/products";
 import { getProvider } from "@/lib/data/providers";
+import { getContext } from "@/lib/repos/context";
+import { fetchRFQs } from "@/lib/repos/rfqs";
+import { fetchOrders } from "@/lib/repos/orders";
 import { mxn, tiempoRestante, fechaCorta, entregaLabel, num } from "@/lib/utils";
 import { categoriaNombre } from "@/lib/constants";
 
-export default function DashboardPage() {
-  const activos = RFQS.filter((r) => r.estado === "en_proceso" || r.estado === "cotizado");
-  const enTransito = ORDERS.filter((o) => o.estado === "en_transito" || o.estado === "en_preparacion");
-  const creditoUsado = ORDERS.filter((o) => o.es_credito).reduce((s, o) => s + o.total, 0);
+export default async function DashboardPage() {
+  const { buyer: CURRENT_BUYER, company: CURRENT_COMPANY } = await getContext();
+  const [rfqs, orders] = await Promise.all([
+    fetchRFQs(CURRENT_COMPANY.id),
+    fetchOrders(CURRENT_COMPANY.id),
+  ]);
+  const activos = rfqs.filter((r) => r.estado === "en_proceso" || r.estado === "cotizado");
+  const enTransito = orders.filter((o) => o.estado === "en_transito" || o.estado === "en_preparacion");
+  const creditoUsado = orders.filter((o) => o.es_credito).reduce((s, o) => s + o.total, 0);
 
   return (
     <div className="space-y-6">
@@ -169,7 +171,7 @@ export default function DashboardPage() {
             </Link>
           </CardHeader>
           <CardContent className="space-y-3">
-            {ORDERS.slice(0, 4).map((o) => {
+            {orders.slice(0, 4).map((o) => {
               const prov = getProvider(o.provider_id);
               return (
                 <Link

@@ -4,14 +4,14 @@ import { PageHeader } from "@/components/dashboard/page-header";
 import { ProductCard } from "@/components/catalog/product-card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { PRODUCTS, searchProducts } from "@/lib/data/products";
+import { fetchProducts } from "@/lib/repos/products";
 import { CATEGORIAS, categoriaNombre } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import type { CategoriaMRO } from "@/types";
 
 export const metadata = { title: "Catálogo MRO" };
 
-export default function CatalogoPage({
+export default async function CatalogoPage({
   searchParams,
 }: {
   searchParams: { q?: string; categoria?: string };
@@ -19,8 +19,7 @@ export default function CatalogoPage({
   const q = searchParams.q ?? "";
   const categoria = searchParams.categoria as CategoriaMRO | undefined;
 
-  let results = q ? searchProducts(q) : PRODUCTS;
-  if (categoria) results = results.filter((p) => p.categoria === categoria);
+  const results = await fetchProducts({ q: q || undefined, categoria });
 
   return (
     <div className="space-y-6">

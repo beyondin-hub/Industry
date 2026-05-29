@@ -41,6 +41,30 @@
 > (Supabase, Stripe, Twilio, Claude) degradan elegantemente a datos de
 > demostración (`lib/data`) y respuestas locales. Configura `.env` para activarlas.
 
+### 🔌 Persistencia y autenticación real
+
+La capa de acceso a datos (`lib/repos/`) consulta Supabase cuando hay
+credenciales y **cae automáticamente a los datos demo** si no las hay o si una
+consulta falla — la UI nunca se rompe.
+
+Para activar la persistencia real:
+
+1. Crea un proyecto en [Supabase](https://supabase.com) y aplica las migraciones
+   de `supabase/migrations/` (esquema, RLS y seed).
+2. Llena en `.env.local`:
+   - `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - `SUPABASE_SERVICE_ROLE_KEY` (solo servidor — alta de empresa/usuario en el registro)
+3. Reinicia `npm run dev`.
+
+Con esto quedan cableados de extremo a extremo:
+
+- **Auth** (`app/(auth)/actions.ts`): login email/contraseña, magic link,
+  registro (crea `companies` + `buyers`) y logout — vía Supabase Auth.
+- **Sesión**: `middleware.ts` refresca el token en cada request.
+- **Catálogo**: `products` + `price_tiers` (`lib/repos/products.ts`).
+- **RFQ**: `POST /api/rfq` inserta en `rfqs` + `rfq_items` y notifica por WhatsApp.
+- **Dashboard / órdenes / mesa de ops / perfil**: leen por empresa con RLS.
+
 ---
 
 ## 🚀 Empezar
