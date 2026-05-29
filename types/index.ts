@@ -74,6 +74,8 @@ export interface Provider {
   credito_disponible: number;
   activo: boolean;
   plan_membresia: PlanMembresia;
+  estado?: "pendiente" | "aprobado" | "suspendido";
+  es_fundador?: boolean;
   created_at: string;
 }
 

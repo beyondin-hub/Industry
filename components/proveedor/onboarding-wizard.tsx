@@ -5,7 +5,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Building2, Tags, PackageCheck, Banknote, FileCheck2, Check, ChevronLeft,
-  ChevronRight, Loader2, ShieldCheck, Sparkles, Store,
+  ChevronRight, Loader2, ShieldCheck, Sparkles, Store, Clock, Lock, ArrowRight,
 } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -75,27 +75,31 @@ export function OnboardingWizard() {
     if (res.ok) {
       setFundador(res.fundador ?? 27);
       setDone(true);
-      toast({ type: "success", title: "¡Bienvenido a Novak!", description: "Tu cuenta de proveedor fundador está lista." });
+      toast({ type: "success", title: "¡Solicitud enviada!", description: "Tu cuenta entró en revisión por Novak." });
     } else {
-      toast({ type: "error", title: "No se pudo completar el alta", description: res.error });
+      toast({ type: "error", title: "No se pudo enviar tu solicitud", description: res.error });
     }
   }
 
   if (done) {
     return (
       <div className="mx-auto max-w-xl rounded-2xl border bg-ink-950 p-10 text-center text-white glow-accent">
-        <span className="mx-auto flex size-14 items-center justify-center rounded-full bg-emerald-500/20"><Check className="size-8 text-emerald-400" /></span>
-        <h2 className="mt-4 font-display text-2xl font-bold">¡Eres Proveedor Fundador #{String(fundador).padStart(3, "0")}! 🎉</h2>
+        <span className="mx-auto flex size-14 items-center justify-center rounded-full bg-safety/20"><Clock className="size-8 text-safety" /></span>
+        <h2 className="mt-4 font-display text-2xl font-bold">¡Solicitud recibida! #{String(fundador).padStart(3, "0")}</h2>
         <p className="mx-auto mt-2 max-w-md text-ink-300">
-          Tu cuenta quedó activa, sin cuota de entrada ni mensualidad. El siguiente paso:
-          sube tu catálogo — nuestra IA lo completa por ti.
+          Tu cuenta está <strong className="text-white">en revisión</strong> por el equipo de Novak (normalmente 24–48h hábiles).
+          Mientras tanto, entra y explora la plataforma y prepara tu catálogo —
+          podrás vender en cuanto te aprobemos.
         </p>
+        <div className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-ink-200">
+          <Lock className="size-3.5 text-safety" /> Sin cuota de entrada ni mensualidad
+        </div>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
-          <Link href="/proveedor/productos" className={cn(buttonVariants({ variant: "gradient" }))}>
-            <Sparkles className="size-4" /> Subir mi catálogo con IA
+          <Link href="/proveedor/dashboard" className={cn(buttonVariants({ variant: "gradient" }))}>
+            Explorar mi portal <ArrowRight className="size-4" />
           </Link>
-          <Link href="/proveedor/dashboard" className={cn(buttonVariants({ variant: "outline" }), "border-white/20 bg-transparent text-white hover:bg-white/10 hover:text-white")}>
-            Ir a mi portal
+          <Link href="/proveedor/productos" className={cn(buttonVariants({ variant: "outline" }), "border-white/20 bg-transparent text-white hover:bg-white/10 hover:text-white")}>
+            <Sparkles className="size-4" /> Preparar mi catálogo
           </Link>
         </div>
       </div>

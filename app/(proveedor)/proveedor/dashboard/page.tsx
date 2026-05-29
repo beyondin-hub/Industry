@@ -10,6 +10,7 @@ import {
   ShieldCheck,
   Sparkles,
   Lock,
+  Clock,
 } from "lucide-react";
 import { PageHeader } from "@/components/dashboard/page-header";
 import { StatCard } from "@/components/dashboard/stat-card";
@@ -51,6 +52,20 @@ export default async function ProveedorDashboard() {
           </Link>
         </div>
       </PageHeader>
+
+      {prov.estado === "pendiente" && (
+        <div className="flex flex-wrap items-center gap-3 rounded-xl border border-safety/30 bg-safety-50 p-4">
+          <Clock className="size-5 shrink-0 text-safety" />
+          <div className="flex-1">
+            <p className="text-sm font-semibold text-ink-900">Tu cuenta está en revisión</p>
+            <p className="text-sm text-ink-600">
+              Podrás recibir RFQs y vender en cuanto Novak apruebe tu solicitud (24–48h hábiles).
+              Mientras tanto, prepara tu catálogo y completa tu perfil.
+            </p>
+          </div>
+          <Link href="/proveedor/productos" className={cn(buttonVariants({ variant: "gradient", size: "sm" }))}>Preparar catálogo</Link>
+        </div>
+      )}
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard label="RFQ por cotizar" value={String(rfqsAbiertos.length)} icon={FileSpreadsheet} accent="text-safety" />
