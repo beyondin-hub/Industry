@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Syne, DM_Sans, DM_Mono } from "next/font/google";
+import { ToastProvider } from "@/components/ui/toast";
 import "./globals.css";
 
 const syne = Syne({
@@ -53,7 +54,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es-MX" className={`${syne.variable} ${dmSans.variable} ${dmMono.variable}`}>
-      <body className="font-sans">{children}</body>
+      <body className="font-sans">
+        <ToastProvider>{children}</ToastProvider>
+      </body>
     </html>
   );
 }

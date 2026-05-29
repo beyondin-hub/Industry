@@ -40,3 +40,10 @@ insert into price_tiers (product_id, cantidad_minima, precio) values
   ('00000000-0000-0000-0000-0000000000b5', 1, 96.00),
   ('00000000-0000-0000-0000-0000000000b5', 12, 86.00),
   ('00000000-0000-0000-0000-0000000000b5', 48, 74.00);
+
+-- ─── Empresas compradoras demo (maquiladoras) ─────────────────
+insert into companies (id, nombre, rfc, industria, ciudad, credito_aprobado, limite_credito, dias_credito)
+values
+  ('00000000-0000-0000-0000-0000000000c1', 'Maquiladora Componentes del Pacífico SA de CV', 'MCP190501XY2', 'automotriz', 'Tijuana', true, 850000, 60),
+  ('00000000-0000-0000-0000-0000000000c2', 'Electro Ensambles Fronterizos SA de CV', 'EEF200815AB3', 'electronica', 'Ciudad Juárez', true, 500000, 30)
+on conflict (rfc) do nothing;

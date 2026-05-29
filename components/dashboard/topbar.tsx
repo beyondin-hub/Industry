@@ -11,6 +11,7 @@ import {
   NOTIFICATIONS,
 } from "@/lib/data/account";
 import { logoutAction } from "@/app/(auth)/actions";
+import { MobileNav } from "@/components/dashboard/mobile-nav";
 import type { Buyer, Company } from "@/types";
 
 export function Topbar({
@@ -25,6 +26,7 @@ export function Topbar({
 
   return (
     <header className="sticky top-0 z-40 flex h-16 items-center gap-4 border-b bg-card/90 px-4 backdrop-blur lg:px-6">
+      <MobileNav />
       {/* Quick order / search */}
       <form action="/catalogo" className="hidden flex-1 items-center gap-2 sm:flex">
         <div className="relative w-full max-w-md">
