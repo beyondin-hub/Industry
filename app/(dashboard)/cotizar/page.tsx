@@ -1,22 +1,25 @@
 import { PageHeader } from "@/components/dashboard/page-header";
-import { RFQForm } from "@/components/rfq/rfq-form";
+import { RFQWizard } from "@/components/rfq/rfq-wizard";
+import { getContext } from "@/lib/repos/context";
 
 export const metadata = { title: "Solicitar cotización (RFQ)" };
 
-export default function CotizarPage({
+export default async function CotizarPage({
   searchParams,
 }: {
   searchParams: { sku?: string; qty?: string };
 }) {
+  const { company } = await getContext();
   return (
     <div className="space-y-6">
       <PageHeader
         title="Solicitar cotización"
-        description="Sube tu lista, pega números de parte o describe lo que necesitas — un solo RFQ, múltiples proveedores cotizan."
+        description="Un solo RFQ, múltiples proveedores cotizan — confirmado en menos de 2 horas hábiles."
       />
-      <RFQForm
+      <RFQWizard
         presetSku={searchParams.sku}
         presetQty={searchParams.qty ? Number(searchParams.qty) : undefined}
+        company={{ nombre: company.nombre, rfc: company.rfc, ciudad: company.ciudad }}
       />
     </div>
   );
