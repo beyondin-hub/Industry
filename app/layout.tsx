@@ -25,6 +25,7 @@ const dmMono = DM_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? "https://heynovak.com"),
   title: {
     default: "Novak — Tu equipo de compras externo para la industria maquiladora",
     template: "%s · Novak",
