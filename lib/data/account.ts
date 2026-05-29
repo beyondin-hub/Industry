@@ -1,0 +1,359 @@
+import type {
+  AutoReorder,
+  Buyer,
+  Company,
+  Notification,
+  Order,
+  Quotation,
+  RFQ,
+  ShoppingList,
+} from "@/types";
+
+// Empresa compradora demo (sesión actual).
+export const CURRENT_COMPANY: Company = {
+  id: "comp-001",
+  nombre: "Maquiladora Componentes del Pacífico",
+  rfc: "MCP190501XY2",
+  industria: "automotriz",
+  ciudad: "Tijuana",
+  credito_aprobado: true,
+  limite_credito: 850000,
+  dias_credito: 60,
+  created_at: "2025-02-01T00:00:00Z",
+};
+
+// Usuario comprador demo (sesión actual).
+export const CURRENT_BUYER: Buyer = {
+  id: "buyer-001",
+  company_id: "comp-001",
+  nombre: "Paulo Zaragoza",
+  puesto: "Gerente de Compras",
+  telefono: "+52 664 123 4567",
+  rol: "admin_empresa",
+  limite_compra: 100000,
+  email: "compras@cpacifico.mx",
+  created_at: "2025-02-01T00:00:00Z",
+};
+
+// Equipo de compras (multi-user account, estilo Amazon Business).
+export const TEAM: Buyer[] = [
+  CURRENT_BUYER,
+  {
+    id: "buyer-002",
+    company_id: "comp-001",
+    nombre: "María Fernanda Ríos",
+    puesto: "Compradora Jr.",
+    telefono: "+52 664 222 1100",
+    rol: "comprador",
+    limite_compra: 25000,
+    email: "mrios@cpacifico.mx",
+    created_at: "2025-03-10T00:00:00Z",
+  },
+  {
+    id: "buyer-003",
+    company_id: "comp-001",
+    nombre: "Ing. Roberto Salas",
+    puesto: "Jefe de Mantenimiento",
+    telefono: "+52 664 333 9988",
+    rol: "autorizador",
+    limite_compra: 500000,
+    email: "rsalas@cpacifico.mx",
+    created_at: "2025-03-15T00:00:00Z",
+  },
+];
+
+const now = Date.now();
+const h = (n: number) => new Date(now + n * 3_600_000).toISOString();
+const d = (n: number) => new Date(now + n * 86_400_000).toISOString();
+
+export const RFQS: RFQ[] = [
+  {
+    id: "rfq-001",
+    folio: "MRO-2026-0148",
+    buyer_id: "buyer-001",
+    company_id: "comp-001",
+    estado: "cotizado",
+    urgencia: "urgente_24h",
+    condicion_pago: "60",
+    requiere_cfdi: true,
+    notas: "Línea 3 detenida — se requiere reemplazo de baleros urgente.",
+    total_estimado: 18500,
+    created_at: h(-1.5),
+    deadline_cotizacion: h(0.5),
+    items: [
+      {
+        id: "ri-1",
+        rfq_id: "rfq-001",
+        product_id: "sku-6205",
+        descripcion: "Balero de bolas 6205-2RS sellado",
+        numero_parte: "6205-2RS",
+        cantidad: 50,
+        unidad: "pza",
+        certificacion_requerida: "IATF 16949",
+      },
+      {
+        id: "ri-2",
+        rfq_id: "rfq-001",
+        product_id: "sku-grasa-ep2",
+        descripcion: "Grasa multipropósito EP2 cartucho 400g",
+        numero_parte: "GR-EP2-400",
+        cantidad: 24,
+        unidad: "pza",
+      },
+    ],
+  },
+  {
+    id: "rfq-002",
+    folio: "MRO-2026-0151",
+    buyer_id: "buyer-002",
+    company_id: "comp-001",
+    estado: "en_proceso",
+    urgencia: "normal",
+    condicion_pago: "30",
+    requiere_cfdi: true,
+    notas: "Resurtido mensual de EPP para planta.",
+    total_estimado: 42000,
+    created_at: h(-0.5),
+    deadline_cotizacion: h(1.5),
+    items: [
+      {
+        id: "ri-3",
+        rfq_id: "rfq-002",
+        product_id: "sku-guante-nitrilo",
+        descripcion: "Guante de nitrilo recubierto talla 9",
+        numero_parte: "NIT-9-GR",
+        cantidad: 500,
+        unidad: "par",
+      },
+      {
+        id: "ri-4",
+        rfq_id: "rfq-002",
+        product_id: "sku-lentes-z87",
+        descripcion: "Lentes de seguridad antiempañante",
+        numero_parte: "SEC-Z87-CL",
+        cantidad: 200,
+        unidad: "pza",
+      },
+    ],
+  },
+  {
+    id: "rfq-003",
+    folio: "MRO-2026-0139",
+    buyer_id: "buyer-001",
+    company_id: "comp-001",
+    estado: "cerrado",
+    urgencia: "programado",
+    condicion_pago: "contado",
+    requiere_cfdi: true,
+    notas: "Proyecto retrofit celda de soldadura.",
+    total_estimado: 26800,
+    created_at: d(-12),
+    deadline_cotizacion: d(-11.9),
+    items: [
+      {
+        id: "ri-5",
+        rfq_id: "rfq-003",
+        product_id: "sku-cilindro-neum",
+        descripcion: "Cilindro neumático ISO 15552 Ø32 x 100mm",
+        numero_parte: "CIL-32-100",
+        cantidad: 8,
+        unidad: "pza",
+      },
+    ],
+  },
+];
+
+export const QUOTATIONS: Quotation[] = [
+  {
+    id: "quo-001",
+    folio: "COT-2026-0210",
+    rfq_id: "rfq-001",
+    provider_id: "prov-001",
+    estado: "enviada",
+    subtotal: 9740,
+    comision_broker: 1168.8,
+    iva: 1745.41,
+    total: 12654.21,
+    tiempo_entrega_horas: 24,
+    condicion_pago: "60",
+    valida_hasta: d(3),
+    created_at: h(-0.8),
+  },
+];
+
+export const ORDERS: Order[] = [
+  {
+    id: "ord-001",
+    folio: "OC-2026-0312",
+    quotation_id: "quo-h1",
+    company_id: "comp-001",
+    estado: "en_transito",
+    total: 38420.5,
+    es_credito: true,
+    fecha_vencimiento_credito: d(54),
+    tracking_url: "#",
+    cfdi_url: "#",
+    cfdi_uuid: "A1B2C3D4-0000-1111-2222-333344445555",
+    categoria: "epp",
+    provider_id: "prov-002",
+    created_at: d(-2),
+  },
+  {
+    id: "ord-002",
+    folio: "OC-2026-0298",
+    quotation_id: "quo-h2",
+    company_id: "comp-001",
+    estado: "entregada",
+    total: 14210.0,
+    es_credito: false,
+    cfdi_url: "#",
+    cfdi_uuid: "B2C3D4E5-1111-2222-3333-444455556666",
+    categoria: "rodamientos",
+    provider_id: "prov-001",
+    created_at: d(-9),
+    entregada_at: d(-8),
+    notas_entrega: "Recibido en almacén planta, andén 2.",
+  },
+  {
+    id: "ord-003",
+    folio: "OC-2026-0285",
+    quotation_id: "quo-h3",
+    company_id: "comp-001",
+    estado: "entregada",
+    total: 9680.0,
+    es_credito: true,
+    fecha_vencimiento_credito: d(18),
+    cfdi_url: "#",
+    cfdi_uuid: "C3D4E5F6-2222-3333-4444-555566667777",
+    categoria: "lubricantes",
+    provider_id: "prov-003",
+    created_at: d(-22),
+    entregada_at: d(-21),
+  },
+  {
+    id: "ord-004",
+    folio: "OC-2026-0270",
+    quotation_id: "quo-h4",
+    company_id: "comp-001",
+    estado: "en_preparacion",
+    total: 22340.0,
+    es_credito: true,
+    fecha_vencimiento_credito: d(60),
+    categoria: "neumatica",
+    provider_id: "prov-005",
+    created_at: h(-6),
+  },
+];
+
+export const NOTIFICATIONS: Notification[] = [
+  {
+    id: "ntf-1",
+    buyer_id: "buyer-001",
+    tipo: "cotizacion_lista",
+    titulo: "Cotización lista — RFQ MRO-2026-0148",
+    mensaje:
+      "RodaNorte cotizó tus 50 baleros 6205-2RS. Entrega mañana en Tijuana. Válida 72h.",
+    leida: false,
+    canal: "whatsapp",
+    created_at: h(-0.8),
+  },
+  {
+    id: "ntf-2",
+    buyer_id: "buyer-001",
+    tipo: "orden_en_transito",
+    titulo: "Tu orden OC-2026-0312 va en camino",
+    mensaje: "El EPP de SeguriBaja salió de almacén. Entrega estimada mañana 11:00.",
+    leida: false,
+    canal: "web",
+    created_at: d(-1),
+  },
+  {
+    id: "ntf-3",
+    buyer_id: "buyer-001",
+    tipo: "stock_bajo",
+    titulo: "Stock bajo: Grasa EP2",
+    mensaje:
+      "Tu consumo proyecta agotar la grasa EP2 en ~9 días. ¿Programar reorden automático?",
+    leida: true,
+    canal: "web",
+    created_at: d(-2),
+  },
+  {
+    id: "ntf-4",
+    buyer_id: "buyer-001",
+    tipo: "credito_vence",
+    titulo: "Crédito por vencer — OC-2026-0285",
+    mensaje: "El pago de $9,680 vence en 18 días (línea de crédito a 30 días).",
+    leida: true,
+    canal: "email",
+    created_at: d(-3),
+  },
+];
+
+export const SHOPPING_LISTS: ShoppingList[] = [
+  {
+    id: "list-1",
+    company_id: "comp-001",
+    nombre: "Mantenimiento preventivo mensual",
+    es_favorita: true,
+    items: [
+      { product_id: "sku-grasa-ep2", cantidad: 24 },
+      { product_id: "sku-6205", cantidad: 20 },
+      { product_id: "sku-banda-v", cantidad: 10 },
+      { product_id: "sku-filtro-aire", cantidad: 4 },
+    ],
+  },
+  {
+    id: "list-2",
+    company_id: "comp-001",
+    nombre: "Kit EPP nuevo ingreso",
+    es_favorita: false,
+    items: [
+      { product_id: "sku-guante-nitrilo", cantidad: 2 },
+      { product_id: "sku-lentes-z87", cantidad: 1 },
+      { product_id: "sku-respirador-n95", cantidad: 1 },
+    ],
+  },
+];
+
+export const AUTO_REORDERS: AutoReorder[] = [
+  {
+    id: "ar-1",
+    company_id: "comp-001",
+    product_id: "sku-guante-nitrilo",
+    cantidad: 500,
+    frecuencia_dias: 30,
+    descuento_pct: 5,
+    activo: true,
+    proxima_fecha: d(12),
+  },
+  {
+    id: "ar-2",
+    company_id: "comp-001",
+    product_id: "sku-grasa-ep2",
+    cantidad: 24,
+    frecuencia_dias: 60,
+    descuento_pct: 5,
+    activo: true,
+    proxima_fecha: d(31),
+  },
+];
+
+// Spend analytics por categoría (últimos 6 meses agregados) — estilo Amazon.
+export const SPEND_BY_CATEGORY = [
+  { categoria: "epp", total: 184500, ordenes: 14 },
+  { categoria: "rodamientos", total: 142300, ordenes: 9 },
+  { categoria: "lubricantes", total: 98700, ordenes: 11 },
+  { categoria: "neumatica", total: 76200, ordenes: 5 },
+  { categoria: "herramientas", total: 54100, ordenes: 4 },
+  { categoria: "electrico", total: 41800, ordenes: 6 },
+] as const;
+
+export const SPEND_BY_MONTH = [
+  { mes: "Dic", total: 78200 },
+  { mes: "Ene", total: 91500 },
+  { mes: "Feb", total: 84300 },
+  { mes: "Mar", total: 102800 },
+  { mes: "Abr", total: 96400 },
+  { mes: "May", total: 144400 },
+] as const;
