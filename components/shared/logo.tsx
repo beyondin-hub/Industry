@@ -25,7 +25,7 @@ export function Logo({
           <circle cx="12" cy="12" r="2.4" fill="currentColor" />
         </svg>
       </span>
-      <span className={cn("text-lg font-extrabold tracking-tight", textColor)}>
+      <span className={cn("font-display text-lg font-extrabold tracking-tight", textColor)}>
         MRO<span className="text-safety">Link</span>
       </span>
     </Link>

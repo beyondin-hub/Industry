@@ -4,35 +4,59 @@
 
 @layer base {
   :root {
-    --background: 210 40% 99%;
-    --foreground: 215 45% 12%;
+    /* Fondo papel cálido (no blanco puro) */
+    --background: 40 33% 95%;
+    --foreground: 40 12% 5%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 215 45% 12%;
+    /* Superficies: blanco cálido, no #FFF */
+    --card: 45 40% 98%;
+    --card-foreground: 40 12% 5%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 215 45% 12%;
+    --popover: 45 40% 98%;
+    --popover-foreground: 40 12% 5%;
 
-    --primary: 215 60% 24%;
-    --primary-foreground: 210 40% 98%;
+    /* Primario: ink casi negro cálido */
+    --primary: 40 12% 5%;
+    --primary-foreground: 40 33% 96%;
 
-    --secondary: 214 32% 95%;
-    --secondary-foreground: 215 45% 18%;
+    --secondary: 43 21% 91%;
+    --secondary-foreground: 30 12% 18%;
 
-    --muted: 214 32% 95%;
-    --muted-foreground: 215 16% 45%;
+    --muted: 43 21% 91%;
+    --muted-foreground: 28 11% 38%;
 
-    --accent: 24 100% 50%;
+    /* Acento: morado moderno */
+    --accent: 252 100% 64%;
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 72% 51%;
+    --destructive: 0 74% 42%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 214 25% 88%;
-    --input: 214 25% 88%;
-    --ring: 215 60% 32%;
+    --border: 40 17% 80%;
+    --input: 40 17% 80%;
+    --ring: 252 100% 64%;
 
-    --radius: 0.6rem;
+    --radius: 0.7rem;
+  }
+
+  .dark {
+    --background: 40 12% 5%;
+    --foreground: 40 33% 95%;
+    --card: 40 11% 9%;
+    --card-foreground: 40 33% 95%;
+    --popover: 40 11% 9%;
+    --popover-foreground: 40 33% 95%;
+    --primary: 40 33% 95%;
+    --primary-foreground: 40 12% 5%;
+    --secondary: 40 8% 16%;
+    --secondary-foreground: 40 33% 95%;
+    --muted: 40 8% 16%;
+    --muted-foreground: 40 10% 62%;
+    --accent: 252 100% 70%;
+    --accent-foreground: 40 12% 5%;
+    --border: 40 8% 18%;
+    --input: 40 8% 18%;
+    --ring: 252 100% 70%;
   }
 
   * {
@@ -41,7 +65,12 @@
 
   body {
     @apply bg-background text-foreground antialiased;
-    font-feature-settings: "rlig" 1, "calt" 1;
+    font-feature-settings: "rlig" 1, "calt" 1, "ss01" 1;
+  }
+
+  h1, h2, h3, .font-display {
+    font-feature-settings: "ss01" 1;
+    letter-spacing: -0.01em;
   }
 }
 
@@ -49,11 +78,40 @@
   .text-balance {
     text-wrap: balance;
   }
+
   /* Grid blueprint sutil para secciones industriales */
   .bg-grid {
     background-image:
-      linear-gradient(to right, hsl(215 30% 90% / 0.6) 1px, transparent 1px),
-      linear-gradient(to bottom, hsl(215 30% 90% / 0.6) 1px, transparent 1px);
-    background-size: 28px 28px;
+      linear-gradient(to right, hsl(40 17% 80% / 0.5) 1px, transparent 1px),
+      linear-gradient(to bottom, hsl(40 17% 80% / 0.5) 1px, transparent 1px);
+    background-size: 30px 30px;
+  }
+
+  /* Gradiente de acento moderno: morado → magenta → oro */
+  .gradient-accent {
+    background-image: linear-gradient(115deg, #6D4AFF 0%, #9B5CFF 35%, #E0529C 70%, #E8B04B 100%);
+  }
+  .gradient-accent-soft {
+    background-image: linear-gradient(115deg, #6D4AFF12 0%, #E0529C12 60%, #E8B04B12 100%);
+  }
+  .text-gradient {
+    background-image: linear-gradient(110deg, #6D4AFF 0%, #9B5CFF 40%, #E0529C 75%, #E8B04B 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Textura de grano sutil para fondos oscuros premium */
+  .bg-noise {
+    background-image: radial-gradient(hsl(0 0% 100% / 0.04) 1px, transparent 1px);
+    background-size: 4px 4px;
+  }
+
+  /* Halo radial morado para fondos hero oscuros */
+  .glow-accent {
+    background:
+      radial-gradient(60% 60% at 75% 20%, #6D4AFF26 0%, transparent 60%),
+      radial-gradient(50% 50% at 15% 90%, #E0529C1f 0%, transparent 60%);
   }
 }

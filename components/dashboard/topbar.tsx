@@ -24,7 +24,7 @@ export function Topbar({
   const noLeidas = NOTIFICATIONS.filter((n) => !n.leida).length;
 
   return (
-    <header className="sticky top-0 z-40 flex h-16 items-center gap-4 border-b bg-white/90 px-4 backdrop-blur lg:px-6">
+    <header className="sticky top-0 z-40 flex h-16 items-center gap-4 border-b bg-card/90 px-4 backdrop-blur lg:px-6">
       {/* Quick order / search */}
       <form action="/catalogo" className="hidden flex-1 items-center gap-2 sm:flex">
         <div className="relative w-full max-w-md">
@@ -32,7 +32,7 @@ export function Topbar({
           <input
             name="q"
             placeholder="Quick order: pega número de parte o busca…"
-            className="h-9 w-full rounded-md border border-input bg-steel-50 pl-9 pr-3 text-sm outline-none focus:bg-white focus:ring-2 focus:ring-ring"
+            className="h-9 w-full rounded-md border border-input bg-steel-50 pl-9 pr-3 text-sm outline-none focus:bg-card focus:ring-2 focus:ring-ring"
           />
         </div>
       </form>
@@ -60,7 +60,7 @@ export function Topbar({
             )}
           </button>
           {open && (
-            <div className="absolute right-0 mt-2 w-80 rounded-xl border bg-white shadow-lg">
+            <div className="absolute right-0 mt-2 w-80 rounded-xl border bg-card shadow-lg">
               <div className="border-b px-4 py-3 text-sm font-semibold">Notificaciones</div>
               <div className="max-h-96 divide-y overflow-y-auto">
                 {NOTIFICATIONS.map((n) => (

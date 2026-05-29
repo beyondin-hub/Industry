@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { MessageCircle } from "lucide-react";
+import { MessageCircle, Clock } from "lucide-react";
 import { Logo } from "@/components/shared/logo";
 import { buttonVariants } from "@/components/ui/button";
 import { BRAND } from "@/lib/constants";
@@ -14,7 +14,7 @@ const NAV = [
 
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-50 border-b bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-white/70">
+    <header className="sticky top-0 z-50 border-b bg-card/90 backdrop-blur supports-[backdrop-filter]:bg-card/70">
       <div className="container flex h-16 items-center justify-between gap-4">
         <div className="flex items-center gap-8">
           <Logo />
@@ -31,6 +31,9 @@ export function SiteHeader() {
           </nav>
         </div>
         <div className="flex items-center gap-2">
+          <span className="hidden items-center gap-1.5 rounded-full border border-safety/30 bg-safety-50 px-3 py-1 text-xs font-semibold text-safety lg:inline-flex">
+            <Clock className="size-3.5" /> Cotización en 2h garantizada
+          </span>
           <a
             href={BRAND.whatsappLink}
             target="_blank"

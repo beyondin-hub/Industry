@@ -17,7 +17,7 @@ export function ProductBuyBox({ product }: { product: Product }) {
   const ahorroUnit = product.precio_base - unit;
 
   return (
-    <div className="rounded-xl border bg-white p-5 shadow-sm">
+    <div className="rounded-xl border bg-card p-5 shadow-sm">
       <div className="flex items-baseline gap-2">
         <span className="text-3xl font-bold text-steel-950">{mxn(unit)}</span>
         <span className="text-sm text-steel-500">/{product.unidad}</span>

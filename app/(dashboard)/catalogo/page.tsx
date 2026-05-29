@@ -29,7 +29,7 @@ export default async function CatalogoPage({
       />
 
       {/* Search bar */}
-      <form action="/catalogo" className="flex items-center gap-2 rounded-xl border bg-white p-2 shadow-sm">
+      <form action="/catalogo" className="flex items-center gap-2 rounded-xl border bg-card p-2 shadow-sm">
         <Search className="ml-2 size-5 shrink-0 text-steel-400" />
         <input
           name="q"
@@ -98,7 +98,7 @@ export default async function CatalogoPage({
               ))}
             </div>
           ) : (
-            <div className="rounded-xl border bg-white py-16 text-center">
+            <div className="rounded-xl border bg-card py-16 text-center">
               <p className="text-steel-600">
                 No encontramos “{q}”. ¿No tienes el número de parte?
               </p>

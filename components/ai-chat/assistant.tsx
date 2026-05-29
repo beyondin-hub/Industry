@@ -71,7 +71,7 @@ export function AIAssistant() {
       )}
 
       {open && (
-        <div className="fixed bottom-6 right-6 z-50 flex h-[560px] w-[min(92vw,400px)] flex-col overflow-hidden rounded-2xl border bg-white shadow-2xl">
+        <div className="fixed bottom-6 right-6 z-50 flex h-[560px] w-[min(92vw,400px)] flex-col overflow-hidden rounded-2xl border bg-card shadow-2xl">
           <div className="flex items-center justify-between bg-steel-900 px-4 py-3 text-white">
             <div className="flex items-center gap-2">
               <div className="flex size-8 items-center justify-center rounded-full bg-safety">
@@ -98,7 +98,7 @@ export function AIAssistant() {
                     "max-w-[85%] rounded-2xl px-3.5 py-2.5 text-sm",
                     m.role === "user"
                       ? "rounded-br-sm bg-steel-900 text-white"
-                      : "rounded-bl-sm border bg-white text-steel-800",
+                      : "rounded-bl-sm border bg-card text-steel-800",
                   )}
                 >
                   {m.content}
@@ -107,7 +107,7 @@ export function AIAssistant() {
             ))}
             {loading && (
               <div className="flex justify-start">
-                <div className="rounded-2xl rounded-bl-sm border bg-white px-3.5 py-2.5">
+                <div className="rounded-2xl rounded-bl-sm border bg-card px-3.5 py-2.5">
                   <span className="flex gap-1">
                     <span className="size-2 animate-pulse-dot rounded-full bg-steel-400" />
                     <span className="size-2 animate-pulse-dot rounded-full bg-steel-400 [animation-delay:200ms]" />
@@ -120,7 +120,7 @@ export function AIAssistant() {
           </div>
 
           {messages.length <= 1 && (
-            <div className="flex flex-wrap gap-1.5 border-t bg-white px-3 py-2">
+            <div className="flex flex-wrap gap-1.5 border-t bg-card px-3 py-2">
               {SUGERENCIAS.map((s) => (
                 <button
                   key={s}
@@ -138,13 +138,13 @@ export function AIAssistant() {
               e.preventDefault();
               send(input);
             }}
-            className="flex items-center gap-2 border-t bg-white p-3"
+            className="flex items-center gap-2 border-t bg-card p-3"
           >
             <input
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Escribe tu necesidad…"
-              className="h-10 flex-1 rounded-md border border-input bg-steel-50 px-3 text-sm outline-none focus:bg-white focus:ring-2 focus:ring-ring"
+              className="h-10 flex-1 rounded-md border border-input bg-steel-50 px-3 text-sm outline-none focus:bg-card focus:ring-2 focus:ring-ring"
             />
             <Button type="submit" size="icon" variant="accent" disabled={loading}>
               <Send className="size-4" />
