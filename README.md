@@ -1,4 +1,4 @@
-# MROLink 🔧
+# Novak 🔧
 
 > **Tu equipo de compras externo para la industria maquiladora.**
 > El primer broker digital especializado en insumos MRO (mantenimiento, reparación
@@ -104,7 +104,7 @@ npm run typecheck  # tsc --noEmit
 - `/reordenes` — Reorden automático con descuento (Subscribe & Save B2B)
 - `/perfil` — Empresa, equipo multiusuario, roles y flujos de aprobación por monto
 
-### Operaciones MROLink
+### Operaciones Novak
 - `/proveedor/dashboard` — Portal de proveedor: RFQ entrantes, catálogo, ventas, membresía
 - `/admin/rfq` — **Mesa de operaciones**: SLA 2h, matching y asignación de proveedores
 
@@ -140,7 +140,7 @@ Migraciones en `supabase/migrations/`:
    price_tiers, rfqs, rfq_items, quotations, orders, auto_reorders, shopping_lists,
    spend_analytics, notifications, price_history).
 2. `0002_rls.sql` — Row Level Security multi-tenant (aislamiento por empresa,
-   catálogo público, rol admin de MROLink).
+   catálogo público, rol admin de Novak).
 3. `0003_seed.sql` — Catálogo semilla (proveedores y productos del norte de México).
 
 Aplicar con la CLI de Supabase:

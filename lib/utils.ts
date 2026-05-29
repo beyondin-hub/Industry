@@ -56,7 +56,7 @@ export function entregaLabel(horas: number, ciudad?: string): string {
   return `Entrega en ${dias} días`;
 }
 
-/** Comisión del broker MROLink (8-15% según categoría/volumen). */
+/** Comisión del broker Novak (8-15% según categoría/volumen). */
 export const COMISION_DEFAULT = 0.12;
 export const IVA = 0.16;
 

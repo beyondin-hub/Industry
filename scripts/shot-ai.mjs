@@ -21,7 +21,7 @@ async function clickText(txt) {
 
 await page.goto(base + "/dashboard", { waitUntil: "networkidle0", timeout: 60000 });
 await wait(800);
-await clickText("Asistente MRO");
+await clickText("Hey Novak");
 await wait(700);
 await page.type('input[placeholder="Escribe tu necesidad…"]', "Necesito cotizar 50 baleros 6205 urgentes");
 await wait(300);

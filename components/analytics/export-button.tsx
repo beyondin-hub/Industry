@@ -6,7 +6,7 @@ import { useToast } from "@/components/ui/toast";
 
 export function ExportButton({
   rows,
-  filename = "mrolink-gasto.csv",
+  filename = "novak-gasto.csv",
 }: {
   rows: { categoria: string; total: number; ordenes: number }[];
   filename?: string;

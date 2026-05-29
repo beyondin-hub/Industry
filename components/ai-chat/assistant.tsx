@@ -28,10 +28,10 @@ const CHIPS = [
 const WELCOME: UiMessage = {
   role: "assistant",
   content:
-    "¡Hola! Soy tu asistente de compras MROLink 🔧 Dime qué insumo necesitas, pega un número de parte o describe tu problema de planta — busco en catálogo y te armo el RFQ.",
+    "¡Hey! Soy Novak 👋 Tu equipo de compras industrial. Dime qué insumo necesitas, pégame un número de parte o describe tu problema de planta — yo busco en catálogo y te armo el RFQ.",
 };
 
-const STORAGE_KEY = "mrolink_chat";
+const STORAGE_KEY = "novak_chat";
 
 export function AIAssistant() {
   const [open, setOpen] = useState(false);
@@ -88,7 +88,7 @@ export function AIAssistant() {
           className="fixed bottom-6 right-6 z-50 flex items-center gap-2 rounded-full bg-ink-950 px-5 py-3.5 font-semibold text-white shadow-lg transition-transform hover:scale-105"
         >
           <Sparkles className="size-5 text-safety" />
-          Asistente MRO
+          Hey Novak
         </button>
       )}
 
@@ -100,8 +100,8 @@ export function AIAssistant() {
                 <Bot className="size-4 text-white" />
               </div>
               <div>
-                <p className="text-sm font-semibold leading-tight">Asistente MROLink</p>
-                <p className="text-[11px] text-ink-400">Especialista en insumos industriales</p>
+                <p className="text-sm font-semibold leading-tight">Novak</p>
+                <p className="text-[11px] text-ink-400">Tu equipo de compras industrial</p>
               </div>
             </div>
             <div className="flex items-center gap-1">

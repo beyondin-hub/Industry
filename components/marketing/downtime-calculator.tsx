@@ -84,7 +84,7 @@ export function DowntimeCalculator() {
             <span className="font-mono font-semibold text-danger">{mxn(riesgo3Dias)}</span>
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-ink-300">Con MROLink (respuesta 2h)</span>
+            <span className="text-ink-300">Con Novak (respuesta 2h)</span>
             <span className="font-mono font-semibold text-emerald-400">{mxn(conMrolink)}</span>
           </div>
         </div>

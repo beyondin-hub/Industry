@@ -36,7 +36,7 @@ export function Sidebar() {
       <nav className="flex-1 space-y-1 overflow-y-auto p-3">
         {COMPRADOR_NAV.map((n) => item(n.href, n.label, n.icon))}
         <p className="px-3 pb-1 pt-5 text-[11px] font-semibold uppercase tracking-wider text-ink-600">
-          Operaciones MROLink
+          Operaciones Novak
         </p>
         {OPERACIONES_NAV.map((n) => item(n.href, n.label, n.icon))}
       </nav>

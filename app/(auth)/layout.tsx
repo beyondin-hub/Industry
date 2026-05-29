@@ -44,7 +44,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           {children}
           <p className="mt-8 text-center text-xs text-steel-400">
             Al continuar aceptas los <Link href="#" className="underline">Términos</Link> y el{" "}
-            <Link href="#" className="underline">Aviso de Privacidad</Link> de MROLink.
+            <Link href="#" className="underline">Aviso de Privacidad</Link> de Novak.
           </p>
         </div>
       </div>

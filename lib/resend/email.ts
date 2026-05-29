@@ -10,7 +10,7 @@ export async function sendEmail(opts: {
   html: string;
 }): Promise<{ ok: boolean; id?: string }> {
   const apiKey = process.env.RESEND_API_KEY;
-  const from = process.env.RESEND_FROM_EMAIL ?? "cotizaciones@mrolink.mx";
+  const from = process.env.RESEND_FROM_EMAIL ?? "cotizaciones@heynovak.com";
   if (!apiKey) {
     console.info(`[Email demo] → ${opts.to}: ${opts.subject}`);
     return { ok: true };
@@ -18,7 +18,7 @@ export async function sendEmail(opts: {
   try {
     const resend = new Resend(apiKey);
     const { data } = await resend.emails.send({
-      from: `MROLink <${from}>`,
+      from: `Novak <${from}>`,
       to: Array.isArray(opts.to) ? opts.to : [opts.to],
       subject: opts.subject,
       html: opts.html,
@@ -34,7 +34,7 @@ export const emailTemplates = {
   rfqRecibido: (folio: string, items: number) => ({
     subject: `Recibimos tu solicitud ${folio} — cotización en 2h`,
     html: `<div style="font-family:system-ui,sans-serif;color:#0D0C0A">
-      <h2 style="font-weight:800">MROLink</h2>
+      <h2 style="font-weight:800">Novak</h2>
       <p>Recibimos tu solicitud de cotización <strong>${folio}</strong> con ${items} partida(s).</p>
       <p>Nuestra mesa de operaciones la está procesando. Recibirás la cotización en
       <strong>menos de 2 horas hábiles</strong> — o tu siguiente orden va con 0% de comisión.</p>
@@ -43,7 +43,7 @@ export const emailTemplates = {
   cotizacionLista: (folio: string, total: string) => ({
     subject: `Tu cotización ${folio} está lista — ${total}`,
     html: `<div style="font-family:system-ui,sans-serif;color:#0D0C0A">
-      <h2 style="font-weight:800">MROLink</h2>
+      <h2 style="font-weight:800">Novak</h2>
       <p>Tu cotización <strong>${folio}</strong> está lista. Total: <strong>${total}</strong>.</p>
       <p>Ingresa a la plataforma para revisarla y aprobarla.</p>
     </div>`,

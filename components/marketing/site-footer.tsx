@@ -27,7 +27,7 @@ export function SiteFooter() {
           <h4 className="mb-3 text-sm font-semibold text-white">Proveedores</h4>
           <ul className="space-y-2 text-sm text-steel-400">
             <li><Link href="/proveedor/dashboard" className="hover:text-safety">Portal de proveedor</Link></li>
-            <li><Link href="/registro" className="hover:text-safety">Vender en MROLink</Link></li>
+            <li><Link href="/registro" className="hover:text-safety">Vender en Novak</Link></li>
             <li><Link href="/#proveedores" className="hover:text-safety">Membresías</Link></li>
           </ul>
         </div>
@@ -49,7 +49,7 @@ export function SiteFooter() {
       </div>
       <div className="border-t border-steel-800">
         <div className="container flex flex-col items-center justify-between gap-2 py-5 text-xs text-steel-500 sm:flex-row">
-          <p>© {new Date().getFullYear()} MROLink. Todos los derechos reservados.</p>
+          <p>© {new Date().getFullYear()} Novak. Todos los derechos reservados.</p>
           <p>Hecho para la industria maquiladora del norte de México 🇲🇽</p>
         </div>
       </div>

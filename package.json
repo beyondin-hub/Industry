@@ -1,8 +1,8 @@
 {
-  "name": "mrolink",
+  "name": "novak",
   "version": "0.1.0",
   "private": true,
-  "description": "MROLink — El broker digital de insumos MRO para la industria maquiladora del norte de México",
+  "description": "Novak — El broker digital de insumos MRO para la industria maquiladora del norte de México",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

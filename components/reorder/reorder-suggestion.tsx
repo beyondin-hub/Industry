@@ -28,7 +28,7 @@ export function ReorderSuggestion() {
   return (
     <div className="rounded-xl border border-safety/30 bg-safety-50/40 p-5">
       <p className="mb-3 flex items-center gap-2 text-sm font-semibold text-ink-900">
-        <Sparkles className="size-4 text-safety" /> MROLink detectó patrones de compra recurrentes
+        <Sparkles className="size-4 text-safety" /> Novak detectó patrones de compra recurrentes
       </p>
       <div className="grid gap-3 md:grid-cols-2">
         {SUGERENCIAS.map((s) => {

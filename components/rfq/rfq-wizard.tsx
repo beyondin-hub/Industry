@@ -284,7 +284,7 @@ export function RFQWizard({
                     />
                     <span className={cn(buttonVariants({ variant: "outline", size: "sm" }), "mt-1")}>Elegir archivo</span>
                   </label>
-                  <a href={templateHref} download="plantilla-mrolink.csv" className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-safety hover:underline">
+                  <a href={templateHref} download="plantilla-novak.csv" className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-safety hover:underline">
                     <Download className="size-3.5" /> Descargar plantilla
                   </a>
                 </div>
@@ -466,7 +466,7 @@ export function RFQWizard({
                     Ver estado en dashboard
                   </Link>
                   <a
-                    href={`https://wa.me/?text=${encodeURIComponent(`Cotización MROLink ${result.folio} en proceso`)}`}
+                    href={`https://wa.me/?text=${encodeURIComponent(`Cotización Novak ${result.folio} en proceso`)}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className={cn(buttonVariants({ variant: "outline" }), "border-white/20 bg-transparent text-white hover:bg-white/10 hover:text-white")}

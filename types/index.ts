@@ -1,5 +1,5 @@
 // ────────────────────────────────────────────────────────────
-// MROLink — Tipos de dominio
+// Novak — Tipos de dominio
 // Reflejan el esquema de Supabase (ver supabase/migrations).
 // ────────────────────────────────────────────────────────────
 

@@ -2,12 +2,14 @@ import type { CategoriaMRO, Ciudad, Industria } from "@/types";
 
 // La marca
 export const BRAND = {
-  name: "MROLink",
+  name: "Novak",
+  domain: "heynovak.com",
+  url: "https://heynovak.com",
   tagline: "Tu equipo de compras externo para la industria maquiladora",
   why: "Ninguna línea de producción debería parar por un problema de suministro resoluble en horas.",
   whatsapp: "+52 664 000 0000",
   whatsappLink: "https://wa.me/526640000000",
-  email: "hola@mrolink.mx",
+  email: "hola@heynovak.com",
   garantia:
     "Cotización confirmada en 2 horas hábiles o tu siguiente orden va con 0% de comisión.",
 } as const;

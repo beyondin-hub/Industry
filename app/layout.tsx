@@ -26,8 +26,8 @@ const dmMono = DM_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "MROLink — Tu equipo de compras externo para la industria maquiladora",
-    template: "%s · MROLink",
+    default: "Novak — Tu equipo de compras externo para la industria maquiladora",
+    template: "%s · Novak",
   },
   description:
     "El primer broker digital de insumos MRO para la industria maquiladora del norte de México. Cotización en 2 horas, entrega 24-48h, crédito B2B y CFDI automático.",
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     "compras industriales",
   ],
   openGraph: {
-    title: "MROLink",
+    title: "Novak",
     description:
       "Cotización confirmada en 2 horas hábiles o tu siguiente orden va con 0% de comisión.",
     type: "website",

@@ -354,7 +354,7 @@ export default function LandingPage() {
                 Vende a cientos de maquiladoras sin equipo de ventas
               </h2>
               <p className="mx-auto mt-2 max-w-xl text-ink-600">
-                Recibe RFQs calificadas y deja que MROLink cobre, facture y entregue.
+                Recibe RFQs calificadas y deja que Novak cobre, facture y entregue.
               </p>
             </div>
             <div className="grid gap-5 md:grid-cols-3">

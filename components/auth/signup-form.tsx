@@ -39,7 +39,7 @@ export function SignupForm() {
     startTransition(async () => {
       const res = await signUpAction(values);
       if (res.ok) {
-        toast({ type: "success", title: "¡Cuenta creada!", description: "Bienvenido a MROLink." });
+        toast({ type: "success", title: "¡Cuenta creada!", description: "Bienvenido a Novak." });
         router.push("/dashboard");
         router.refresh();
       } else {

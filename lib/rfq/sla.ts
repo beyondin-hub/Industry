@@ -1,4 +1,4 @@
-// Horario hábil MROLink: Lun-Vie 8:00-18:00 (hora local).
+// Horario hábil Novak: Lun-Vie 8:00-18:00 (hora local).
 const HORA_INICIO = 8;
 const HORA_FIN = 18;
 
