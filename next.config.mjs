@@ -6,6 +6,10 @@ const nextConfig = {
       { protocol: "https", hostname: "**" },
     ],
   },
+  // pdf-parse (y sus deps de pdfjs) se cargan en runtime de servidor, no se empaquetan.
+  experimental: {
+    serverComponentsExternalPackages: ["pdf-parse"],
+  },
 };
 
 export default nextConfig;

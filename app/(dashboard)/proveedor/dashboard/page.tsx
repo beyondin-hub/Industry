@@ -20,7 +20,7 @@ import { UrgenciaBadge } from "@/components/shared/status-badge";
 import { CatalogManager } from "@/components/proveedor/catalog-manager";
 import { RFQS, CURRENT_COMPANY } from "@/lib/data/account";
 import { PRODUCTS } from "@/lib/data/products";
-import { getProvider } from "@/lib/data/providers";
+import { getProviderContext } from "@/lib/repos/provider-context";
 import { maskBuyer } from "@/lib/anti-bypass";
 import { REVENUE_STREAMS } from "@/lib/pricing/provider";
 import { INDUSTRIAS } from "@/lib/constants";
@@ -28,10 +28,9 @@ import { mxn, tiempoRestante, num, cn } from "@/lib/utils";
 
 export const metadata = { title: "Portal de proveedor" };
 
-export default function ProveedorDashboard() {
-  // Proveedor demo: RodaNorte
-  const prov = getProvider("prov-001")!;
-  const misProductos = PRODUCTS.filter((p) => p.provider_id === prov.id);
+export default async function ProveedorDashboard() {
+  const { provider: prov, isDemo } = await getProviderContext();
+  const misProductos = isDemo ? PRODUCTS.filter((p) => p.provider_id === prov.id) : [];
   const rfqsAbiertos = RFQS.filter((r) => r.estado !== "cerrado");
   const industriaLabel = INDUSTRIAS.find((i) => i.slug === CURRENT_COMPANY.industria)?.nombre ?? "manufactura";
   const buyerMask = maskBuyer({ industria: industriaLabel, ciudad: CURRENT_COMPANY.ciudad });
@@ -44,6 +43,9 @@ export default function ProveedorDashboard() {
       >
         <div className="flex items-center gap-2">
           <Badge variant="purplecow"><Crown className="size-3" /> Proveedor Fundador</Badge>
+          <Link href="/proveedor/mensajes" className={cn(buttonVariants({ variant: "outline", size: "sm" }))}>
+            Mensajes
+          </Link>
           <Link href="/proveedor/productos" className={cn(buttonVariants({ variant: "gradient", size: "sm" }))}>
             <Sparkles className="size-4" /> Subir catálogo (IA)
           </Link>

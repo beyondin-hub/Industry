@@ -16,6 +16,7 @@ import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/components/ui/toast";
 import { CATEGORIAS, CERTIFICACIONES, CIUDADES } from "@/lib/constants";
 import { FULFILLMENT_OPTIONS } from "@/lib/pricing/provider";
+import { registerProvider } from "@/app/vender/registro/actions";
 import { cn } from "@/lib/utils";
 
 const STEPS = ["Negocio", "Categorías", "Cumplimiento", "Cobro", "Confirmar"];
@@ -25,9 +26,10 @@ export function OnboardingWizard() {
   const [step, setStep] = useState(0);
   const [pending, setPending] = useState(false);
   const [done, setDone] = useState(false);
+  const [fundador, setFundador] = useState(27);
 
   // Estado
-  const [biz, setBiz] = useState({ razon: "", rfc: "", comercial: "", ciudad: "", anios: "", web: "", email: "", tel: "" });
+  const [biz, setBiz] = useState({ razon: "", rfc: "", comercial: "", ciudad: "", anios: "", web: "", email: "", tel: "", password: "" });
   const [cats, setCats] = useState<string[]>([]);
   const [certs, setCerts] = useState<string[]>([]);
   const [marcas, setMarcas] = useState("");
@@ -44,7 +46,7 @@ export function OnboardingWizard() {
     set(arr.includes(v) ? arr.filter((x) => x !== v) : [...arr, v]);
 
   function canContinue() {
-    if (step === 0) return biz.razon.length > 2 && /^[A-ZÑ&]{3,4}\d{6}[A-Z0-9]{3}$/i.test(biz.rfc) && biz.ciudad && biz.email.includes("@");
+    if (step === 0) return biz.razon.length > 2 && /^[A-ZÑ&]{3,4}\d{6}[A-Z0-9]{3}$/i.test(biz.rfc) && !!biz.ciudad && biz.email.includes("@") && biz.password.length >= 6;
     if (step === 1) return cats.length > 0;
     if (step === 2) return fulfillment.length > 0;
     if (step === 3) return clabe.replace(/\s/g, "").length >= 18;
@@ -60,20 +62,30 @@ export function OnboardingWizard() {
     setStep((s) => Math.min(STEPS.length - 1, s + 1));
   }
 
-  function submit() {
+  async function submit() {
     setPending(true);
-    setTimeout(() => {
-      setPending(false);
+    const res = await registerProvider({
+      razon: biz.razon, rfc: biz.rfc, comercial: biz.comercial, ciudad: biz.ciudad,
+      anios: biz.anios ? Number(biz.anios) : undefined, email: biz.email, password: biz.password,
+      telefono: biz.tel, categorias: cats, certificaciones: certs, marcas,
+      fulfillment, cobertura, clabe: clabe.replace(/\s/g, ""),
+      acepta_financiamiento: financiar, plazo_pago: pago,
+    });
+    setPending(false);
+    if (res.ok) {
+      setFundador(res.fundador ?? 27);
       setDone(true);
       toast({ type: "success", title: "¡Bienvenido a Novak!", description: "Tu cuenta de proveedor fundador está lista." });
-    }, 1200);
+    } else {
+      toast({ type: "error", title: "No se pudo completar el alta", description: res.error });
+    }
   }
 
   if (done) {
     return (
       <div className="mx-auto max-w-xl rounded-2xl border bg-ink-950 p-10 text-center text-white glow-accent">
         <span className="mx-auto flex size-14 items-center justify-center rounded-full bg-emerald-500/20"><Check className="size-8 text-emerald-400" /></span>
-        <h2 className="mt-4 font-display text-2xl font-bold">¡Eres Proveedor Fundador #027! 🎉</h2>
+        <h2 className="mt-4 font-display text-2xl font-bold">¡Eres Proveedor Fundador #{String(fundador).padStart(3, "0")}! 🎉</h2>
         <p className="mx-auto mt-2 max-w-md text-ink-300">
           Tu cuenta quedó activa, sin cuota de entrada ni mensualidad. El siguiente paso:
           sube tu catálogo — nuestra IA lo completa por ti.
@@ -155,6 +167,10 @@ export function OnboardingWizard() {
                   <Label className="mb-1.5 block">WhatsApp</Label>
                   <Input value={biz.tel} onChange={(e) => setBiz({ ...biz, tel: e.target.value })} placeholder="+52 ..." />
                 </div>
+              </div>
+              <div>
+                <Label className="mb-1.5 block">Contraseña de tu cuenta *</Label>
+                <Input type="password" value={biz.password} onChange={(e) => setBiz({ ...biz, password: e.target.value })} placeholder="Mínimo 6 caracteres — para administrar tu cuenta" />
               </div>
             </div>
           )}

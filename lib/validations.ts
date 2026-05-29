@@ -28,6 +28,27 @@ export const signupSchema = z.object({
 });
 export type SignupInput = z.infer<typeof signupSchema>;
 
+// Alta de proveedor (cuenta administradora).
+export const providerSignupSchema = z.object({
+  razon: z.string().min(3, "Razón social muy corta"),
+  rfc: z.string().regex(rfcRegex, "RFC no válido"),
+  comercial: z.string().optional(),
+  ciudad: z.string().min(1, "Selecciona tu ciudad"),
+  anios: z.coerce.number().int().min(0).optional(),
+  email: z.string().min(1, "Ingresa tu correo").email("Correo no válido"),
+  password: z.string().min(6, "Mínimo 6 caracteres"),
+  telefono: z.string().optional(),
+  categorias: z.array(z.string()).min(1, "Elige al menos una categoría"),
+  certificaciones: z.array(z.string()).default([]),
+  marcas: z.string().optional(),
+  fulfillment: z.array(z.string()).min(1, "Elige una opción de cumplimiento"),
+  cobertura: z.array(z.string()).default([]),
+  clabe: z.string().min(18, "CLABE a 18 dígitos").max(18, "CLABE a 18 dígitos"),
+  acepta_financiamiento: z.boolean().default(true),
+  plazo_pago: z.string().default("30"),
+});
+export type ProviderSignupInput = z.infer<typeof providerSignupSchema>;
+
 // Esquema del RFQ (se reutiliza en el wizard de FASE 2).
 export const rfqItemSchema = z.object({
   descripcion: z.string().min(3, "Describe el insumo"),

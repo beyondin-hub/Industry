@@ -12,6 +12,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/components/ui/toast";
 import { CATEGORIAS, categoriaNombre } from "@/lib/constants";
+import { publishProducts } from "@/app/(dashboard)/proveedor/actions";
 import { cn } from "@/lib/utils";
 
 interface Draft {
@@ -89,14 +90,53 @@ export function ProductImporter() {
     setDrafts((d) => [{ nombre: "", numero_parte: "", marca: "", categoria: "herramientas", unidad: "pza", precio: 0, descripcion: "", certificaciones: [] }, ...d]);
     setTab("manual");
   }
-  function publish() {
+  async function handleFile(f: File) {
+    if (f.type === "application/pdf" || f.name.toLowerCase().endsWith(".pdf")) {
+      setLoading(true);
+      try {
+        const fd = new FormData();
+        fd.append("file", f);
+        const res = await fetch("/api/parse-pdf", { method: "POST", body: fd });
+        const data = await res.json();
+        if (data.text) {
+          setRaw(data.text);
+          toast({ type: "success", title: `PDF leído (${data.lineas} líneas)`, description: "Pulsa “Enriquecer con IA” para completar las fichas." });
+        } else {
+          toast({ type: "error", title: "No se pudo leer el PDF", description: data.error });
+        }
+      } catch {
+        toast({ type: "error", title: "No se pudo leer el PDF" });
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      f.text().then(setRaw);
+    }
+  }
+
+  const [publishing, setPublishing] = useState(false);
+  async function publish() {
     const validos = drafts.filter((d) => d.nombre.trim().length > 2 && d.precio > 0);
     if (validos.length === 0) {
       toast({ type: "error", title: "Agrega nombre y precio a tus productos" });
       return;
     }
-    toast({ type: "success", title: `${validos.length} productos publicados`, description: "Ya están visibles en el catálogo de Novak." });
-    setDrafts([]);
+    setPublishing(true);
+    const res = await publishProducts(validos.map((d) => ({
+      nombre: d.nombre, numero_parte: d.numero_parte, marca: d.marca, categoria: d.categoria,
+      unidad: d.unidad, precio: d.precio, descripcion: d.descripcion, certificaciones: d.certificaciones,
+    })));
+    setPublishing(false);
+    if (res.ok) {
+      toast({
+        type: "success",
+        title: `${res.publicados} productos publicados`,
+        description: res.persisted ? "Guardados en Supabase y visibles en el catálogo." : "Visibles en el catálogo de Novak (demo).",
+      });
+      setDrafts([]);
+    } else {
+      toast({ type: "error", title: "No se pudieron publicar", description: res.error });
+    }
   }
 
   return (
@@ -127,8 +167,8 @@ export function ProductImporter() {
               {loading ? <Loader2 className="size-4 animate-spin" /> : <><Sparkles className="size-4" /> Enriquecer con IA</>}
             </Button>
             <label className={cn(buttonVariants({ variant: "outline" }), "cursor-pointer")}>
-              <Upload className="size-4" /> Subir CSV/TXT
-              <input type="file" accept=".csv,.txt,text/plain,text/csv" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) f.text().then(setRaw); }} />
+              <Upload className="size-4" /> Subir PDF / CSV / TXT
+              <input type="file" accept=".csv,.txt,.pdf,text/plain,text/csv,application/pdf" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFile(f); }} />
             </label>
             <button onClick={() => setRaw(EJEMPLO)} className="text-xs font-medium text-safety hover:underline">Usar ejemplo</button>
           </div>
@@ -151,7 +191,9 @@ export function ProductImporter() {
               {enrichedBy === "claude" && <Badge variant="purplecow" className="text-[10px]"><Sparkles className="size-2.5" /> Completado por Novak IA</Badge>}
               {enrichedBy === "heuristica" && <Badge variant="secondary" className="text-[10px]">Autocompletado</Badge>}
             </p>
-            <Button variant="gradient" onClick={publish}><Check className="size-4" /> Publicar productos</Button>
+            <Button variant="gradient" onClick={publish} disabled={publishing}>
+              {publishing ? <Loader2 className="size-4 animate-spin" /> : <><Check className="size-4" /> Publicar productos</>}
+            </Button>
           </div>
           <div className="divide-y">
             {drafts.map((d, i) => (

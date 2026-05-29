@@ -1,0 +1,15 @@
+import puppeteer from "puppeteer";
+const browser = await puppeteer.launch({ headless: "new", args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage", "--disable-gpu"] });
+const page = await browser.newPage();
+await page.setViewport({ width: 1280, height: 820, deviceScaleFactor: 2 });
+const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+await page.goto("http://localhost:3100/proveedor/mensajes", { waitUntil: "networkidle0", timeout: 60000 });
+await wait(700);
+await page.type('input[placeholder^="Escribe tu mensaje"]', "Mejor háblame directo al 664-123-4567 o a ventas@miempresa.com");
+await wait(500);
+await page.screenshot({ path: "/tmp/shots/msg-preview.png" });
+await page.keyboard.press("Enter");
+await wait(1500);
+await page.screenshot({ path: "/tmp/shots/msg-sent.png" });
+console.log("done");
+await browser.close();
