@@ -9,6 +9,8 @@ import {
   Building2,
   Store,
   ClipboardList,
+  Bell,
+  ScanBarcode,
   type LucideIcon,
 } from "lucide-react";
 
@@ -21,11 +23,13 @@ export interface NavItem {
 export const COMPRADOR_NAV: NavItem[] = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/catalogo", label: "Catálogo MRO", icon: PackageSearch },
+  { href: "/quick-order", label: "Quick Order", icon: ScanBarcode },
   { href: "/cotizar", label: "Cotizar (RFQ)", icon: FileSpreadsheet },
   { href: "/ordenes", label: "Órdenes", icon: Truck },
   { href: "/listas", label: "Mis listas", icon: ListChecks },
   { href: "/reordenes", label: "Reorden auto", icon: Repeat },
   { href: "/analytics", label: "Spend analytics", icon: BarChart3 },
+  { href: "/notificaciones", label: "Notificaciones", icon: Bell },
   { href: "/perfil", label: "Empresa y equipo", icon: Building2 },
 ];
 

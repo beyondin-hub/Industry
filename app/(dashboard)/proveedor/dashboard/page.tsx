@@ -13,6 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { UrgenciaBadge } from "@/components/shared/status-badge";
+import { CatalogManager } from "@/components/proveedor/catalog-manager";
 import { RFQS } from "@/lib/data/account";
 import { PRODUCTS } from "@/lib/data/products";
 import { getProvider } from "@/lib/data/providers";
@@ -117,45 +118,8 @@ export default function ProveedorDashboard() {
         </Card>
       </div>
 
-      {/* Mis productos */}
-      <Card>
-        <CardHeader className="flex-row items-center justify-between">
-          <CardTitle className="flex items-center gap-2">
-            <Store className="size-5 text-steel-600" /> Mi catálogo
-          </CardTitle>
-          <Button variant="outline" size="sm"><Package className="size-4" /> Agregar producto</Button>
-        </CardHeader>
-        <CardContent className="p-0">
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[640px] text-sm">
-              <thead>
-                <tr className="border-b bg-steel-50 text-left text-xs text-steel-500">
-                  <th className="px-5 py-3 font-medium">Producto</th>
-                  <th className="px-5 py-3 font-medium">N/P</th>
-                  <th className="px-5 py-3 text-right font-medium">Precio base</th>
-                  <th className="px-5 py-3 text-right font-medium">Stock</th>
-                  <th className="px-5 py-3 font-medium">Estado</th>
-                </tr>
-              </thead>
-              <tbody>
-                {misProductos.map((p) => (
-                  <tr key={p.id} className="border-b last:border-0 hover:bg-steel-50">
-                    <td className="px-5 py-3 font-medium text-steel-900">{p.nombre}</td>
-                    <td className="px-5 py-3 font-mono text-steel-600">{p.numero_parte}</td>
-                    <td className="px-5 py-3 text-right font-semibold text-steel-900">{mxn(p.precio_base)}</td>
-                    <td className="px-5 py-3 text-right text-steel-600">{num(p.stock_actual)}</td>
-                    <td className="px-5 py-3">
-                      <Badge variant={p.stock_actual > 0 ? "success" : "warning"}>
-                        {p.stock_actual > 0 ? "En stock" : "Sin stock"}
-                      </Badge>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </CardContent>
-      </Card>
+      {/* Mis productos — CRUD */}
+      <CatalogManager initial={misProductos} />
     </div>
   );
 }
