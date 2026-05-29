@@ -9,7 +9,7 @@ const NAV = [
   { href: "/catalogo", label: "Catálogo" },
   { href: "/#categorias", label: "Categorías" },
   { href: "/#como-funciona", label: "Cómo funciona" },
-  { href: "/#proveedores", label: "Para proveedores" },
+  { href: "/vender", label: "Para proveedores" },
 ];
 
 export function SiteHeader() {

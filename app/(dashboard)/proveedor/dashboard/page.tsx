@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {
   Store,
   FileSpreadsheet,
@@ -6,18 +7,24 @@ import {
   Star,
   Send,
   Crown,
+  ShieldCheck,
+  Sparkles,
+  Lock,
 } from "lucide-react";
 import { PageHeader } from "@/components/dashboard/page-header";
 import { StatCard } from "@/components/dashboard/stat-card";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { UrgenciaBadge } from "@/components/shared/status-badge";
 import { CatalogManager } from "@/components/proveedor/catalog-manager";
-import { RFQS } from "@/lib/data/account";
+import { RFQS, CURRENT_COMPANY } from "@/lib/data/account";
 import { PRODUCTS } from "@/lib/data/products";
 import { getProvider } from "@/lib/data/providers";
-import { mxn, tiempoRestante, num } from "@/lib/utils";
+import { maskBuyer } from "@/lib/anti-bypass";
+import { REVENUE_STREAMS } from "@/lib/pricing/provider";
+import { INDUSTRIAS } from "@/lib/constants";
+import { mxn, tiempoRestante, num, cn } from "@/lib/utils";
 
 export const metadata = { title: "Portal de proveedor" };
 
@@ -26,6 +33,8 @@ export default function ProveedorDashboard() {
   const prov = getProvider("prov-001")!;
   const misProductos = PRODUCTS.filter((p) => p.provider_id === prov.id);
   const rfqsAbiertos = RFQS.filter((r) => r.estado !== "cerrado");
+  const industriaLabel = INDUSTRIAS.find((i) => i.slug === CURRENT_COMPANY.industria)?.nombre ?? "manufactura";
+  const buyerMask = maskBuyer({ industria: industriaLabel, ciudad: CURRENT_COMPANY.ciudad });
 
   return (
     <div className="space-y-6">
@@ -33,9 +42,12 @@ export default function ProveedorDashboard() {
         title={prov.nombre_comercial}
         description={`Portal de proveedor · ${prov.ciudad}`}
       >
-        <Badge variant="purplecow" className="capitalize">
-          <Crown className="size-3" /> Plan {prov.plan_membresia}
-        </Badge>
+        <div className="flex items-center gap-2">
+          <Badge variant="purplecow"><Crown className="size-3" /> Proveedor Fundador</Badge>
+          <Link href="/proveedor/productos" className={cn(buttonVariants({ variant: "gradient", size: "sm" }))}>
+            <Sparkles className="size-4" /> Subir catálogo (IA)
+          </Link>
+        </div>
       </PageHeader>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -67,6 +79,11 @@ export default function ProveedorDashboard() {
                       SLA: {t.vencido ? "vencido" : t.label}
                     </Badge>
                   </div>
+                  <p className="mt-1.5 flex items-center gap-1.5 text-xs text-ink-500">
+                    <ShieldCheck className="size-3.5 text-emerald-600" />
+                    {buyerMask.etiqueta} · {buyerMask.industria} · {buyerMask.ciudad}
+                    <Lock className="ml-1 size-3 text-ink-400" />
+                  </p>
                   <ul className="mt-2 space-y-1 text-sm text-steel-600">
                     {rfq.items.map((it) => (
                       <li key={it.id}>
@@ -89,31 +106,31 @@ export default function ProveedorDashboard() {
           </CardContent>
         </Card>
 
-        {/* Membresía */}
+        {/* Plan y modelo */}
         <Card>
           <CardHeader>
-            <CardTitle>Tu membresía</CardTitle>
+            <CardTitle>Tu plan: Fundador</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            {[
-              { plan: "Básico", precio: "$2,500", features: ["Hasta 50 productos", "RFQ ilimitados"], active: false },
-              { plan: "Premium", precio: "$5,000", features: ["Hasta 300 productos", "Badge destacado", "Prioridad en RFQ"], active: false },
-              { plan: "Enterprise", precio: "$8,000", features: ["Productos ilimitados", "API e integración", "Account manager"], active: true },
-            ].map((m) => (
-              <div
-                key={m.plan}
-                className={`rounded-lg border p-3 ${m.active ? "border-purplecow bg-purplecow-50" : ""}`}
-              >
-                <div className="flex items-center justify-between">
-                  <span className="font-semibold text-steel-900">{m.plan}</span>
-                  <span className="text-sm font-bold text-steel-900">{m.precio}<span className="text-xs font-normal text-steel-500">/mes</span></span>
-                </div>
-                <ul className="mt-1.5 space-y-0.5 text-xs text-steel-600">
-                  {m.features.map((f) => <li key={f}>✓ {f}</li>)}
-                </ul>
-                {m.active && <Badge variant="purplecow" className="mt-2">Plan actual</Badge>}
+            <div className="rounded-lg border border-safety/40 bg-safety-50/50 p-3">
+              <div className="flex items-baseline justify-between">
+                <span className="font-display text-lg font-extrabold text-ink-950">$0<span className="text-xs font-normal text-ink-500">/mes</span></span>
+                <Badge variant="success">sin mensualidad</Badge>
               </div>
-            ))}
+              <p className="mt-1 text-xs text-ink-600">Solo pagas comisión cuando vendes. Sin cuota de entrada.</p>
+            </div>
+            <p className="text-xs font-semibold uppercase tracking-wide text-ink-500">Cómo ganamos juntos</p>
+            <div className="space-y-1.5">
+              {REVENUE_STREAMS.slice(0, 5).map((r) => (
+                <div key={r.id} className="flex items-center justify-between rounded-md border px-3 py-2">
+                  <span className="flex items-center gap-1.5 text-xs text-ink-700">
+                    <r.icon className="size-3.5 text-safety" /> {r.nombre}
+                  </span>
+                  <span className="font-mono text-xs font-semibold text-ink-900">{r.valor}</span>
+                </div>
+              ))}
+            </div>
+            <p className="text-[11px] text-ink-400">Los fees opcionales solo aplican si activas el servicio (financiamiento, fulfillment, etc.).</p>
           </CardContent>
         </Card>
       </div>
