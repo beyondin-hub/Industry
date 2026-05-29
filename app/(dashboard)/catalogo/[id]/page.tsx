@@ -19,6 +19,7 @@ import { ProductBuyBox } from "@/components/catalog/product-buybox";
 import { ProductCard } from "@/components/catalog/product-card";
 import { ProductTabs } from "@/components/catalog/product-tabs";
 import { PriceHistoryChart } from "@/components/catalog/price-history-chart";
+import { ProductImage } from "@/components/catalog/product-image";
 import { PRODUCTS } from "@/lib/data/products";
 import { fetchProduct, fetchRelated } from "@/lib/repos/products";
 import { fetchProvider } from "@/lib/repos/providers";
@@ -61,8 +62,8 @@ export default async function ProductPage({ params }: { params: { id: string } }
         {/* Main */}
         <div className="space-y-6">
           <div className="grid gap-6 sm:grid-cols-[260px_1fr]">
-            <div className="flex h-60 items-center justify-center rounded-xl border bg-steel-50 text-steel-300">
-              <Package className="size-20" />
+            <div className="h-60 overflow-hidden rounded-xl border">
+              <ProductImage categoria={product.categoria} numeroParte={product.numero_parte} marca={product.marca} imagenUrl={product.imagen_url} size="detail" />
             </div>
             <div>
               <div className="mb-1 flex items-center gap-2 text-sm">

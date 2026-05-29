@@ -1,4 +1,5 @@
 import type { Product } from "@/types";
+import { rankedSearch } from "@/lib/search/industrial";
 
 // Catálogo MRO de demostración. Top SKUs con stock propio confirmado (24-48h).
 export const PRODUCTS: Product[] = [
@@ -632,12 +633,6 @@ export function getProduct(id: string): Product | undefined {
 }
 
 export function searchProducts(query: string): Product[] {
-  const q = query.trim().toLowerCase();
-  if (!q) return PRODUCTS;
-  return PRODUCTS.filter((p) =>
-    [p.nombre, p.numero_parte, p.marca, p.descripcion, p.subcategoria]
-      .join(" ")
-      .toLowerCase()
-      .includes(q),
-  );
+  // Búsqueda industrial con sinónimos + ranking por specs/N°parte/marca.
+  return rankedSearch(PRODUCTS, query);
 }

@@ -13,7 +13,7 @@ export type Role = "comprador" | "proveedor" | "admin";
 /** Página de inicio según el rol. */
 export function homeForRole(role?: string | null): string {
   if (role === "proveedor") return "/proveedor/dashboard";
-  if (role === "admin") return "/admin/rfq";
+  if (role === "admin") return "/admin/dashboard";
   return "/dashboard";
 }
 

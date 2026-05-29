@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { Truck, ShieldCheck, FileText, Package } from "lucide-react";
+import { Truck, ShieldCheck } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { ProductImage } from "@/components/catalog/product-image";
 import { mxn, entregaLabel } from "@/lib/utils";
 import { getProvider } from "@/lib/data/providers";
 import type { Product } from "@/types";
@@ -18,8 +19,8 @@ export function ProductCard({ product }: { product: Product }) {
   return (
     <Card className="flex flex-col transition-shadow hover:shadow-md">
       <Link href={`/catalogo/${product.id}`} className="block">
-        <div className="flex h-36 items-center justify-center rounded-t-xl border-b bg-steel-50 text-steel-300">
-          <Package className="size-12" />
+        <div className="h-36 overflow-hidden rounded-t-xl border-b">
+          <ProductImage categoria={product.categoria} numeroParte={product.numero_parte} marca={product.marca} imagenUrl={product.imagen_url} />
         </div>
       </Link>
       <CardContent className="flex flex-1 flex-col p-4">

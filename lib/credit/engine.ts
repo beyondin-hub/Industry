@@ -94,3 +94,16 @@ export function desgloseCotizacion(subtotal: number, comisionPct = COMISION) {
   const iva = +(base * IVA).toFixed(2);
   return { subtotal, comision, iva, total: +(base + iva).toFixed(2) };
 }
+
+/**
+ * Reversa el total de una orden a sus componentes (para tesorería):
+ * total = (subtotal + comisión) * (1 + IVA), comisión = subtotal * comisionPct.
+ * - payoutProveedor = subtotal (lo que Novak le paga al proveedor)
+ * - margenNovak = comisión (la ganancia de Novak; el IVA es traslado al SAT)
+ */
+export function reverseDesglose(total: number, comisionPct = COMISION) {
+  const subtotal = +(total / ((1 + comisionPct) * (1 + IVA))).toFixed(2);
+  const comision = +(subtotal * comisionPct).toFixed(2);
+  const iva = +(total - subtotal - comision).toFixed(2);
+  return { subtotal, comision, iva, payoutProveedor: subtotal, margenNovak: comision };
+}
