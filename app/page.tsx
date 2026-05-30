@@ -129,8 +129,8 @@ export default function LandingPage() {
               </div>
 
               <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-                <Link href="/cotizar" className={cn(buttonVariants({ variant: "default", size: "lg" }))}>
-                  Solicitar cotización
+                <Link href="/registro" className={cn(buttonVariants({ variant: "gradient", size: "lg" }))}>
+                  Crear cuenta gratis <ArrowRight className="size-4" />
                 </Link>
                 <Link href="/catalogo" className={cn(buttonVariants({ variant: "outline", size: "lg" }))}>
                   Ver catálogo
