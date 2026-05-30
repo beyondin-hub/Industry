@@ -19,6 +19,7 @@ import {
   Users,
   Building,
   ScrollText,
+  Settings,
   type LucideIcon,
 } from "lucide-react";
 import type { AdminSection } from "@/lib/admin/permissions";
@@ -59,6 +60,7 @@ export const PROVEEDOR_NAV: NavItem[] = [
 // ─── ADMIN (equipo Novak) — operación del marketplace ───────────
 export const ADMIN_NAV: AdminNavItem[] = [
   { href: "/admin/dashboard", label: "Inicio", icon: LayoutDashboard, section: "dashboard" },
+  { href: "/admin/finanzas", label: "Finanzas y analytics", icon: BarChart3, section: "finanzas" },
   { href: "/admin/rfq", label: "Mesa de operaciones", icon: ClipboardList, section: "rfq" },
   { href: "/admin/cotizador", label: "Constructor de cotizaciones", icon: FileSpreadsheet, section: "cotizador" },
   { href: "/admin/ordenes", label: "Órdenes", icon: Truck, section: "ordenes" },
@@ -67,8 +69,10 @@ export const ADMIN_NAV: AdminNavItem[] = [
   { href: "/admin/compradores", label: "Compradores", icon: Building, section: "compradores" },
   { href: "/admin/credito", label: "Solicitudes de crédito", icon: CreditCard, section: "credito" },
   { href: "/admin/tesoreria", label: "Tesorería", icon: Landmark, section: "tesoreria" },
+  { href: "/admin/soporte", label: "Soporte y mensajería", icon: MessagesSquare, section: "soporte" },
   { href: "/admin/equipo", label: "Equipo Novak", icon: Users, section: "equipo" },
   { href: "/admin/auditoria", label: "Auditoría", icon: ScrollText, section: "auditoria" },
+  { href: "/admin/config", label: "Configuración", icon: Settings, section: "config" },
 ];
 
 // Para el selector de vistas en modo demo.

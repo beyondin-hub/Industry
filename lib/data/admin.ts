@@ -78,3 +78,62 @@ export const CREDIT_REQUESTS: CreditRequest[] = [
   { id: "cr-002", company_id: "comp-002", empresa: "Electro Ensambles Fronterizos", industria: "electronica", ciudad: "Ciudad Juárez", limite_solicitado: 750000, gmv6m: 410000, antiguedad_meses: 9, estado: "pendiente", created_at: new Date(Date.now() - 20 * 3_600_000).toISOString() },
   { id: "cr-003", company_id: "comp-005", empresa: "Plásticos Inyectados de Reynosa", industria: "plasticos", ciudad: "Reynosa", limite_solicitado: 250000, gmv6m: 90000, antiguedad_meses: 2, estado: "pendiente", created_at: new Date(Date.now() - 40 * 3_600_000).toISOString() },
 ];
+
+export interface TicketMessage { remitente: "comprador" | "proveedor" | "novak"; cuerpo: string; created_at: string; }
+export interface Ticket {
+  id: string;
+  asunto: string;
+  tipo: "incidencia" | "pregunta" | "reclamo" | "crédito";
+  origen: "comprador" | "proveedor";
+  origen_nombre: string;
+  prioridad: "baja" | "media" | "alta";
+  estado: "abierto" | "en_proceso" | "resuelto";
+  created_at: string;
+  mensajes: TicketMessage[];
+}
+
+export const TICKETS: Ticket[] = [
+  {
+    id: "tk-001", asunto: "Faltante en orden OC-2026-0312", tipo: "incidencia", origen: "comprador",
+    origen_nombre: "Maquiladora Componentes del Pacífico", prioridad: "alta", estado: "abierto",
+    created_at: new Date(Date.now() - 2 * 3_600_000).toISOString(),
+    mensajes: [
+      { remitente: "comprador", cuerpo: "Recibimos 480 de 500 guantes. Faltan 20 pares de la orden OC-2026-0312.", created_at: new Date(Date.now() - 2 * 3_600_000).toISOString() },
+    ],
+  },
+  {
+    id: "tk-002", asunto: "¿Cuándo me pagan la cotización COT-2026-0210?", tipo: "pregunta", origen: "proveedor",
+    origen_nombre: "RodaNorte", prioridad: "media", estado: "en_proceso",
+    created_at: new Date(Date.now() - 9 * 3_600_000).toISOString(),
+    mensajes: [
+      { remitente: "proveedor", cuerpo: "Hola, ¿en qué fecha se dispersa el pago de la orden ya entregada?", created_at: new Date(Date.now() - 9 * 3_600_000).toISOString() },
+      { remitente: "novak", cuerpo: "Hola RodaNorte, el pago va programado según tu plazo pactado (30 días). Te confirmo la fecha exacta hoy.", created_at: new Date(Date.now() - 8 * 3_600_000).toISOString() },
+    ],
+  },
+  {
+    id: "tk-003", asunto: "Solicito ampliación de línea de crédito", tipo: "crédito", origen: "comprador",
+    origen_nombre: "Electro Ensambles Fronterizos", prioridad: "media", estado: "abierto",
+    created_at: new Date(Date.now() - 26 * 3_600_000).toISOString(),
+    mensajes: [
+      { remitente: "comprador", cuerpo: "Necesitamos ampliar a $750,000 para el siguiente trimestre. ¿Qué requieren?", created_at: new Date(Date.now() - 26 * 3_600_000).toISOString() },
+    ],
+  },
+];
+
+export interface PlatformConfig {
+  comisiones: { categoria: string; pct: number }[];
+  credito: { score_minimo: number; plazo_max: number; exposicion_max_pct: number };
+  fees: { financiamiento_pct: number; fulfillment_pct: number; entrega_por_orden: number };
+  flags: { rfq_publico: boolean; credito_auto: boolean; busqueda_imagen: boolean; reorden_auto: boolean };
+}
+
+export const PLATFORM_CONFIG: PlatformConfig = {
+  comisiones: [
+    { categoria: "rodamientos", pct: 12 }, { categoria: "epp", pct: 14 }, { categoria: "lubricantes", pct: 12 },
+    { categoria: "herramientas", pct: 10 }, { categoria: "neumatica", pct: 11 }, { categoria: "electrico", pct: 11 },
+    { categoria: "abrasivos", pct: 13 }, { categoria: "sujetadores", pct: 15 }, { categoria: "sellos", pct: 13 }, { categoria: "filtros", pct: 12 },
+  ],
+  credito: { score_minimo: 45, plazo_max: 90, exposicion_max_pct: 85 },
+  fees: { financiamiento_pct: 3, fulfillment_pct: 3, entrega_por_orden: 350 },
+  flags: { rfq_publico: true, credito_auto: false, busqueda_imagen: false, reorden_auto: true },
+};
