@@ -16,13 +16,20 @@ import {
   Package,
   MessagesSquare,
   Landmark,
+  Users,
+  Building,
+  ScrollText,
   type LucideIcon,
 } from "lucide-react";
+import type { AdminSection } from "@/lib/admin/permissions";
 
 export interface NavItem {
   href: string;
   label: string;
   icon: LucideIcon;
+}
+export interface AdminNavItem extends NavItem {
+  section: AdminSection;
 }
 
 // ─── COMPRADOR (maquiladora) — solo módulos de compra ───────────
@@ -50,12 +57,15 @@ export const PROVEEDOR_NAV: NavItem[] = [
 ];
 
 // ─── ADMIN (equipo Novak) — operación del marketplace ───────────
-export const ADMIN_NAV: NavItem[] = [
-  { href: "/admin/dashboard", label: "Inicio", icon: LayoutDashboard },
-  { href: "/admin/rfq", label: "Mesa de operaciones", icon: ClipboardList },
-  { href: "/admin/cotizador", label: "Constructor de cotizaciones", icon: FileSpreadsheet },
-  { href: "/admin/proveedores", label: "Proveedores", icon: Store },
-  { href: "/admin/tesoreria", label: "Tesorería y crédito", icon: Landmark },
+export const ADMIN_NAV: AdminNavItem[] = [
+  { href: "/admin/dashboard", label: "Inicio", icon: LayoutDashboard, section: "dashboard" },
+  { href: "/admin/rfq", label: "Mesa de operaciones", icon: ClipboardList, section: "rfq" },
+  { href: "/admin/cotizador", label: "Constructor de cotizaciones", icon: FileSpreadsheet, section: "cotizador" },
+  { href: "/admin/proveedores", label: "Proveedores", icon: Store, section: "proveedores" },
+  { href: "/admin/compradores", label: "Compradores y crédito", icon: Building, section: "compradores" },
+  { href: "/admin/tesoreria", label: "Tesorería", icon: Landmark, section: "tesoreria" },
+  { href: "/admin/equipo", label: "Equipo Novak", icon: Users, section: "equipo" },
+  { href: "/admin/auditoria", label: "Auditoría", icon: ScrollText, section: "auditoria" },
 ];
 
 // Para el selector de vistas en modo demo.

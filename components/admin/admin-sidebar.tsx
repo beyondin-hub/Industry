@@ -5,10 +5,12 @@ import { usePathname } from "next/navigation";
 import { Logo } from "@/components/shared/logo";
 import { ADMIN_NAV } from "@/components/dashboard/nav-items";
 import { DemoViewSwitcher } from "@/components/shared/demo-view-switcher";
+import { can, roleLabel, type AdminRole } from "@/lib/admin/permissions";
 import { cn } from "@/lib/utils";
 
-export function AdminSidebar({ isDemo = false }: { isDemo?: boolean }) {
+export function AdminSidebar({ isDemo = false, role = "super_admin" }: { isDemo?: boolean; role?: AdminRole }) {
   const pathname = usePathname();
+  const nav = ADMIN_NAV.filter((n) => can(role, n.section));
   return (
     <aside className="hidden w-64 shrink-0 flex-col bg-ink-950 lg:flex">
       <div className="flex h-16 items-center border-b border-ink-800 px-5">
@@ -16,11 +18,11 @@ export function AdminSidebar({ isDemo = false }: { isDemo?: boolean }) {
       </div>
       <div className="px-5 py-3">
         <span className="inline-flex items-center gap-1.5 rounded-full bg-safety/20 px-2.5 py-1 text-[11px] font-semibold text-safety">
-          Mesa de operaciones Novak
+          Equipo Novak · {roleLabel(role)}
         </span>
       </div>
       <nav className="flex-1 space-y-1 overflow-y-auto p-3">
-        {ADMIN_NAV.map((n) => {
+        {nav.map((n) => {
           const active = pathname === n.href || pathname.startsWith(n.href + "/");
           const Icon = n.icon;
           return (

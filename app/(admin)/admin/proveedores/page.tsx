@@ -1,9 +1,11 @@
+import Link from "next/link";
 import { Store, ShieldCheck, Star, Inbox } from "lucide-react";
 import { PageHeader } from "@/components/dashboard/page-header";
 import { StatCard } from "@/components/dashboard/stat-card";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { ProviderApprovals } from "@/components/admin/provider-approvals";
 import { fetchProviders, fetchPendingProviders } from "@/lib/repos/providers";
 import { categoriaNombre } from "@/lib/constants";
@@ -75,7 +77,9 @@ export default async function AdminProveedoresPage() {
                     <td className="px-5 py-3">
                       <Badge variant={p.stock_confirmado ? "success" : "warning"}>{p.stock_confirmado ? "Verificado" : "Por verificar"}</Badge>
                     </td>
-                    <td className="px-5 py-3 text-right"><Button variant="outline" size="sm">Ver</Button></td>
+                    <td className="px-5 py-3 text-right">
+                      <Link href={`/admin/proveedores/${p.id}`} className={cn(buttonVariants({ variant: "outline", size: "sm" }))}>Ver 360°</Link>
+                    </td>
                   </tr>
                 ))}
               </tbody>

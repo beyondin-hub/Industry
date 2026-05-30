@@ -5,6 +5,7 @@ import { desgloseCotizacion } from "@/lib/credit/engine";
 import { folio as makeFolio } from "@/lib/utils";
 import { sendWhatsApp, waTemplates } from "@/lib/twilio/whatsapp";
 import { sendEmail, emailTemplates } from "@/lib/resend/email";
+import { logAudit } from "@/lib/audit";
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://heynovak.com";
 
@@ -85,7 +86,10 @@ export async function createQuotation(input: {
 /** Aprueba una solicitud de proveedor: activa su cuenta y le avisa. */
 export async function approveProvider(input: { providerId: string }): Promise<{ ok: boolean; error?: string }> {
   const supabase = createClient();
-  if (!supabase) return { ok: true }; // demo (sin BD/contacto)
+  if (!supabase) {
+    await logAudit({ accion: "provider.approve", entidad: "provider", entidad_id: input.providerId, detalle: "Aprobó al proveedor" });
+    return { ok: true }; // demo (sin BD/contacto)
+  }
   try {
     const { data, error } = await supabase
       .from("providers")
@@ -99,6 +103,7 @@ export async function approveProvider(input: { providerId: string }): Promise<{ 
         { nombre: data.nombre_comercial, email: data.email, telefono: data.telefono },
         "aprobado",
       );
+      await logAudit({ accion: "provider.approve", entidad: "provider", entidad_id: data.nombre_comercial, detalle: "Aprobó al proveedor y notificó" });
     }
     return { ok: true };
   } catch {
@@ -109,7 +114,10 @@ export async function approveProvider(input: { providerId: string }): Promise<{ 
 /** Rechaza una solicitud de proveedor y le avisa. */
 export async function rejectProvider(input: { providerId: string; motivo?: string }): Promise<{ ok: boolean; error?: string }> {
   const supabase = createClient();
-  if (!supabase) return { ok: true }; // demo
+  if (!supabase) {
+    await logAudit({ accion: "provider.reject", entidad: "provider", entidad_id: input.providerId, detalle: "Rechazó la solicitud" });
+    return { ok: true }; // demo
+  }
   try {
     const { data, error } = await supabase
       .from("providers")
