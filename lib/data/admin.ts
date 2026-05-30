@@ -59,3 +59,22 @@ export const AUDIT_LOG: AuditEntry[] = [
   { id: "a4", actor_nombre: "Paulo Zaragoza", accion: "team.invite", entidad: "team_member", entidad_id: "mariana@heynovak.com", detalle: "Invitó a un nuevo operador (rol: soporte)", created_at: h(-26) },
   { id: "a5", actor_nombre: "Luis Cárdenas", accion: "payout.disperse", entidad: "order", entidad_id: "OC-2026-0298", detalle: "Dispersó pago al proveedor RodaNorte", created_at: h(-30) },
 ];
+
+export interface CreditRequest {
+  id: string;
+  company_id: string;
+  empresa: string;
+  industria: Industria;
+  ciudad: Ciudad;
+  limite_solicitado: number;
+  gmv6m: number;
+  antiguedad_meses: number;
+  estado: "pendiente" | "aprobado" | "rechazado";
+  created_at: string;
+}
+
+export const CREDIT_REQUESTS: CreditRequest[] = [
+  { id: "cr-001", company_id: "comp-003", empresa: "Dispositivos Médicos Mexicali", industria: "medico", ciudad: "Mexicali", limite_solicitado: 400000, gmv6m: 142000, antiguedad_meses: 4, estado: "pendiente", created_at: new Date(Date.now() - 3 * 3_600_000).toISOString() },
+  { id: "cr-002", company_id: "comp-002", empresa: "Electro Ensambles Fronterizos", industria: "electronica", ciudad: "Ciudad Juárez", limite_solicitado: 750000, gmv6m: 410000, antiguedad_meses: 9, estado: "pendiente", created_at: new Date(Date.now() - 20 * 3_600_000).toISOString() },
+  { id: "cr-003", company_id: "comp-005", empresa: "Plásticos Inyectados de Reynosa", industria: "plasticos", ciudad: "Reynosa", limite_solicitado: 250000, gmv6m: 90000, antiguedad_meses: 2, estado: "pendiente", created_at: new Date(Date.now() - 40 * 3_600_000).toISOString() },
+];
