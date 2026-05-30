@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import { PROVIDERS, getProvider as getDemoProvider } from "@/lib/data/providers";
+import { PROVIDERS, PENDING_APPLICATIONS, getProvider as getDemoProvider } from "@/lib/data/providers";
 import type { Provider } from "@/types";
 
 function mapProvider(row: any): Provider {
@@ -16,6 +16,8 @@ function mapProvider(row: any): Provider {
     credito_disponible: row.credito_disponible ?? 0,
     activo: row.activo ?? true,
     plan_membresia: row.plan_membresia ?? "basico",
+    estado: row.estado ?? "aprobado",
+    es_fundador: row.es_fundador ?? false,
     created_at: row.created_at ?? new Date().toISOString(),
   };
 }
@@ -41,5 +43,22 @@ export async function fetchProviders(): Promise<Provider[]> {
     return data.map(mapProvider);
   } catch {
     return PROVIDERS;
+  }
+}
+
+/** Solicitudes de proveedor pendientes de aprobación (bandeja admin). */
+export async function fetchPendingProviders(): Promise<Provider[]> {
+  const supabase = createClient();
+  if (!supabase) return PENDING_APPLICATIONS;
+  try {
+    const { data, error } = await supabase
+      .from("providers")
+      .select("*")
+      .eq("estado", "pendiente")
+      .order("created_at", { ascending: true });
+    if (error || !data) return PENDING_APPLICATIONS;
+    return data.map(mapProvider);
+  } catch {
+    return PENDING_APPLICATIONS;
   }
 }

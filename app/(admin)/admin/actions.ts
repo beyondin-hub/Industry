@@ -57,6 +57,38 @@ export async function createQuotation(input: {
   }
 }
 
+/** Aprueba una solicitud de proveedor: activa su cuenta para vender. */
+export async function approveProvider(input: { providerId: string }): Promise<{ ok: boolean; error?: string }> {
+  const supabase = createClient();
+  if (!supabase) return { ok: true }; // demo
+  try {
+    const { error } = await supabase
+      .from("providers")
+      .update({ estado: "aprobado", stock_confirmado: true })
+      .eq("id", input.providerId);
+    if (error) return { ok: false, error: error.message };
+    return { ok: true };
+  } catch {
+    return { ok: false, error: "No se pudo aprobar al proveedor." };
+  }
+}
+
+/** Rechaza una solicitud de proveedor. */
+export async function rejectProvider(input: { providerId: string; motivo?: string }): Promise<{ ok: boolean; error?: string }> {
+  const supabase = createClient();
+  if (!supabase) return { ok: true }; // demo
+  try {
+    const { error } = await supabase
+      .from("providers")
+      .update({ estado: "suspendido", activo: false })
+      .eq("id", input.providerId);
+    if (error) return { ok: false, error: error.message };
+    return { ok: true };
+  } catch {
+    return { ok: false, error: "No se pudo rechazar la solicitud." };
+  }
+}
+
 /** Dispersa el pago al proveedor (tesorería). */
 export async function dispersarPago(input: { orderId: string; providerId: string; monto: number }): Promise<{ ok: boolean; error?: string }> {
   const supabase = createClient();

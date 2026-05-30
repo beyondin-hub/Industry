@@ -1,15 +1,19 @@
-import { TrendingUp, ClipboardList, AlertTriangle, Clock, Percent, Landmark } from "lucide-react";
+import Link from "next/link";
+import { TrendingUp, ClipboardList, AlertTriangle, Clock, Percent, Landmark, Inbox } from "lucide-react";
 import { PageHeader } from "@/components/dashboard/page-header";
 import { StatCard } from "@/components/dashboard/stat-card";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { buttonVariants } from "@/components/ui/button";
 import { RFQS, ORDERS } from "@/lib/data/account";
-import { tiempoRestante, mxn } from "@/lib/utils";
+import { fetchPendingProviders } from "@/lib/repos/providers";
+import { tiempoRestante, mxn, cn } from "@/lib/utils";
 import { COMISION } from "@/lib/credit/engine";
 
 export const metadata = { title: "Panel Novak" };
 
-export default function AdminDashboard() {
+export default async function AdminDashboard() {
+  const pendientes = await fetchPendingProviders();
   const abiertos = RFQS.filter((r) => r.estado !== "cerrado" && r.estado !== "aprobado");
   const enRiesgo = abiertos.filter((r) => tiempoRestante(r.deadline_cotizacion).vencido).length;
   const ganados = RFQS.filter((r) => r.estado === "aprobado").length;
@@ -22,6 +26,16 @@ export default function AdminDashboard() {
   return (
     <div className="space-y-6">
       <PageHeader title="Panel Novak" description="Salud del marketplace, SLA de la garantía 2h y finanzas del broker" />
+
+      {pendientes.length > 0 && (
+        <div className="flex flex-wrap items-center gap-3 rounded-xl border border-safety/30 bg-safety-50 p-4">
+          <Inbox className="size-5 shrink-0 text-safety" />
+          <p className="flex-1 text-sm text-ink-800">
+            <strong>{pendientes.length} solicitud(es) de proveedor</strong> esperando aprobación.
+          </p>
+          <Link href="/admin/proveedores" className={cn(buttonVariants({ variant: "gradient", size: "sm" }))}>Revisar solicitudes</Link>
+        </div>
+      )}
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard label="GMV (acumulado)" value={mxn(gmv)} icon={TrendingUp} accent="text-emerald-600" />

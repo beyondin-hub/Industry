@@ -96,3 +96,58 @@ export const PROVIDERS: Provider[] = [
 export function getProvider(id: string): Provider | undefined {
   return PROVIDERS.find((p) => p.id === id);
 }
+
+// Solicitudes de alta pendientes de aprobación (bandeja del admin).
+export const PENDING_APPLICATIONS: Provider[] = [
+  {
+    id: "papp-001",
+    razon_social: "Suministros Industriales Tecate SA de CV",
+    rfc: "SIT230410QF8",
+    nombre_comercial: "SumiTecate",
+    ciudad: "Tijuana",
+    categorias: ["epp", "herramientas"],
+    certificaciones: ["ISO 9001", "ANSI Z87.1"],
+    score: 0,
+    stock_confirmado: false,
+    credito_disponible: 30,
+    activo: true,
+    plan_membresia: "basico",
+    estado: "pendiente",
+    es_fundador: true,
+    created_at: new Date(Date.now() - 6 * 3_600_000).toISOString(),
+  },
+  {
+    id: "papp-002",
+    razon_social: "Hidráulica y Sellos del Bajío SA de CV",
+    rfc: "HSB220915KL3",
+    nombre_comercial: "HidroSellos",
+    ciudad: "Monterrey",
+    categorias: ["neumatica", "sellos"],
+    certificaciones: ["ISO 9001", "IATF 16949"],
+    score: 0,
+    stock_confirmado: false,
+    credito_disponible: 45,
+    activo: true,
+    plan_membresia: "basico",
+    estado: "pendiente",
+    es_fundador: true,
+    created_at: new Date(Date.now() - 26 * 3_600_000).toISOString(),
+  },
+  {
+    id: "papp-003",
+    razon_social: "Abrasivos y Corte del Norte SA de CV",
+    rfc: "ACN240102MN1",
+    nombre_comercial: "AbraNorte",
+    ciudad: "Ciudad Juárez",
+    categorias: ["abrasivos", "sujetadores"],
+    certificaciones: ["ISO 9001"],
+    score: 0,
+    stock_confirmado: false,
+    credito_disponible: 30,
+    activo: true,
+    plan_membresia: "basico",
+    estado: "pendiente",
+    es_fundador: true,
+    created_at: new Date(Date.now() - 50 * 3_600_000).toISOString(),
+  },
+];
