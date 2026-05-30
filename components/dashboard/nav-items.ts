@@ -20,6 +20,7 @@ import {
   Building,
   ScrollText,
   Settings,
+  FileText,
   type LucideIcon,
 } from "lucide-react";
 import type { AdminSection } from "@/lib/admin/permissions";
@@ -70,6 +71,8 @@ export const ADMIN_NAV: AdminNavItem[] = [
   { href: "/admin/credito", label: "Solicitudes de crédito", icon: CreditCard, section: "credito" },
   { href: "/admin/tesoreria", label: "Tesorería", icon: Landmark, section: "tesoreria" },
   { href: "/admin/soporte", label: "Soporte y mensajería", icon: MessagesSquare, section: "soporte" },
+  { href: "/admin/cms", label: "Contenido (CMS)", icon: FileText, section: "cms" },
+  { href: "/admin/automatizaciones", label: "Automatizaciones", icon: Bell, section: "automatizaciones" },
   { href: "/admin/equipo", label: "Equipo Novak", icon: Users, section: "equipo" },
   { href: "/admin/auditoria", label: "Auditoría", icon: ScrollText, section: "auditoria" },
   { href: "/admin/config", label: "Configuración", icon: Settings, section: "config" },

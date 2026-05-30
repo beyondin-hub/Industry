@@ -28,6 +28,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { CATEGORIAS, BRAND } from "@/lib/constants";
+import { fetchSiteContent } from "@/lib/repos/content";
 import { PROVIDERS } from "@/lib/data/providers";
 import { cn } from "@/lib/utils";
 
@@ -67,11 +68,15 @@ const CUENTA = [
   { icon: BarChart3, t: "Analytics de gasto", d: "Visibilidad por categoría y proveedor para negociar mejor cada trimestre." },
 ];
 
-export default function LandingPage() {
+export default async function LandingPage() {
   const proveedores = PROVIDERS.slice(0, 6);
+  const content = await fetchSiteContent();
 
   return (
     <div className="flex min-h-screen flex-col">
+      {content.banner.activo && (
+        <div className="bg-ink-950 px-4 py-2 text-center text-sm text-white">{content.banner.texto}</div>
+      )}
       <SiteHeader />
       <main className="flex-1">
         {/* ─── HERO ─── */}
@@ -84,13 +89,10 @@ export default function LandingPage() {
                 <Zap className="size-3.5" /> Garantía: cotización en 2h o 0% comisión
               </Badge>
               <h1 className="mt-6 font-display text-4xl font-extrabold leading-[1.05] tracking-tight text-ink-950 text-balance sm:text-5xl lg:text-6xl">
-                El equipo de compras externo que la{" "}
-                <span className="text-gradient">maquiladora necesitaba</span>
+                {content.hero_titulo}{" "}
+                <span className="text-gradient">{content.hero_destacado}</span>
               </h1>
-              <p className="mx-auto mt-5 max-w-xl text-lg text-ink-600">
-                Cotiza, compra y recibe insumos MRO de proveedores certificados —
-                en horas, no en días. Un solo WhatsApp y plataforma para todo.
-              </p>
+              <p className="mx-auto mt-5 max-w-xl text-lg text-ink-600">{content.hero_subtitulo}</p>
 
               {/* Quick Order Box */}
               <form
@@ -419,7 +421,7 @@ export default function LandingPage() {
               Tu primera cotización va{" "}
               <span className="text-gradient">sin comisión</span>
             </h2>
-            <p className="max-w-xl text-ink-300">{BRAND.garantia}</p>
+            <p className="max-w-xl text-ink-300">{content.garantia}</p>
             <div className="flex flex-wrap items-center justify-center gap-3">
               <Link href="/registro" className={cn(buttonVariants({ variant: "gradient", size: "lg" }))}>
                 Crear mi cuenta gratis <ArrowRight className="size-4" />

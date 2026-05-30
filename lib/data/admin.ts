@@ -137,3 +137,42 @@ export const PLATFORM_CONFIG: PlatformConfig = {
   fees: { financiamiento_pct: 3, fulfillment_pct: 3, entrega_por_orden: 350 },
   flags: { rfq_publico: true, credito_auto: false, busqueda_imagen: false, reorden_auto: true },
 };
+
+export interface SiteContent {
+  banner: { activo: boolean; texto: string };
+  hero_titulo: string;
+  hero_destacado: string;
+  hero_subtitulo: string;
+  garantia: string;
+  faq: { q: string; a: string }[];
+}
+
+export const SITE_CONTENT: SiteContent = {
+  banner: { activo: false, texto: "🚀 Programa de fundadores abierto — primera cotización sin comisión." },
+  hero_titulo: "El equipo de compras externo que la",
+  hero_destacado: "maquiladora necesitaba",
+  hero_subtitulo: "Cotiza, compra y recibe insumos MRO de proveedores certificados — en horas, no en días. Un solo WhatsApp y plataforma para todo.",
+  garantia: "Cotización confirmada en 2 horas hábiles o tu siguiente orden va con 0% de comisión.",
+  faq: [
+    { q: "¿Cuánto tarda una cotización?", a: "Menos de 2 horas hábiles, garantizado." },
+    { q: "¿Manejan crédito?", a: "Sí, línea B2B preaprobada a 30/60/90 días." },
+  ],
+};
+
+export interface NotificationRule {
+  id: string;
+  evento: string;
+  descripcion: string;
+  canales: ("whatsapp" | "email" | "web")[];
+  plantilla: string;
+  activo: boolean;
+}
+
+export const NOTIFICATION_RULES: NotificationRule[] = [
+  { id: "rfq_recibido", evento: "RFQ recibido", descripcion: "Al enviar una solicitud de cotización", canales: ["whatsapp", "email", "web"], plantilla: "Recibimos tu solicitud {folio}. Cotización en menos de 2h hábiles.", activo: true },
+  { id: "cotizacion_lista", evento: "Cotización lista", descripcion: "Cuando una cotización se envía al comprador", canales: ["whatsapp", "email"], plantilla: "Tu cotización {folio} está lista. Total: {total}.", activo: true },
+  { id: "orden_transito", evento: "Orden en tránsito", descripcion: "Cuando la orden sale de almacén", canales: ["whatsapp", "web"], plantilla: "Tu orden {folio} va en camino. ETA: {eta}.", activo: true },
+  { id: "credito_vence", evento: "Crédito por vencer", descripcion: "5 días antes del vencimiento", canales: ["email", "web"], plantilla: "Tu crédito de {monto} vence en {dias} días.", activo: true },
+  { id: "reorden", evento: "Reorden automático", descripcion: "Recordatorio antes de quedarse sin stock", canales: ["whatsapp"], plantilla: "Tus {producto} se agotan pronto. ¿Reordenamos con 5% de descuento?", activo: false },
+  { id: "proveedor_aprobado", evento: "Proveedor aprobado", descripcion: "Al aprobar una solicitud de proveedor", canales: ["whatsapp", "email"], plantilla: "¡Tu cuenta de proveedor fue aprobada! Ya puedes activar tu catálogo.", activo: true },
+];
