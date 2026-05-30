@@ -3,6 +3,31 @@
 import { createClient } from "@/lib/supabase/server";
 import { desgloseCotizacion } from "@/lib/credit/engine";
 import { folio as makeFolio } from "@/lib/utils";
+import { sendWhatsApp, waTemplates } from "@/lib/twilio/whatsapp";
+import { sendEmail, emailTemplates } from "@/lib/resend/email";
+
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://heynovak.com";
+
+/** Notifica al proveedor por WhatsApp + email el resultado de su solicitud. */
+async function notificarProveedor(
+  contacto: { nombre: string; email?: string | null; telefono?: string | null },
+  resultado: "aprobado" | "rechazado",
+) {
+  const tareas: Promise<unknown>[] = [];
+  if (contacto.telefono) {
+    const body = resultado === "aprobado"
+      ? waTemplates.proveedorAprobado(contacto.nombre)
+      : waTemplates.proveedorRechazado(contacto.nombre);
+    tareas.push(sendWhatsApp({ to: contacto.telefono, body }).catch(() => {}));
+  }
+  if (contacto.email) {
+    const tpl = resultado === "aprobado"
+      ? emailTemplates.proveedorAprobado(contacto.nombre, APP_URL)
+      : emailTemplates.proveedorRechazado(contacto.nombre);
+    tareas.push(sendEmail({ to: contacto.email, ...tpl }).catch(() => {}));
+  }
+  await Promise.all(tareas);
+}
 
 export interface CreateQuoteResult {
   ok: boolean;
@@ -57,32 +82,48 @@ export async function createQuotation(input: {
   }
 }
 
-/** Aprueba una solicitud de proveedor: activa su cuenta para vender. */
+/** Aprueba una solicitud de proveedor: activa su cuenta y le avisa. */
 export async function approveProvider(input: { providerId: string }): Promise<{ ok: boolean; error?: string }> {
   const supabase = createClient();
-  if (!supabase) return { ok: true }; // demo
+  if (!supabase) return { ok: true }; // demo (sin BD/contacto)
   try {
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from("providers")
       .update({ estado: "aprobado", stock_confirmado: true })
-      .eq("id", input.providerId);
+      .eq("id", input.providerId)
+      .select("nombre_comercial, email, telefono")
+      .single();
     if (error) return { ok: false, error: error.message };
+    if (data) {
+      await notificarProveedor(
+        { nombre: data.nombre_comercial, email: data.email, telefono: data.telefono },
+        "aprobado",
+      );
+    }
     return { ok: true };
   } catch {
     return { ok: false, error: "No se pudo aprobar al proveedor." };
   }
 }
 
-/** Rechaza una solicitud de proveedor. */
+/** Rechaza una solicitud de proveedor y le avisa. */
 export async function rejectProvider(input: { providerId: string; motivo?: string }): Promise<{ ok: boolean; error?: string }> {
   const supabase = createClient();
   if (!supabase) return { ok: true }; // demo
   try {
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from("providers")
       .update({ estado: "suspendido", activo: false })
-      .eq("id", input.providerId);
+      .eq("id", input.providerId)
+      .select("nombre_comercial, email, telefono")
+      .single();
     if (error) return { ok: false, error: error.message };
+    if (data) {
+      await notificarProveedor(
+        { nombre: data.nombre_comercial, email: data.email, telefono: data.telefono },
+        "rechazado",
+      );
+    }
     return { ok: true };
   } catch {
     return { ok: false, error: "No se pudo rechazar la solicitud." };

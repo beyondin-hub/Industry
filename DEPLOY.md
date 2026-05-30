@@ -60,3 +60,26 @@ npm install
 npm run build   # debe terminar sin errores
 npm run start   # http://localhost:3000
 ```
+
+## 5. Checklist para operar EN VIVO (sin modo demo)
+
+Cuando agregas las variables de Supabase, la app deja el modo demo: las guardas
+por rol y las aprobaciones operan de verdad. Para que funcione completo:
+
+1. **Aplica TODAS las migraciones** en orden (`supabase/migrations/`):
+   `0001_init` → `0002_rls` → `0003_seed` → `0004_marketplace` → `0005_credito` → `0006_tesoreria`.
+2. **Roles de usuario** (los lee el middleware):
+   - Comprador: se asigna solo al registrarse (`user_metadata.role = comprador`).
+   - Proveedor: se asigna solo en el alta (`app_metadata.role = proveedor`).
+   - **Admin (equipo Novak):** créalo manualmente y ponle el rol. En Supabase →
+     Authentication → Users → (tu usuario) → **App Metadata**: `{ "role": "admin" }`.
+3. **Auth → URL Configuration:** Site URL + Redirect `https://<tu-url>/auth/callback`.
+4. **Notificaciones al proveedor (aprobar/rechazar)** — requieren:
+   - WhatsApp: `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_WHATSAPP_FROM`.
+   - Email: `RESEND_API_KEY`, `RESEND_FROM_EMAIL`.
+   Sin estas, el envío degrada a un log en servidor (no falla).
+5. **Asistente Novak con IA real:** `ANTHROPIC_API_KEY` (si falta, usa respuestas locales).
+
+Con esto: registro de proveedor (estado `pendiente`) → bandeja admin aprueba
+(`estado: aprobado` + WhatsApp/email al proveedor) → su portal se activa; y un
+comprador no puede abrir `/admin` ni `/proveedor` aunque escriba la URL.

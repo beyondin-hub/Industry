@@ -2,15 +2,16 @@ import { Landmark, ArrowDownToLine, ArrowUpFromLine, TrendingUp } from "lucide-r
 import { PageHeader } from "@/components/dashboard/page-header";
 import { StatCard } from "@/components/dashboard/stat-card";
 import { TreasuryTable, type TreasuryRow } from "@/components/admin/treasury-table";
-import { ORDERS } from "@/lib/data/account";
 import { getProvider } from "@/lib/data/providers";
+import { fetchOrders } from "@/lib/repos/orders";
 import { reverseDesglose } from "@/lib/credit/engine";
 import { mxn } from "@/lib/utils";
 
 export const metadata = { title: "Tesorería y crédito" };
 
-export default function TesoreriaPage() {
-  const vigentes = ORDERS.filter((o) => o.estado !== "cancelada");
+export default async function TesoreriaPage() {
+  const orders = await fetchOrders();
+  const vigentes = orders.filter((o) => o.estado !== "cancelada");
 
   const rows: TreasuryRow[] = vigentes.map((o) => {
     const r = reverseDesglose(o.total);

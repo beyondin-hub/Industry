@@ -48,4 +48,22 @@ export const emailTemplates = {
       <p>Ingresa a la plataforma para revisarla y aprobarla.</p>
     </div>`,
   }),
+  proveedorAprobado: (nombre: string, url: string) => ({
+    subject: "¡Tu cuenta de proveedor en Novak fue aprobada! 🎉",
+    html: `<div style="font-family:system-ui,sans-serif;color:#0D0C0A">
+      <h2 style="font-weight:800">Novak</h2>
+      <p>¡Felicidades <strong>${nombre}</strong>! Tu solicitud para vender en Novak fue <strong>aprobada</strong>.</p>
+      <p>Ya puedes activar tu catálogo y recibir solicitudes de cotización de maquiladoras.</p>
+      <p><a href="${url}/proveedor/dashboard" style="background:#6D4AFF;color:#fff;padding:10px 16px;border-radius:8px;text-decoration:none">Entrar a mi portal</a></p>
+    </div>`,
+  }),
+  proveedorRechazado: (nombre: string) => ({
+    subject: "Tu solicitud de proveedor en Novak",
+    html: `<div style="font-family:system-ui,sans-serif;color:#0D0C0A">
+      <h2 style="font-weight:800">Novak</h2>
+      <p>Hola <strong>${nombre}</strong>, gracias por tu interés en vender en Novak.</p>
+      <p>Por ahora no pudimos aprobar tu solicitud. Si crees que es un error o deseas más
+      información, responde a este correo y con gusto lo revisamos.</p>
+    </div>`,
+  }),
 };

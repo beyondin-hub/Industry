@@ -1,12 +1,14 @@
 import { PageHeader } from "@/components/dashboard/page-header";
 import { QuoteBuilder, type RFQVM, type ProvVM } from "@/components/admin/quote-builder";
-import { RFQS, CURRENT_COMPANY } from "@/lib/data/account";
+import { CURRENT_COMPANY } from "@/lib/data/account";
 import { PROVIDERS } from "@/lib/data/providers";
+import { fetchRFQs } from "@/lib/repos/rfqs";
 
 export const metadata = { title: "Constructor de cotizaciones" };
 
-export default function CotizadorPage() {
-  const porCotizar = RFQS.filter((r) => r.estado === "nuevo" || r.estado === "en_proceso" || r.estado === "cotizado");
+export default async function CotizadorPage() {
+  const allRfqs = await fetchRFQs();
+  const porCotizar = allRfqs.filter((r) => r.estado === "nuevo" || r.estado === "en_proceso" || r.estado === "cotizado");
   const rfqs: RFQVM[] = porCotizar.map((r) => ({
     id: r.id,
     folio: r.folio,

@@ -5,15 +5,20 @@ import { StatCard } from "@/components/dashboard/stat-card";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
-import { RFQS, ORDERS } from "@/lib/data/account";
 import { fetchPendingProviders } from "@/lib/repos/providers";
+import { fetchRFQs } from "@/lib/repos/rfqs";
+import { fetchOrders } from "@/lib/repos/orders";
 import { tiempoRestante, mxn, cn } from "@/lib/utils";
 import { COMISION } from "@/lib/credit/engine";
 
 export const metadata = { title: "Panel Novak" };
 
 export default async function AdminDashboard() {
-  const pendientes = await fetchPendingProviders();
+  const [pendientes, RFQS, ORDERS] = await Promise.all([
+    fetchPendingProviders(),
+    fetchRFQs(),
+    fetchOrders(),
+  ]);
   const abiertos = RFQS.filter((r) => r.estado !== "cerrado" && r.estado !== "aprobado");
   const enRiesgo = abiertos.filter((r) => tiempoRestante(r.deadline_cotizacion).vencido).length;
   const ganados = RFQS.filter((r) => r.estado === "aprobado").length;

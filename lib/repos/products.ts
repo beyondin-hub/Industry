@@ -86,6 +86,23 @@ export async function fetchProduct(id: string): Promise<Product | undefined> {
   }
 }
 
+/** Productos publicados por un proveedor (su catálogo). */
+export async function fetchProductsByProvider(providerId: string): Promise<Product[]> {
+  const supabase = createClient();
+  if (!supabase) return PRODUCTS.filter((p) => p.provider_id === providerId);
+  try {
+    const { data, error } = await supabase
+      .from("products")
+      .select(SELECT)
+      .eq("provider_id", providerId)
+      .order("created_at", { ascending: false });
+    if (error || !data) return PRODUCTS.filter((p) => p.provider_id === providerId);
+    return data.map(mapProduct);
+  } catch {
+    return PRODUCTS.filter((p) => p.provider_id === providerId);
+  }
+}
+
 export async function fetchRelated(
   categoria: CategoriaMRO,
   excludeId: string,

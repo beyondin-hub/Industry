@@ -20,7 +20,7 @@ import { Badge } from "@/components/ui/badge";
 import { UrgenciaBadge } from "@/components/shared/status-badge";
 import { CatalogManager } from "@/components/proveedor/catalog-manager";
 import { RFQS, CURRENT_COMPANY } from "@/lib/data/account";
-import { PRODUCTS } from "@/lib/data/products";
+import { fetchProductsByProvider } from "@/lib/repos/products";
 import { getProviderContext } from "@/lib/repos/provider-context";
 import { maskBuyer } from "@/lib/anti-bypass";
 import { REVENUE_STREAMS } from "@/lib/pricing/provider";
@@ -30,8 +30,8 @@ import { mxn, tiempoRestante, num, cn } from "@/lib/utils";
 export const metadata = { title: "Portal de proveedor" };
 
 export default async function ProveedorDashboard() {
-  const { provider: prov, isDemo } = await getProviderContext();
-  const misProductos = isDemo ? PRODUCTS.filter((p) => p.provider_id === prov.id) : [];
+  const { provider: prov } = await getProviderContext();
+  const misProductos = await fetchProductsByProvider(prov.id);
   const rfqsAbiertos = RFQS.filter((r) => r.estado !== "cerrado");
   const industriaLabel = INDUSTRIAS.find((i) => i.slug === CURRENT_COMPANY.industria)?.nombre ?? "manufactura";
   const buyerMask = maskBuyer({ industria: industriaLabel, ciudad: CURRENT_COMPANY.ciudad });

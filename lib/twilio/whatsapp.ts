@@ -58,4 +58,10 @@ export const waTemplates = {
   // 5. Crédito por vencer.
   creditoVence: (monto: string, dias: number) =>
     `💳 Novak: Tu línea de crédito de ${monto} vence en ${dias} días. Programa tu pago para conservar el cupo.`,
+  // Proveedor: solicitud aprobada.
+  proveedorAprobado: (nombre: string) =>
+    `🎉 ¡Felicidades ${nombre}! Tu cuenta de proveedor en Novak fue APROBADA. Ya puedes activar tu catálogo y recibir solicitudes de cotización. Entra a tu portal 👉`,
+  // Proveedor: solicitud rechazada.
+  proveedorRechazado: (nombre: string) =>
+    `Hola ${nombre}, gracias por aplicar a Novak. Por ahora no pudimos aprobar tu solicitud. Si crees que es un error o quieres más información, respóndenos por este medio.`,
 };
