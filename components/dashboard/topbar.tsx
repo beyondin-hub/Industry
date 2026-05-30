@@ -17,16 +17,18 @@ import type { Buyer, Company } from "@/types";
 export function Topbar({
   buyer = CURRENT_BUYER,
   company = CURRENT_COMPANY,
+  isDemo = false,
 }: {
   buyer?: Buyer;
   company?: Company;
+  isDemo?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const noLeidas = NOTIFICATIONS.filter((n) => !n.leida).length;
 
   return (
     <header className="sticky top-0 z-40 flex h-16 items-center gap-4 border-b bg-card/90 px-4 backdrop-blur lg:px-6">
-      <MobileNav />
+      <MobileNav isDemo={isDemo} />
       {/* Quick order / search */}
       <form action="/catalogo" className="hidden flex-1 items-center gap-2 sm:flex">
         <div className="relative w-full max-w-md">

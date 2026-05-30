@@ -2,19 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, ClipboardList, FileSpreadsheet, Store, Landmark } from "lucide-react";
 import { Logo } from "@/components/shared/logo";
+import { ADMIN_NAV } from "@/components/dashboard/nav-items";
+import { DemoViewSwitcher } from "@/components/shared/demo-view-switcher";
 import { cn } from "@/lib/utils";
 
-const NAV = [
-  { href: "/admin/dashboard", label: "Inicio", icon: LayoutDashboard },
-  { href: "/admin/rfq", label: "Mesa de operaciones", icon: ClipboardList },
-  { href: "/admin/cotizador", label: "Constructor de cotizaciones", icon: FileSpreadsheet },
-  { href: "/admin/proveedores", label: "Proveedores", icon: Store },
-  { href: "/admin/tesoreria", label: "Tesorería y crédito", icon: Landmark },
-];
-
-export function AdminSidebar() {
+export function AdminSidebar({ isDemo = false }: { isDemo?: boolean }) {
   const pathname = usePathname();
   return (
     <aside className="hidden w-64 shrink-0 flex-col bg-ink-950 lg:flex">
@@ -27,7 +20,7 @@ export function AdminSidebar() {
         </span>
       </div>
       <nav className="flex-1 space-y-1 overflow-y-auto p-3">
-        {NAV.map((n) => {
+        {ADMIN_NAV.map((n) => {
           const active = pathname === n.href || pathname.startsWith(n.href + "/");
           const Icon = n.icon;
           return (
@@ -44,6 +37,7 @@ export function AdminSidebar() {
           );
         })}
       </nav>
+      <DemoViewSwitcher current="admin" show={isDemo} />
       <div className="border-t border-ink-800 p-3">
         <Link href="/" className="block rounded-lg px-3 py-2 text-xs text-ink-400 hover:text-white">
           ← Salir del panel

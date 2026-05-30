@@ -8,12 +8,12 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { buyer, company } = await getContext();
+  const { buyer, company, isDemo } = await getContext();
   return (
-    <div className="flex min-h-screen bg-steel-50">
-      <Sidebar />
+    <div className="flex min-h-screen bg-paper-300">
+      <Sidebar isDemo={isDemo} />
       <div className="flex min-w-0 flex-1 flex-col">
-        <Topbar buyer={buyer} company={company} />
+        <Topbar buyer={buyer} company={company} isDemo={isDemo} />
         <main className="flex-1 p-4 lg:p-6">{children}</main>
       </div>
       <AIAssistant />
