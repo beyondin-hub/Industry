@@ -14,7 +14,11 @@ import {
   HandCoins,
   Quote,
   Check,
-  Crown,
+  Store,
+  FileSpreadsheet,
+  Repeat,
+  BarChart3,
+  Sparkles,
 } from "lucide-react";
 import { SiteHeader } from "@/components/marketing/site-header";
 import { SiteFooter } from "@/components/marketing/site-footer";
@@ -54,10 +58,13 @@ const TESTIMONIOS = [
   { quote: "El reorden automático de EPP y lubricantes nos quitó trabajo manual. Nunca más nos quedamos sin guantes a media producción.", nombre: "Carlos Esquivel", cargo: "Jefe de Mantenimiento", empresa: "Manufactura, Cd. Juárez", ini: "CE" },
 ];
 
-const PLANES = [
-  { plan: "Básico", precio: "$2,500", destacado: false, features: ["Hasta 50 productos", "RFQ ilimitados", "Perfil verificado"] },
-  { plan: "Premium", precio: "$5,000", destacado: true, features: ["Hasta 300 productos", "Badge destacado", "Prioridad en RFQ", "Analytics de demanda"] },
-  { plan: "Enterprise", precio: "$8,000", destacado: false, features: ["Productos ilimitados", "API e integración", "Account manager", "Inteligencia de mercado"] },
+const CUENTA = [
+  { icon: FileSpreadsheet, t: "Cotiza en 2 horas", d: "Sube tu lista o pega números de parte y recibe cotización garantizada en 2h hábiles." },
+  { icon: Search, t: "Catálogo con precios y stock", d: "Ve precios por volumen y disponibilidad real sin llamadas ni esperas." },
+  { icon: CreditCard, t: "Crédito B2B 30/60/90", d: "Línea preaprobada para que compres hoy y pagues después, sin frenar la línea." },
+  { icon: Truck, t: "Órdenes con tracking", d: "Sigue tus pedidos en vivo y recibe en planta en 24–48h con CFDI." },
+  { icon: Repeat, t: "Reorden automático", d: "Programa tus insumos recurrentes y ahorra 5% sin volver a capturar." },
+  { icon: BarChart3, t: "Analytics de gasto", d: "Visibilidad por categoría y proveedor para negociar mejor cada trimestre." },
 ];
 
 export default function LandingPage() {
@@ -329,12 +336,13 @@ export default function LandingPage() {
         <section id="proveedores-verificados" className="border-b py-16">
           <div className="container">
             <div className="mb-10 max-w-2xl">
-              <Badge variant="steel"><ShieldCheck className="size-3" /> Trade Assurance</Badge>
+              <Badge variant="steel"><ShieldCheck className="size-3" /> Compra con confianza</Badge>
               <h2 className="mt-3 font-display text-3xl font-bold tracking-tight text-ink-950">
-                Proveedores verificados, con score real
+                Compras a proveedores verificados, no a desconocidos
               </h2>
               <p className="mt-2 text-ink-600">
-                Cada proveedor pasa validación de certificaciones y se califica por calidad, velocidad, comunicación y precio.
+                Cada proveedor que te surte pasa validación de certificaciones y score real
+                (calidad, velocidad, comunicación y precio). Tú compras tranquilo; Novak responde.
               </p>
             </div>
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -345,49 +353,60 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* ─── PRICING PROVEEDORES ─── */}
-        <section id="proveedores" className="border-b bg-paper-300 py-16">
+        {/* ─── LO QUE OBTIENES CON TU CUENTA (comprador) ─── */}
+        <section className="border-b bg-paper-300 py-16">
           <div className="container">
-            <div className="mb-10 text-center">
-              <Badge variant="accent">Para proveedores</Badge>
+            <div className="mb-10 max-w-2xl">
+              <Badge variant="accent"><Sparkles className="size-3" /> Tu cuenta gratis</Badge>
               <h2 className="mt-3 font-display text-3xl font-bold tracking-tight text-ink-950">
-                Vende a cientos de maquiladoras sin equipo de ventas
+                Todo lo que tu cuenta Novak pone en tus manos
               </h2>
-              <p className="mx-auto mt-2 max-w-xl text-ink-600">
-                Recibe RFQs calificadas y deja que Novak cobre, facture y entregue.
+              <p className="mt-2 text-ink-600">
+                Crea tu cuenta y prueba la plataforma — sin costo y sin compromiso.
               </p>
             </div>
-            <div className="grid gap-5 md:grid-cols-3">
-              {PLANES.map((pl) => (
-                <Card key={pl.plan} className={cn(pl.destacado && "border-safety ring-2 ring-safety/30")}>
-                  <CardContent className="p-6">
-                    {pl.destacado && (
-                      <Badge variant="accent" className="mb-3"><Crown className="size-3" /> Más popular</Badge>
-                    )}
-                    <h3 className="font-display text-lg font-bold text-ink-900">{pl.plan}</h3>
-                    <p className="mt-1">
-                      <span className="font-display text-3xl font-extrabold text-ink-950">{pl.precio}</span>
-                      <span className="text-sm text-ink-500"> MXN/mes</span>
-                    </p>
-                    <ul className="mt-4 space-y-2 text-sm text-ink-700">
-                      {pl.features.map((f) => (
-                        <li key={f} className="flex gap-2">
-                          <Check className="size-4 shrink-0 text-emerald-700" /> {f}
-                        </li>
-                      ))}
-                    </ul>
-                    <Link
-                      href="/registro"
-                      className={cn(
-                        buttonVariants({ variant: pl.destacado ? "gradient" : "outline" }),
-                        "mt-6 w-full",
-                      )}
-                    >
-                      Empezar
-                    </Link>
-                  </CardContent>
-                </Card>
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {CUENTA.map((f) => (
+                <div key={f.t} className="flex gap-4 rounded-xl border bg-card p-5">
+                  <div className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-ink-950 text-safety">
+                    <f.icon className="size-5" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-ink-900">{f.t}</h3>
+                    <p className="mt-1 text-sm text-ink-600">{f.d}</p>
+                  </div>
+                </div>
               ))}
+            </div>
+            <div className="mt-8 flex flex-wrap items-center gap-3">
+              <Link href="/registro" className={cn(buttonVariants({ variant: "gradient", size: "lg" }))}>
+                Crear mi cuenta gratis <ArrowRight className="size-4" />
+              </Link>
+              <Link href="/catalogo" className={cn(buttonVariants({ variant: "outline", size: "lg" }))}>
+                Explorar la plataforma
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* ─── BANDA PROVEEDORES (secundaria → /vender) ─── */}
+        <section className="border-b py-12">
+          <div className="container">
+            <div className="flex flex-col items-center justify-between gap-4 rounded-2xl border bg-card p-6 text-center sm:flex-row sm:text-left">
+              <div className="flex items-center gap-3">
+                <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-ink-950 text-safety">
+                  <Store className="size-5" />
+                </span>
+                <div>
+                  <p className="font-display font-semibold text-ink-900">¿Eres proveedor de insumos industriales?</p>
+                  <p className="text-sm text-ink-600">
+                    Vende a cientos de maquiladoras. Nosotros ponemos el crédito y protegemos tu cobro.
+                  </p>
+                </div>
+              </div>
+              <Link href="/vender" className={cn(buttonVariants({ variant: "outline" }), "shrink-0")}>
+                Conoce el programa de proveedores <ArrowRight className="size-4" />
+              </Link>
             </div>
           </div>
         </section>
@@ -403,7 +422,7 @@ export default function LandingPage() {
             <p className="max-w-xl text-ink-300">{BRAND.garantia}</p>
             <div className="flex flex-wrap items-center justify-center gap-3">
               <Link href="/registro" className={cn(buttonVariants({ variant: "gradient", size: "lg" }))}>
-                Regístrate gratis <ArrowRight className="size-4" />
+                Crear mi cuenta gratis <ArrowRight className="size-4" />
               </Link>
               <a
                 href={BRAND.whatsappLink}
