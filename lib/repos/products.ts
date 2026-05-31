@@ -54,13 +54,24 @@ export async function fetchProducts(opts?: {
     let query = supabase.from("products").select(SELECT).eq("activo", true);
     if (opts?.categoria) query = query.eq("categoria", opts.categoria);
     if (opts?.q) {
-      const q = opts.q.replace(/[%,]/g, " ");
-      query = query.or(
-        `nombre.ilike.%${q}%,numero_parte.ilike.%${q}%,marca.ilike.%${q}%,descripcion.ilike.%${q}%`,
-      );
+      const q = opts.q.replace(/[%,]/g, " ").trim();
+      // Full-text industrial: usa el tsvector generado (search_vector).
+      const tsQuery = q.split(/\s+/).filter(Boolean).join(" & ");
+      query = query.textSearch("search_vector", tsQuery, { type: "websearch", config: "spanish" });
     }
     const { data, error } = await query.limit(200);
     if (error || !data) throw error;
+    // Si la columna search_vector aún no existe, cae al fallback ilike.
+    if (opts?.q && data.length === 0) {
+      const q = opts.q.replace(/[%,]/g, " ");
+      const { data: alt } = await supabase
+        .from("products")
+        .select(SELECT)
+        .eq("activo", true)
+        .or(`nombre.ilike.%${q}%,numero_parte.ilike.%${q}%,marca.ilike.%${q}%,descripcion.ilike.%${q}%`)
+        .limit(200);
+      if (alt && alt.length) return alt.map(mapProduct);
+    }
     return data.map(mapProduct);
   } catch {
     let list = opts?.q ? searchDemoProducts(opts.q) : PRODUCTS;

@@ -24,6 +24,8 @@ export default async function AdminOrdenesPage() {
     es_credito: o.es_credito,
     pagado: !!o.pagado,
     created_at: o.created_at,
+    cfdi_uuid: (o as any).cfdi_uuid ?? undefined,
+    empresa_rfc: (BUYER_COMPANIES.find((c) => c.id === o.company_id) as any)?.rfc,
   }));
 
   const enCurso = vms.filter((o) => o.estado === "confirmada" || o.estado === "en_preparacion" || o.estado === "en_transito").length;
