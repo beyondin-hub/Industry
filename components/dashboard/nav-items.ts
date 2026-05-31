@@ -24,6 +24,7 @@ import {
   MapPin,
   Send,
   Gauge,
+  Warehouse,
   type LucideIcon,
 } from "lucide-react";
 import type { AdminSection } from "@/lib/admin/permissions";
@@ -70,6 +71,7 @@ export const ADMIN_NAV: AdminNavItem[] = [
   { href: "/admin/cotizador", label: "Constructor de cotizaciones", icon: FileSpreadsheet, section: "cotizador" },
   { href: "/admin/ordenes", label: "Órdenes", icon: Truck, section: "ordenes" },
   { href: "/admin/envios", label: "Torre de envíos", icon: MapPin, section: "envios" },
+  { href: "/admin/bodega", label: "Bodega / Fulfillment", icon: Warehouse, section: "bodega" },
   { href: "/admin/catalogo", label: "Catálogo global", icon: PackageSearch, section: "catalogo" },
   { href: "/admin/proveedores", label: "Proveedores", icon: Store, section: "proveedores" },
   { href: "/admin/scoring", label: "Scoring de proveedores", icon: Gauge, section: "scoring" },
