@@ -22,6 +22,7 @@ import {
   Settings,
   FileText,
   MapPin,
+  Send,
   type LucideIcon,
 } from "lucide-react";
 import type { AdminSection } from "@/lib/admin/permissions";
@@ -55,6 +56,7 @@ export const COMPRADOR_NAV: NavItem[] = [
 export const PROVEEDOR_NAV: NavItem[] = [
   { href: "/proveedor/dashboard", label: "Inicio", icon: LayoutDashboard },
   { href: "/proveedor/productos", label: "Mi catálogo", icon: Package },
+  { href: "/proveedor/despachos", label: "Despachos", icon: Send },
   { href: "/proveedor/mensajes", label: "Mensajes", icon: MessagesSquare },
   { href: "/proveedor/perfil", label: "Mi cuenta", icon: Building2 },
 ];
