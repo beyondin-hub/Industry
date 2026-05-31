@@ -23,6 +23,7 @@ import {
   FileText,
   MapPin,
   Send,
+  Gauge,
   type LucideIcon,
 } from "lucide-react";
 import type { AdminSection } from "@/lib/admin/permissions";
@@ -71,6 +72,7 @@ export const ADMIN_NAV: AdminNavItem[] = [
   { href: "/admin/envios", label: "Torre de envíos", icon: MapPin, section: "envios" },
   { href: "/admin/catalogo", label: "Catálogo global", icon: PackageSearch, section: "catalogo" },
   { href: "/admin/proveedores", label: "Proveedores", icon: Store, section: "proveedores" },
+  { href: "/admin/scoring", label: "Scoring de proveedores", icon: Gauge, section: "scoring" },
   { href: "/admin/compradores", label: "Compradores", icon: Building, section: "compradores" },
   { href: "/admin/credito", label: "Solicitudes de crédito", icon: CreditCard, section: "credito" },
   { href: "/admin/tesoreria", label: "Tesorería", icon: Landmark, section: "tesoreria" },
