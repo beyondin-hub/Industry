@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { OrdenStatus } from "@/components/shared/status-badge";
 import { getProvider } from "@/lib/data/providers";
+import { buildShipment } from "@/lib/data/shipments";
 import { getContext } from "@/lib/repos/context";
 import { fetchOrders } from "@/lib/repos/orders";
 import { mxn, fechaCorta } from "@/lib/utils";
@@ -84,6 +85,7 @@ export default async function OrdenesPage() {
         <h2 className="text-sm font-semibold uppercase tracking-wide text-steel-500">En curso</h2>
         {enCurso.map((o) => {
           const prov = getProvider(o.provider_id);
+          const envio = buildShipment(o);
           return (
             <Card key={o.id}>
               <CardContent className="space-y-5 p-5">
@@ -99,6 +101,12 @@ export default async function OrdenesPage() {
                     </p>
                   </div>
                   <p className="text-xl font-bold text-steel-950">{mxn(o.total)}</p>
+                </div>
+                <div className="flex flex-wrap items-center gap-2 rounded-lg bg-secondary/40 px-3 py-2 text-xs">
+                  <Truck className="size-3.5 text-safety" />
+                  <span className="font-medium text-ink-800">{envio.modoLabel}</span>
+                  <span className="text-ink-500">· {envio.carrier} · guía <span className="font-mono">{envio.guia}</span></span>
+                  <Badge variant="success" className="ml-auto">{envio.etiqueta}</Badge>
                 </div>
                 <Tracking estado={o.estado} />
                 <div className="flex flex-wrap gap-2 border-t pt-4">

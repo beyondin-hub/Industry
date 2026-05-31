@@ -21,6 +21,7 @@ import {
   ScrollText,
   Settings,
   FileText,
+  MapPin,
   type LucideIcon,
 } from "lucide-react";
 import type { AdminSection } from "@/lib/admin/permissions";
@@ -65,6 +66,7 @@ export const ADMIN_NAV: AdminNavItem[] = [
   { href: "/admin/rfq", label: "Mesa de operaciones", icon: ClipboardList, section: "rfq" },
   { href: "/admin/cotizador", label: "Constructor de cotizaciones", icon: FileSpreadsheet, section: "cotizador" },
   { href: "/admin/ordenes", label: "Órdenes", icon: Truck, section: "ordenes" },
+  { href: "/admin/envios", label: "Torre de envíos", icon: MapPin, section: "envios" },
   { href: "/admin/catalogo", label: "Catálogo global", icon: PackageSearch, section: "catalogo" },
   { href: "/admin/proveedores", label: "Proveedores", icon: Store, section: "proveedores" },
   { href: "/admin/compradores", label: "Compradores", icon: Building, section: "compradores" },

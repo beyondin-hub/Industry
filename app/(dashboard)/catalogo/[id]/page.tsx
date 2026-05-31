@@ -23,6 +23,9 @@ import { ProductImage } from "@/components/catalog/product-image";
 import { PRODUCTS } from "@/lib/data/products";
 import { fetchProduct, fetchRelated } from "@/lib/repos/products";
 import { fetchProvider } from "@/lib/repos/providers";
+import { getContext } from "@/lib/repos/context";
+import { decideFulfillment, providerModesFromFlags } from "@/lib/logistics/routing";
+import { zonaLabel } from "@/lib/logistics/zones";
 import { categoriaNombre, categoriaEmoji } from "@/lib/constants";
 import { entregaLabel, num } from "@/lib/utils";
 
@@ -44,6 +47,11 @@ export default async function ProductPage({ params }: { params: { id: string } }
   const prov = await fetchProvider(product.provider_id);
   const enStock = product.stock_actual > 0;
   const relacionados = await fetchRelated(product.categoria, product.id);
+
+  // Promesa de entrega según la ciudad del comprador y el modo del proveedor.
+  const { company } = await getContext();
+  const modes = providerModesFromFlags(prov?.stock_confirmado ?? false);
+  const envio = decideFulfillment({ buyerCity: company.ciudad, providerModes: modes, stockEnHub: prov?.stock_confirmado && enStock });
 
   return (
     <div className="space-y-6">
@@ -143,6 +151,20 @@ export default async function ProductPage({ params }: { params: { id: string } }
         {/* Buy box + historial de precio */}
         <div className="space-y-4 lg:sticky lg:top-20 lg:self-start">
           <ProductBuyBox product={product} />
+          <Card className="border-emerald-200 bg-emerald-50/40">
+            <CardContent className="p-4">
+              <p className="flex items-center gap-1.5 text-xs font-medium uppercase tracking-wide text-emerald-700">
+                <Truck className="size-3.5" /> Entrega a {company.ciudad}
+              </p>
+              <p className="mt-1 font-display text-lg font-bold text-ink-950">{envio.promesa.etiqueta}</p>
+              <div className="mt-2 flex flex-wrap items-center gap-1.5 text-xs">
+                <Badge variant="steel">{envio.modoLabel}</Badge>
+                <Badge variant="secondary">{envio.carrier}</Badge>
+                <Badge variant="secondary">Zona {zonaLabel(envio.promesa.zona)}</Badge>
+              </div>
+              <p className="mt-2 text-[11px] text-ink-500">{envio.razon} Incluye CFDI con Carta Porte.</p>
+            </CardContent>
+          </Card>
           <Card>
             <CardContent className="p-4">
               <PriceHistoryChart base={product.precio_base} id={product.id} />
