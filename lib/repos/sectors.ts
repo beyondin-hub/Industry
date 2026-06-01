@@ -6,6 +6,7 @@ import {
   sectorProducts as demoProducts,
   getSectorProduct as getDemoSectorProduct,
   sectorGuides as demoGuides,
+  getGuide as getDemoGuide,
 } from "@/lib/data/sectors";
 import type {
   IndustrySector,
@@ -137,4 +138,8 @@ export async function fetchSectorGuides(slug: string): Promise<SectorGuide[]> {
   } catch {
     return demoGuides(slug);
   }
+}
+
+export async function fetchSectorGuide(guideSlug: string): Promise<SectorGuide | undefined> {
+  return getDemoGuide(guideSlug);
 }

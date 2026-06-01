@@ -29,6 +29,8 @@ const BUYER_PREFIXES = [
   "/perfil",
   "/notificaciones",
   "/quick-order",
+  "/herramientas",
+  "/guias",
 ];
 
 /** Qué rol exige una ruta (o null si es pública). */

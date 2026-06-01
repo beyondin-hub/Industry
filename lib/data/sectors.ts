@@ -680,6 +680,24 @@ export const SECTOR_GUIDES: SectorGuide[] = [
     categoria: "seleccion-producto",
     tags: ["guantes", "cuarto-limpio", "ISO-13485"],
     orden: 1,
+    contenido: `## Por qué el guante correcto importa en manufactura médica
+El guante es la principal barrera entre el operador y el producto. Un guante mal elegido genera partículas, contamina el dispositivo y puede costarte un hallazgo en auditoría.
+
+## Clasificación por ISO Class
+- **ISO Class 5**: requiere guante de nitrilo sin polvo, lavado en cuarto limpio y con bajo desprendimiento de partículas.
+- **ISO Class 7**: nitrilo sin polvo estándar, empaque doble.
+- **ISO Class 8**: nitrilo o vinilo sin polvo, según el proceso.
+
+## Nitrilo vs Látex vs Vinilo
+- **Nitrilo**: mejor resistencia química y a punción; sin proteínas de látex. Recomendado por defecto.
+- **Látex**: buen tacto, pero riesgo de alergia; en desuso en líneas médicas.
+- **Vinilo**: económico, para tareas de bajo riesgo y corta duración.
+
+## Cómo leer la certificación en la caja
+Verifica **ISO 13485** del fabricante, lote, fecha y declaración "sin polvo / sin látex". Exige el **COA por lote**.
+
+## Lo que NOVAK Med tiene en stock para cada ISO Class
+Guante Nitrilo sin polvo ISO Class 7-8 (GLV-NIT-ISO7) con COA por lote y entrega 24h en Tijuana.`,
   },
   {
     id: "guide-med-2",
@@ -730,9 +748,30 @@ export const SECTOR_GUIDES: SectorGuide[] = [
     categoria: "proceso",
     tags: ["SMT", "squeegee", "Kapton", "consumibles"],
     orden: 3,
+    contenido: `## Los consumibles que paran una línea SMT si faltan
+Si se te acaba uno de estos, la línea se detiene. Tenerlos en stock mínimo es seguro de continuidad.
+
+- Pasta de soldadura y **squeegee blades**
+- **IPA 99%** grado electrónico y wipes lint-free
+- **Cinta Kapton** y aceite de horno de reflujo
+- Flux, malla desoldadora y puntas de cautín
+
+## Squeegee blades — cuándo cambiarlas
+Cámbialas ante desgaste visible del filo o defectos de impresión. Mantén un juego de repuesto por impresora (DEK/MPM).
+
+## IPA 99% vs 70%
+- **99%**: limpieza de PCBs y stencils — se evapora sin residuo iónico.
+- **70%**: desinfección de superficies, no para electrónica.
+
+## Cómo calcular tu stock mínimo
+Stock mínimo = consumo promedio diario × lead time del proveedor × factor de seguridad (1.5). Con el **Kit de Línea SMT** de NOVAK Electronics lo automatizas con alertas de reorden.`,
   },
 ];
 
 export function sectorGuides(slug: string): SectorGuide[] {
   return SECTOR_GUIDES.filter((g) => g.sector_slug === slug).sort((a, b) => a.orden - b.orden);
+}
+
+export function getGuide(guideSlug: string): SectorGuide | undefined {
+  return SECTOR_GUIDES.find((g) => g.slug === guideSlug);
 }
