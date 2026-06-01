@@ -1,9 +1,12 @@
 // Catálogo de tareas programadas (Vercel Cron). Refleja vercel.json.
+// `cadencia` = activa en el plan Hobby (gratis, solo diario).
+// `cadenciaPro` = cadencia ideal al subir a Vercel Pro (ver vercel.pro.json).
 export interface CronJob {
   path: string;
   nombre: string;
   schedule: string;
   cadencia: string;
+  cadenciaPro?: string;
   descripcion: string;
 }
 
@@ -11,22 +14,25 @@ export const CRON_JOBS: CronJob[] = [
   {
     path: "/api/cron/check-rfq-guarantee",
     nombre: "Garantía de cotización 2h",
-    schedule: "0 * * * *",
-    cadencia: "Cada hora",
+    schedule: "0 15 * * *",
+    cadencia: "Diario 15:00",
+    cadenciaPro: "Cada hora",
     descripcion: "RFQs sin cotización tras el deadline de 2h hábiles → activa el beneficio 0% comisión.",
   },
   {
     path: "/api/cron/sync-tracking",
     nombre: "Sincronización de rastreo",
-    schedule: "0 */2 * * *",
-    cadencia: "Cada 2 horas",
+    schedule: "0 13 * * *",
+    cadencia: "Diario 13:00",
+    cadenciaPro: "Cada 2 horas",
     descripcion: "Actualiza el estado de los envíos en tránsito con el carrier (EnvíaYa).",
   },
   {
     path: "/api/cron/check-dispatch-deadline",
     nombre: "Deadline de despacho",
-    schedule: "30 * * * *",
-    cadencia: "Cada hora",
+    schedule: "0 16 * * *",
+    cadencia: "Diario 16:00",
+    cadenciaPro: "Cada hora",
     descripcion: "Marca como vencidos los despachos del proveedor no confirmados a tiempo.",
   },
   {

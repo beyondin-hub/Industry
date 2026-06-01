@@ -32,9 +32,12 @@ export default async function AutomatizacionesPage() {
             {CRON_JOBS.map((j) => (
               <div key={j.path} className="flex flex-wrap items-center gap-3 p-4">
                 <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
                     <span className="font-medium text-ink-900">{j.nombre}</span>
                     <Badge variant="secondary">{j.cadencia}</Badge>
+                    {j.cadenciaPro && (
+                      <Badge variant="purplecow" title="Cadencia al subir a Vercel Pro">Pro: {j.cadenciaPro}</Badge>
+                    )}
                   </div>
                   <p className="mt-0.5 text-xs text-ink-500">{j.descripcion}</p>
                 </div>

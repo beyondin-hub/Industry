@@ -44,6 +44,22 @@ configurar las variables de entorno correspondientes.
 
 **Env:** `PAC_API_URL`, `PAC_API_KEY`, `ADMIN_2FA_ENABLED`, `SENTRY_DSN` / `MONITORING_WEBHOOK_URL`.
 
+## Vercel Cron: Hobby (gratis) vs Pro
+
+El plan **Hobby** de Vercel solo permite crons **diarios**. Por eso `vercel.json`
+usa horarios diarios para las 3 tareas que idealmente correrían más seguido
+(garantía 2h, sync de rastreo, deadline de despacho).
+
+Al subir a **Vercel Pro**, recupera la cadencia responsiva con un solo paso:
+
+```bash
+cp vercel.pro.json vercel.json && git commit -am "crons: cadencia Pro" && git push
+```
+
+`vercel.pro.json` ya trae los horarios `0 * * * *` (cada hora) y `0 */2 * * *`
+(cada 2h). El panel `/admin/automatizaciones` muestra la cadencia activa (Hobby)
+y, en una etiqueta morada, la cadencia "Pro" objetivo de cada tarea.
+
 ## Decisiones
 - **Paleta:** se conservó el morado (`safety` #6D4AFF). Se ignoró el naranja del prompt v2.0.
 - **Dominio:** se mantiene `heynovak.com` (no `novak.mx`).

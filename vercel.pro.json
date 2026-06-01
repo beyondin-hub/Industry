@@ -1,0 +1,21 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "nextjs",
+  "buildCommand": "next build",
+  "installCommand": "npm install",
+  "git": {
+    "deploymentEnabled": {
+      "main": true
+    }
+  },
+  "_comentario": "Plantilla para Vercel PRO. Al subir de plan, copia este archivo sobre vercel.json (cp vercel.pro.json vercel.json) para recuperar la cadencia responsiva: garantía 2h y rastreo cada hora / cada 2h. El plan Hobby (gratis) solo admite crons diarios; por eso vercel.json usa horarios diarios.",
+  "crons": [
+    { "path": "/api/cron/check-rfq-guarantee", "schedule": "0 * * * *" },
+    { "path": "/api/cron/sync-tracking", "schedule": "0 */2 * * *" },
+    { "path": "/api/cron/check-dispatch-deadline", "schedule": "30 * * * *" },
+    { "path": "/api/cron/check-credit-expiry", "schedule": "0 9 * * *" },
+    { "path": "/api/cron/check-auto-reorders", "schedule": "0 7 * * *" },
+    { "path": "/api/cron/check-cert-expiry", "schedule": "0 8 * * 1" },
+    { "path": "/api/cron/calculate-scores", "schedule": "0 6 1 * *" }
+  ]
+}
