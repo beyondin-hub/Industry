@@ -2,6 +2,7 @@ import Link from "next/link";
 import { MessageCircle } from "lucide-react";
 import { Logo } from "@/components/shared/logo";
 import { CategoriesMenu } from "@/components/marketing/categories-menu";
+import { MobileMenu } from "@/components/marketing/mobile-menu";
 import { SmartSearch } from "@/components/catalog/smart-search";
 import { buttonVariants } from "@/components/ui/button";
 import { BRAND } from "@/lib/constants";
@@ -22,6 +23,7 @@ export function SiteHeader() {
         </div>
 
         <div className="ml-auto flex items-center gap-2">
+          {/* Cluster desktop */}
           <Link
             href="/vender"
             className="hidden text-sm font-medium text-steel-700 transition-colors hover:text-safety lg:inline"
@@ -32,17 +34,19 @@ export function SiteHeader() {
             href={BRAND.whatsappLink}
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden items-center gap-1.5 text-sm font-semibold text-emerald-700 hover:text-emerald-800 sm:inline-flex"
+            className="hidden items-center gap-1.5 text-sm font-semibold text-emerald-700 hover:text-emerald-800 md:inline-flex"
           >
             <MessageCircle className="size-4" />
             WhatsApp
           </a>
-          <Link href="/login" className={cn(buttonVariants({ variant: "ghost", size: "sm" }))}>
+          <Link href="/login" className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "hidden md:inline-flex")}>
             Iniciar sesión
           </Link>
-          <Link href="/registro" className={cn(buttonVariants({ variant: "accent", size: "sm" }))}>
+          <Link href="/registro" className={cn(buttonVariants({ variant: "accent", size: "sm" }), "hidden md:inline-flex")}>
             Crear cuenta
           </Link>
+          {/* Menú móvil */}
+          <MobileMenu />
         </div>
       </div>
 

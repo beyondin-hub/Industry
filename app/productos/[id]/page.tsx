@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ChevronRight, ShieldCheck, FileText } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -6,13 +7,43 @@ import { ProductImage } from "@/components/catalog/product-image";
 import { ProductCard } from "@/components/catalog/product-card";
 import { PublicBuyBox } from "@/components/marketing/public-buybox";
 import { fetchProduct, fetchRelated } from "@/lib/repos/products";
+import { PRODUCTS } from "@/lib/data/products";
+import { photoForProduct } from "@/lib/catalog/images";
 import { categoriaNombre, categoriaEmoji } from "@/lib/constants";
 
-export async function generateMetadata({ params }: { params: { id: string } }) {
+// Pre-renderiza (SSG) las fichas del catálogo demo para SEO y velocidad.
+export function generateStaticParams() {
+  return PRODUCTS.slice(0, 60).map((p) => ({ id: p.id }));
+}
+
+export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
   const product = await fetchProduct(params.id);
+  if (!product) return { title: "Producto no encontrado" };
+
+  const desc =
+    product.descripcion?.slice(0, 160) ??
+    `${product.nombre} (${product.numero_parte}) — ${product.marca}. Precio, stock y entrega 24–48h en el norte de México.`;
+  const url = `/productos/${product.id}`;
+  const img = photoForProduct(product.categoria, product.imagen_url);
+
   return {
-    title: product ? `${product.nombre} · Novak` : "Producto",
-    description: product?.descripcion?.slice(0, 150),
+    title: product.nombre,
+    description: desc,
+    keywords: [product.nombre, product.numero_parte, product.marca, categoriaNombre(product.categoria), "MRO", "industrial"].filter(Boolean) as string[],
+    alternates: { canonical: url },
+    openGraph: {
+      title: `${product.nombre} · Novak`,
+      description: desc,
+      type: "website",
+      url,
+      images: img ? [{ url: img }] : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: product.nombre,
+      description: desc,
+      images: img ? [img] : undefined,
+    },
   };
 }
 
@@ -23,8 +54,29 @@ export default async function ProductoPublicoPage({ params }: { params: { id: st
   const related = await fetchRelated(product.categoria, product.id, 4);
   const specs = Object.entries(product.especificaciones ?? {});
 
+  // Datos estructurados schema.org/Product para resultados enriquecidos.
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.nombre,
+    sku: product.numero_parte || product.id,
+    mpn: product.numero_parte || undefined,
+    brand: product.marca ? { "@type": "Brand", name: product.marca } : undefined,
+    category: categoriaNombre(product.categoria),
+    description: product.descripcion || undefined,
+    image: photoForProduct(product.categoria, product.imagen_url),
+    offers: {
+      "@type": "Offer",
+      priceCurrency: "MXN",
+      price: product.precio_base,
+      availability: product.stock_actual > 0 ? "https://schema.org/InStock" : "https://schema.org/PreOrder",
+      url: `/productos/${product.id}`,
+    },
+  };
+
   return (
     <div className="space-y-8">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       {/* Breadcrumb */}
       <nav className="flex flex-wrap items-center gap-1 text-xs text-ink-500">
         <Link href="/productos" className="hover:text-safety">Catálogo</Link>
