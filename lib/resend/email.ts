@@ -54,7 +54,7 @@ export const emailTemplates = {
       <h2 style="font-weight:800">Novak</h2>
       <p>¡Felicidades <strong>${nombre}</strong>! Tu solicitud para vender en Novak fue <strong>aprobada</strong>.</p>
       <p>Ya puedes activar tu catálogo y recibir solicitudes de cotización de maquiladoras.</p>
-      <p><a href="${url}/proveedor/dashboard" style="background:#D4843E;color:#fff;padding:10px 16px;border-radius:8px;text-decoration:none">Entrar a mi portal</a></p>
+      <p><a href="${url}/proveedor/dashboard" style="background:#1A1A1A;color:#fff;padding:10px 16px;border-radius:8px;text-decoration:none">Entrar a mi portal</a></p>
     </div>`,
   }),
   proveedorRechazado: (nombre: string) => ({

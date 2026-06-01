@@ -18,7 +18,7 @@ export function Logo({
         <span className="font-display text-base font-extrabold leading-none text-white">N</span>
       </span>
       <span className={cn("font-display text-lg font-extrabold tracking-tight", textColor)}>
-        Novak<span className="text-safety">.</span>
+        Novak<span className="text-purplecow">.</span>
       </span>
     </Link>
   );
