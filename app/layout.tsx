@@ -1,18 +1,18 @@
 import type { Metadata } from "next";
-import { Bricolage_Grotesque, Hanken_Grotesk, DM_Mono } from "next/font/google";
+import { Sora, Onest, DM_Mono } from "next/font/google";
 import { ToastProvider } from "@/components/ui/toast";
 import "./globals.css";
 
-// Display: orgánica, moderna y con carácter sólido/industrial (Apple-ish + fuerza).
-const display = Bricolage_Grotesque({
+// Display: Sora — limpia, geométrica y moderna (cercana a SF Pro, minimal Apple).
+const display = Sora({
   subsets: ["latin"],
   weight: ["600", "700", "800"],
   variable: "--font-display",
   display: "swap",
 });
 
-// Cuerpo: cómoda y descansada para lectura prolongada.
-const sans = Hanken_Grotesk({
+// Cuerpo: Onest — diseñada para lectura cómoda y descansada.
+const sans = Onest({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
   variable: "--font-sans",
