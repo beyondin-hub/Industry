@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Bell, Search, ShieldCheck, CreditCard, LogOut } from "lucide-react";
+import { Bell, ShieldCheck, CreditCard, LogOut } from "lucide-react";
+import { SmartSearch } from "@/components/catalog/smart-search";
 import { Badge } from "@/components/ui/badge";
 import { mxn } from "@/lib/utils";
 import {
@@ -31,26 +32,18 @@ export function Topbar({
   return (
     <header className="sticky top-0 z-40 flex h-16 items-center gap-4 border-b bg-card/90 px-4 backdrop-blur lg:px-6">
       <MobileNav isDemo={isDemo} sector={sector} />
-      {/* Quick order / search — sector-aware */}
-      <form
-        action={sector ? `/catalogo/sector/${sector.slug}` : "/catalogo"}
-        className="hidden flex-1 items-center gap-2 sm:flex"
-      >
-        <div className="relative w-full max-w-md">
-          <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-steel-400" />
-          <input
-            name="q"
-            placeholder={
-              sector?.slug === "medical"
-                ? "Número de parte, certificación o descripción…"
-                : sector?.slug === "electronics"
-                  ? "Número de parte, SKU o consumible…"
-                  : "Quick order: pega número de parte o busca…"
-            }
-            className="h-9 w-full rounded-md border border-input bg-steel-50 pl-9 pr-3 text-sm outline-none focus:bg-card focus:ring-2 focus:ring-ring"
-          />
-        </div>
-      </form>
+      {/* Quick order / búsqueda inteligente */}
+      <div className="hidden flex-1 items-center sm:flex">
+        <SmartSearch
+          placeholder={
+            sector?.slug === "medical"
+              ? "Número de parte, certificación o descripción…"
+              : sector?.slug === "electronics"
+                ? "Número de parte, SKU o consumible…"
+                : "Quick order: pega número de parte o busca…"
+          }
+        />
+      </div>
 
       <div className="ml-auto flex items-center gap-3">
         {sector && (
