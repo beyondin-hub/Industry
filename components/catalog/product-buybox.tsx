@@ -2,19 +2,31 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Minus, Plus, FileSpreadsheet, MessageCircle } from "lucide-react";
+import { Minus, Plus, FileSpreadsheet, MessageCircle, Truck, AlertTriangle, Repeat } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { mxn, precioPorCantidad, num } from "@/lib/utils";
 import { BRAND } from "@/lib/constants";
 import { cn } from "@/lib/utils";
+import { stockStatus, deliveryETA, socialProof } from "@/lib/catalog/signals";
 import type { Product } from "@/types";
+
+const STOCK_VARIANT = {
+  success: "success",
+  warning: "warning",
+  danger: "danger",
+  muted: "secondary",
+} as const;
 
 export function ProductBuyBox({ product }: { product: Product }) {
   const [cantidad, setCantidad] = useState(1);
-  const unit = precioPorCantidad(product.price_tiers, product.precio_base, cantidad);
+  const [reorden, setReorden] = useState(false);
+  const base = precioPorCantidad(product.price_tiers, product.precio_base, cantidad);
+  const unit = reorden ? base * 0.95 : base; // -5% adicional por reorden automático
   const total = unit * cantidad;
   const ahorroUnit = product.precio_base - unit;
+  const stock = stockStatus(product);
+  const proof = socialProof(product);
 
   return (
     <div className="rounded-xl border bg-card p-5 shadow-sm">
@@ -27,6 +39,17 @@ export function ProductBuyBox({ product }: { product: Product }) {
           Ahorras {mxn(ahorroUnit)}/{product.unidad} a esta cantidad
         </p>
       )}
+
+      {/* Disponibilidad exacta + ETA */}
+      <div className="mt-4 space-y-1.5">
+        <Badge variant={STOCK_VARIANT[stock.tone]} className="text-[11px]">
+          {stock.escaso ? <AlertTriangle className="size-3" /> : null} {stock.label}
+        </Badge>
+        <p className="flex items-center gap-1.5 text-xs text-steel-600">
+          <Truck className="size-3.5 shrink-0" /> {deliveryETA(product)}
+        </p>
+        {proof && <p className="text-xs font-medium text-safety">{proof}</p>}
+      </div>
 
       {/* Quantity */}
       <div className="mt-4 flex items-center gap-3">
@@ -62,9 +85,25 @@ export function ProductBuyBox({ product }: { product: Product }) {
         <span className="text-xl font-bold text-steel-950">{mxn(total)}</span>
       </div>
 
+      {/* Reorden automático con descuento adicional */}
+      <label className="mt-4 flex cursor-pointer items-start gap-2.5 rounded-lg border p-3 text-sm">
+        <input
+          type="checkbox"
+          checked={reorden}
+          onChange={(e) => setReorden(e.target.checked)}
+          className="mt-0.5 size-4 accent-safety"
+        />
+        <span>
+          <span className="flex items-center gap-1.5 font-medium text-steel-800">
+            <Repeat className="size-3.5" /> Reorden automático cada 30 días
+          </span>
+          <span className="text-xs text-emerald-600">+5% de descuento adicional en cada entrega</span>
+        </span>
+      </label>
+
       <div className="mt-4 space-y-2">
         <Link
-          href={`/cotizar?sku=${product.id}&qty=${cantidad}`}
+          href={`/cotizar?sku=${product.id}&qty=${cantidad}${reorden ? "&reorden=1" : ""}`}
           className={cn(buttonVariants({ variant: "accent", size: "lg" }), "w-full")}
         >
           <FileSpreadsheet className="size-4" /> Solicitar cotización

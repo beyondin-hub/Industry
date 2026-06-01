@@ -1,16 +1,23 @@
 import Link from "next/link";
-import { Truck, ShieldCheck } from "lucide-react";
+import { Truck, ShieldCheck, AlertTriangle } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ProductImage } from "@/components/catalog/product-image";
-import { mxn, entregaLabel } from "@/lib/utils";
-import { getProvider } from "@/lib/data/providers";
+import { mxn } from "@/lib/utils";
+import { stockStatus, deliveryETA, firstVolumeBreak } from "@/lib/catalog/signals";
 import type { Product } from "@/types";
 
+const STOCK_VARIANT = {
+  success: "success",
+  warning: "warning",
+  danger: "danger",
+  muted: "secondary",
+} as const;
+
 export function ProductCard({ product }: { product: Product }) {
-  const prov = getProvider(product.provider_id);
-  const enStock = product.stock_actual > 0;
+  const stock = stockStatus(product);
+  const vol = firstVolumeBreak(product);
   const ahorro =
     product.precio_base > product.precio_minimo
       ? Math.round((1 - product.precio_minimo / product.precio_base) * 100)
@@ -53,14 +60,20 @@ export function ProductCard({ product }: { product: Product }) {
           )}
         </div>
 
-        <div className="mt-3 flex items-center gap-2">
-          {enStock ? (
-            <Badge variant="success" className="text-[10px]">
-              <Truck className="size-2.5" /> {entregaLabel(product.tiempo_entrega_horas, prov?.ciudad)}
-            </Badge>
-          ) : (
-            <Badge variant="warning" className="text-[10px]">Sobre pedido</Badge>
-          )}
+        {/* Precio por volumen siempre visible (táctica B2B) */}
+        {vol && (
+          <p className="mt-1 text-xs text-emerald-700">
+            Desde {vol.cantidad}: <span className="font-semibold">{mxn(vol.precio)}</span> (−{vol.pct}%)
+          </p>
+        )}
+
+        <div className="mt-3 flex flex-col gap-1.5">
+          <Badge variant={STOCK_VARIANT[stock.tone]} className="w-fit text-[10px]">
+            {stock.escaso ? <AlertTriangle className="size-2.5" /> : null} {stock.label}
+          </Badge>
+          <span className="flex items-center gap-1 text-[11px] text-steel-500">
+            <Truck className="size-3 shrink-0" /> {deliveryETA(product)}
+          </span>
         </div>
 
         <div className="mt-3 flex gap-2 border-t pt-3">
