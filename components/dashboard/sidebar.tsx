@@ -5,9 +5,19 @@ import { usePathname } from "next/navigation";
 import { Logo } from "@/components/shared/logo";
 import { COMPRADOR_NAV } from "@/components/dashboard/nav-items";
 import { DemoViewSwitcher } from "@/components/shared/demo-view-switcher";
+import { SidebarSector } from "@/components/sector/sidebar-sector";
 import { cn } from "@/lib/utils";
+import type { IndustrySector, SectorCategory } from "@/types";
 
-export function Sidebar({ isDemo = false }: { isDemo?: boolean }) {
+export function Sidebar({
+  isDemo = false,
+  sector = null,
+  categories = [],
+}: {
+  isDemo?: boolean;
+  sector?: IndustrySector | null;
+  categories?: SectorCategory[];
+}) {
   const pathname = usePathname();
 
   return (
@@ -33,6 +43,8 @@ export function Sidebar({ isDemo = false }: { isDemo?: boolean }) {
             </Link>
           );
         })}
+
+        <SidebarSector sector={sector} categories={categories} />
       </nav>
       <DemoViewSwitcher current="comprador" show={isDemo} />
       <div className="border-t border-ink-800 p-3">

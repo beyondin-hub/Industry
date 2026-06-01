@@ -24,15 +24,30 @@ import { getProvider } from "@/lib/data/providers";
 import { getContext } from "@/lib/repos/context";
 import { fetchRFQs } from "@/lib/repos/rfqs";
 import { fetchOrders } from "@/lib/repos/orders";
+import { getActiveSector } from "@/lib/sector/context";
+import { fetchSectorCategories } from "@/lib/repos/sectors";
+import { SectorBanner } from "@/components/sector/sector-banner";
+import { sectorAlerts, ALERT_TONE_CLASS } from "@/lib/sector/alerts";
 import { mxn, tiempoRestante, fechaCorta, entregaLabel, num } from "@/lib/utils";
 import { categoriaNombre } from "@/lib/constants";
 
 export default async function DashboardPage() {
   const { buyer: CURRENT_BUYER, company: CURRENT_COMPANY } = await getContext();
-  const [rfqs, orders] = await Promise.all([
+  const { sector } = await getActiveSector();
+  const [rfqs, orders, sectorCategories] = await Promise.all([
     fetchRFQs(CURRENT_COMPANY.id),
     fetchOrders(CURRENT_COMPANY.id),
+    sector ? fetchSectorCategories(sector.slug) : Promise.resolve([]),
   ]);
+
+  // Alertas: contextuales al sector si hay uno activo; si no, genéricas.
+  const alerts = sector
+    ? sectorAlerts(sector.slug).map((a) => ({ c: ALERT_TONE_CLASS[a.tone], t: a.text }))
+    : [
+        { c: "border-amber-300 bg-amber-50 text-amber-800", t: "El aceite ISO 46 que ordenas cada 45 días vence el próximo martes." },
+        { c: "border-orange-300 bg-orange-50 text-orange-800", t: "Stock de guantes bajo — 30 pares disponibles de tu proveedor habitual." },
+        { c: "border-info/30 bg-blue-50 text-info", t: "Nueva cotización de proveedor alternativo 12% más barata en rodamientos." },
+      ];
   const activos = rfqs.filter((r) => r.estado === "en_proceso" || r.estado === "cotizado");
   const enTransito = orders.filter((o) => o.estado === "en_transito" || o.estado === "en_preparacion");
   const creditoUsado = orders.filter((o) => o.es_credito).reduce((s, o) => s + o.total, 0);
@@ -47,6 +62,8 @@ export default async function DashboardPage() {
           <Plus className="size-4" /> Nueva cotización
         </Link>
       </PageHeader>
+
+      {sector && <SectorBanner sector={sector} categories={sectorCategories} />}
 
       {/* KPIs */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -101,11 +118,7 @@ export default async function DashboardPage() {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-2.5">
-            {[
-              { c: "border-amber-300 bg-amber-50 text-amber-800", t: "El aceite ISO 46 que ordenas cada 45 días vence el próximo martes." },
-              { c: "border-orange-300 bg-orange-50 text-orange-800", t: "Stock de guantes bajo — 30 pares disponibles de tu proveedor habitual." },
-              { c: "border-info/30 bg-blue-50 text-info", t: "Nueva cotización de proveedor alternativo 12% más barata en rodamientos." },
-            ].map((a, i) => (
+            {alerts.map((a, i) => (
               <div key={i} className={`rounded-lg border px-3 py-2.5 text-xs ${a.c}`}>
                 {a.t}
               </div>
