@@ -96,7 +96,7 @@ export default async function LandingPage() {
 
               {/* Quick Order Box */}
               <form
-                action="/catalogo"
+                action="/productos/busqueda"
                 className="mx-auto mt-8 flex w-full max-w-2xl flex-col gap-2 rounded-2xl border bg-card p-2 shadow-lg sm:flex-row sm:items-center"
               >
                 <div className="flex flex-1 items-center gap-2 pl-2">
@@ -134,7 +134,7 @@ export default async function LandingPage() {
                 <Link href="/registro" className={cn(buttonVariants({ variant: "gradient", size: "lg" }))}>
                   Crear cuenta gratis <ArrowRight className="size-4" />
                 </Link>
-                <Link href="/catalogo" className={cn(buttonVariants({ variant: "outline", size: "lg" }))}>
+                <Link href="/productos" className={cn(buttonVariants({ variant: "outline", size: "lg" }))}>
                   Ver catálogo
                 </Link>
               </div>
@@ -239,7 +239,7 @@ export default async function LandingPage() {
                 </h2>
                 <p className="mt-2 text-ink-600">Taxonomía industrial profunda — busca por uso, no solo por nombre.</p>
               </div>
-              <Link href="/catalogo" className={cn(buttonVariants({ variant: "outline" }))}>
+              <Link href="/productos" className={cn(buttonVariants({ variant: "outline" }))}>
                 Ver catálogo completo <ArrowRight className="size-4" />
               </Link>
             </div>
@@ -247,7 +247,7 @@ export default async function LandingPage() {
               {CATEGORIAS.map((c) => (
                 <Link
                   key={c.slug}
-                  href={`/catalogo?categoria=${c.slug}`}
+                  href={`/productos?categoria=${c.slug}`}
                   className="group rounded-xl border bg-card p-5 transition-all hover:-translate-y-0.5 hover:border-safety hover:shadow-md"
                 >
                   <div className="mb-3 text-3xl">{c.emoji}</div>
@@ -274,7 +274,7 @@ export default async function LandingPage() {
                 nuestro equipo lo busca y cotiza en 2 horas.
               </p>
               <form
-                action="/catalogo"
+                action="/productos/busqueda"
                 className="mx-auto mt-7 flex w-full max-w-xl flex-col gap-2 rounded-2xl bg-white/5 p-2 ring-1 ring-white/10 backdrop-blur sm:flex-row"
               >
                 <input
@@ -384,7 +384,7 @@ export default async function LandingPage() {
               <Link href="/registro" className={cn(buttonVariants({ variant: "gradient", size: "lg" }))}>
                 Crear mi cuenta gratis <ArrowRight className="size-4" />
               </Link>
-              <Link href="/catalogo" className={cn(buttonVariants({ variant: "outline", size: "lg" }))}>
+              <Link href="/productos" className={cn(buttonVariants({ variant: "outline", size: "lg" }))}>
                 Explorar la plataforma
               </Link>
             </div>

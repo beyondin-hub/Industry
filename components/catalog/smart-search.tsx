@@ -48,9 +48,12 @@ function pushRecent(q: string) {
 export function SmartSearch({
   placeholder = "Busca por número de parte, descripción o marca…",
   autoFocus = false,
+  basePath = "/catalogo",
 }: {
   placeholder?: string;
   autoFocus?: boolean;
+  /** Prefijo de rutas: "/catalogo" (portal) o "/productos" (público). */
+  basePath?: string;
 }) {
   const router = useRouter();
   const [q, setQ] = useState("");
@@ -91,13 +94,13 @@ export function SmartSearch({
     if (!term.trim()) return;
     pushRecent(term);
     setOpen(false);
-    router.push(`/catalogo/busqueda?q=${encodeURIComponent(term)}`);
+    router.push(`${basePath}/busqueda?q=${encodeURIComponent(term)}`);
   };
 
   const goProduct = (id: string) => {
     pushRecent(q);
     setOpen(false);
-    router.push(`/catalogo/${id}`);
+    router.push(`${basePath}/${id}`);
   };
 
   const showRecent = q.trim().length < 2 && recent.length > 0;
@@ -195,7 +198,7 @@ export function SmartSearch({
               {data.categories.map((c) => (
                 <Link
                   key={c.slug}
-                  href={`/catalogo/busqueda?categoria=${c.slug}`}
+                  href={`${basePath}/busqueda?categoria=${c.slug}`}
                   onClick={() => setOpen(false)}
                   className="flex items-center justify-between px-3 py-2 text-sm hover:bg-steel-50"
                 >

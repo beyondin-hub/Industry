@@ -6,7 +6,7 @@ import { BRAND } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
 const NAV = [
-  { href: "/catalogo", label: "Catálogo" },
+  { href: "/productos", label: "Catálogo" },
   { href: "/#categorias", label: "Categorías" },
   { href: "/#como-funciona", label: "Cómo funciona" },
   { href: "/vender", label: "Para proveedores" },

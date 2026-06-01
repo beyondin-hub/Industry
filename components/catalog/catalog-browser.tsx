@@ -19,10 +19,19 @@ export function CatalogBrowser({
   products,
   initialCategoria,
   q,
+  detailBase = "/catalogo",
+  quoteTo,
+  searchAction = "/catalogo",
 }: {
   products: Product[];
   initialCategoria?: CategoriaMRO;
   q?: string;
+  /** Base del detalle de producto (público: "/productos"). */
+  detailBase?: string;
+  /** Destino del CTA Cotizar (público: "/registro"). */
+  quoteTo?: string;
+  /** Action del formulario de búsqueda (público: "/productos/busqueda"). */
+  searchAction?: string;
 }) {
   const [categoria, setCategoria] = useState<CategoriaMRO | undefined>(initialCategoria);
   const [certs, setCerts] = useState<string[]>([]);
@@ -159,7 +168,7 @@ export function CatalogBrowser({
       {/* Resultados */}
       <div>
         {/* Quick Order bar sticky */}
-        <form action="/catalogo" className="sticky top-16 z-10 mb-4 flex items-center gap-2 rounded-xl border bg-card/95 p-2 shadow-sm backdrop-blur">
+        <form action={searchAction} className="sticky top-16 z-10 mb-4 flex items-center gap-2 rounded-xl border bg-card/95 p-2 shadow-sm backdrop-blur">
           <Search className="ml-2 size-5 shrink-0 text-ink-400" />
           <input
             name="q"
@@ -209,7 +218,7 @@ export function CatalogBrowser({
                   exit={{ opacity: 0, scale: 0.96 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <ProductCard product={p} />
+                  <ProductCard product={p} detailBase={detailBase} quoteTo={quoteTo} />
                 </motion.div>
               ))}
             </AnimatePresence>
@@ -219,7 +228,7 @@ export function CatalogBrowser({
             <p className="text-ink-600">No hay productos con esos filtros.</p>
             <div className="mt-3 flex justify-center gap-2">
               <Button variant="outline" onClick={clearAll}>Limpiar filtros</Button>
-              <Link href="/cotizar"><Button variant="gradient">Cotizar con foto del componente</Button></Link>
+              <Link href={quoteTo ?? "/cotizar"}><Button variant="gradient">Cotizar con foto del componente</Button></Link>
             </div>
           </div>
         )}
