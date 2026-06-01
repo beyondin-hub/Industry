@@ -16,6 +16,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ProductBuyBox } from "@/components/catalog/product-buybox";
+import { RecentlyViewedTracker } from "@/components/catalog/recently-viewed-tracker";
 import { ProductCard } from "@/components/catalog/product-card";
 import { ProductTabs } from "@/components/catalog/product-tabs";
 import { PriceHistoryChart } from "@/components/catalog/price-history-chart";
@@ -55,6 +56,7 @@ export default async function ProductPage({ params }: { params: { id: string } }
 
   return (
     <div className="space-y-6">
+      <RecentlyViewedTracker id={product.id} />
       {/* Breadcrumb */}
       <nav className="flex items-center gap-1.5 text-sm text-steel-500">
         <Link href="/catalogo" className="hover:text-safety">Catálogo</Link>

@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Bell, ShieldCheck, CreditCard, LogOut } from "lucide-react";
 import { SmartSearch } from "@/components/catalog/smart-search";
+import { CartIndicator } from "@/components/catalog/cart-indicator";
 import { Badge } from "@/components/ui/badge";
 import { mxn } from "@/lib/utils";
 import {
@@ -64,6 +65,9 @@ export function Topbar({
             Crédito {mxn(company.limite_credito)} · {company.dias_credito}d
           </div>
         )}
+
+        {/* Carrito de cotización */}
+        <CartIndicator />
 
         {/* Notifications */}
         <div className="relative">

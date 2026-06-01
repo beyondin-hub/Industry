@@ -2,13 +2,14 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Minus, Plus, FileSpreadsheet, MessageCircle, Truck, AlertTriangle, Repeat } from "lucide-react";
+import { Minus, Plus, FileSpreadsheet, MessageCircle, Truck, AlertTriangle, Repeat, ClipboardList, Check, GitCompare, Bell } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { mxn, precioPorCantidad, num } from "@/lib/utils";
 import { BRAND } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { stockStatus, deliveryETA, socialProof } from "@/lib/catalog/signals";
+import { useCatalogStore } from "@/lib/catalog/store";
 import type { Product } from "@/types";
 
 const STOCK_VARIANT = {
@@ -21,6 +22,10 @@ const STOCK_VARIANT = {
 export function ProductBuyBox({ product }: { product: Product }) {
   const [cantidad, setCantidad] = useState(1);
   const [reorden, setReorden] = useState(false);
+  const [added, setAdded] = useState(false);
+  const { addToCart, toggleCompare, toggleWatch, compare, watchlist } = useCatalogStore();
+  const enCompare = compare.includes(product.id);
+  const enWatch = watchlist.includes(product.id);
   const base = precioPorCantidad(product.price_tiers, product.precio_base, cantidad);
   const unit = reorden ? base * 0.95 : base; // -5% adicional por reorden automático
   const total = unit * cantidad;
@@ -102,15 +107,52 @@ export function ProductBuyBox({ product }: { product: Product }) {
       </label>
 
       <div className="mt-4 space-y-2">
+        <Button
+          variant="accent"
+          size="lg"
+          className="w-full"
+          onClick={() => {
+            addToCart(product.id, cantidad, reorden);
+            setAdded(true);
+            setTimeout(() => setAdded(false), 2000);
+          }}
+        >
+          {added ? <><Check className="size-4" /> Agregado a tu cotización</> : <><ClipboardList className="size-4" /> Agregar a cotización</>}
+        </Button>
+        {added && (
+          <Link href="/cotizacion" className="block text-center text-sm font-medium text-safety hover:underline">
+            Ver mi cotización →
+          </Link>
+        )}
+        <div className="flex gap-2">
+          <button
+            onClick={() => toggleCompare(product.id)}
+            className={cn(
+              "flex flex-1 items-center justify-center gap-1.5 rounded-md border py-2 text-xs font-medium transition-colors",
+              enCompare ? "border-safety bg-safety-50 text-safety" : "text-steel-600 hover:bg-secondary",
+            )}
+          >
+            <GitCompare className="size-3.5" /> {enCompare ? "Comparando" : "Comparar"}
+          </button>
+          <button
+            onClick={() => toggleWatch(product.id)}
+            className={cn(
+              "flex flex-1 items-center justify-center gap-1.5 rounded-md border py-2 text-xs font-medium transition-colors",
+              enWatch ? "border-safety bg-safety-50 text-safety" : "text-steel-600 hover:bg-secondary",
+            )}
+          >
+            <Bell className="size-3.5" /> {enWatch ? "En watchlist" : "Avisarme"}
+          </button>
+        </div>
         <Link
           href={`/cotizar?sku=${product.id}&qty=${cantidad}${reorden ? "&reorden=1" : ""}`}
-          className={cn(buttonVariants({ variant: "accent", size: "lg" }), "w-full")}
+          className={cn(buttonVariants({ variant: "outline", size: "lg" }), "w-full")}
         >
-          <FileSpreadsheet className="size-4" /> Solicitar cotización
+          <FileSpreadsheet className="size-4" /> Cotización formal (RFQ)
         </Link>
         <a
           href={BRAND.whatsappLink}
-          className={cn(buttonVariants({ variant: "outline", size: "lg" }), "w-full text-emerald-700")}
+          className={cn(buttonVariants({ variant: "ghost", size: "lg" }), "w-full text-emerald-700")}
         >
           <MessageCircle className="size-4" /> Cotizar por WhatsApp
         </a>

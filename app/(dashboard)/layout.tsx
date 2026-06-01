@@ -5,6 +5,8 @@ import { AIAssistant } from "@/components/ai-chat/assistant";
 import { getContext } from "@/lib/repos/context";
 import { getActiveSector } from "@/lib/sector/context";
 import { fetchSectorCategories } from "@/lib/repos/sectors";
+import { CatalogStoreProvider } from "@/lib/catalog/store";
+import { CompareBar } from "@/components/catalog/compare-bar";
 
 export default async function DashboardLayout({
   children,
@@ -19,13 +21,16 @@ export default async function DashboardLayout({
 
   const sectorCategories = sector ? await fetchSectorCategories(sector.slug) : [];
   return (
-    <div className="flex min-h-screen bg-paper-300">
-      <Sidebar isDemo={isDemo} sector={sector} categories={sectorCategories} />
-      <div className="flex min-w-0 flex-1 flex-col">
-        <Topbar buyer={buyer} company={company} isDemo={isDemo} sector={sector} />
-        <main className="flex-1 p-4 lg:p-6">{children}</main>
+    <CatalogStoreProvider>
+      <div className="flex min-h-screen bg-paper-300">
+        <Sidebar isDemo={isDemo} sector={sector} categories={sectorCategories} />
+        <div className="flex min-w-0 flex-1 flex-col">
+          <Topbar buyer={buyer} company={company} isDemo={isDemo} sector={sector} />
+          <main className="flex-1 p-4 lg:p-6">{children}</main>
+        </div>
+        <AIAssistant />
+        <CompareBar />
       </div>
-      <AIAssistant />
-    </div>
+    </CatalogStoreProvider>
   );
 }
