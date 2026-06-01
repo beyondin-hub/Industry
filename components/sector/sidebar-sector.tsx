@@ -49,7 +49,7 @@ export function SidebarSector({
         {destacadas.map((c) => (
           <Link
             key={c.slug}
-            href={`/catalogo/${sector.slug}?category=${c.slug}`}
+            href={`/catalogo/sector/${sector.slug}?category=${c.slug}`}
             className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm text-ink-300 transition-colors hover:bg-ink-800/60 hover:text-white"
           >
             <ChevronRight className="size-3 shrink-0 text-ink-600" />
@@ -57,7 +57,7 @@ export function SidebarSector({
           </Link>
         ))}
         <Link
-          href={`/catalogo/${sector.slug}`}
+          href={`/catalogo/sector/${sector.slug}`}
           className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium text-ink-200 hover:text-white"
           style={{ color: sector.color_secundario }}
         >

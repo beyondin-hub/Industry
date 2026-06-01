@@ -46,7 +46,7 @@ export function SectorBanner({
           .map((c) => (
             <Link
               key={c.slug}
-              href={`/catalogo/${sector.slug}?category=${c.slug}`}
+              href={`/catalogo/sector/${sector.slug}?category=${c.slug}`}
               className="rounded-full border bg-card px-3 py-1 text-xs font-medium text-steel-700 transition-colors hover:text-white"
               style={{ borderColor: `${color}55` }}
             >

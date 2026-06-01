@@ -33,7 +33,7 @@ export function Topbar({
       <MobileNav isDemo={isDemo} />
       {/* Quick order / search — sector-aware */}
       <form
-        action={sector ? `/catalogo/${sector.slug}` : "/catalogo"}
+        action={sector ? `/catalogo/sector/${sector.slug}` : "/catalogo"}
         className="hidden flex-1 items-center gap-2 sm:flex"
       >
         <div className="relative w-full max-w-md">
