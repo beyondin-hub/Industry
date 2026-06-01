@@ -1,7 +1,9 @@
+import { redirect } from "next/navigation";
 import { Sidebar } from "@/components/dashboard/sidebar";
 import { Topbar } from "@/components/dashboard/topbar";
 import { AIAssistant } from "@/components/ai-chat/assistant";
 import { getContext } from "@/lib/repos/context";
+import { getActiveSector } from "@/lib/sector/context";
 
 export default async function DashboardLayout({
   children,
@@ -9,6 +11,10 @@ export default async function DashboardLayout({
   children: React.ReactNode;
 }) {
   const { buyer, company, isDemo } = await getContext();
+
+  // Onboarding de sector: si el comprador aún no lo configuró, va al selector.
+  const { configured } = await getActiveSector();
+  if (!configured) redirect("/onboarding/sector");
   return (
     <div className="flex min-h-screen bg-paper-300">
       <Sidebar isDemo={isDemo} />

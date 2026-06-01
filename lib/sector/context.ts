@@ -9,11 +9,22 @@ export const SECTOR_COOKIE = "novak_sector";
 
 export const SECTOR_SLUGS = ["medical", "electronics"] as const;
 
+/** Valor de cookie que indica "manufactura general": onboarding hecho, sin sector. */
+export const SECTOR_GENERAL = "general";
+
 export interface SectorState {
-  /** Sector activo del comprador, o null si aún no lo configuró. */
+  /** Sector activo del comprador, o null si eligió general o no configuró. */
   sector: IndustrySector | null;
   /** true si el comprador ya pasó por el onboarding de sector. */
   configured: boolean;
+}
+
+/** Interpreta el valor crudo de la cookie de sector. */
+function fromCookie(raw: string | undefined): SectorState {
+  if (!raw) return { sector: null, configured: false };
+  if (raw === SECTOR_GENERAL) return { sector: null, configured: true };
+  const sector = getSector(raw) ?? null;
+  return { sector, configured: Boolean(sector) };
 }
 
 /**
@@ -25,12 +36,13 @@ export interface SectorState {
  */
 export async function getActiveSector(): Promise<SectorState> {
   const ctx = await getContext();
+  const cookieState = fromCookie(cookies().get(SECTOR_COOKIE)?.value);
 
   // Modo live: el sector vive en la fila del comprador.
   if (!ctx.isDemo) {
     const buyer = ctx.buyer as unknown as Record<string, unknown>;
     const sectorId = (buyer.sector_id as string | null) ?? null;
-    const configured = Boolean(buyer.sector_configurado);
+    const configuredDb = Boolean(buyer.sector_configurado);
     if (sectorId) {
       const supabase = createClient();
       try {
@@ -40,19 +52,16 @@ export async function getActiveSector(): Promise<SectorState> {
           .eq("id", sectorId)
           .single();
         if (data?.slug) {
-          return { sector: getSector(data.slug) ?? null, configured };
+          return { sector: getSector(data.slug) ?? null, configured: configuredDb };
         }
       } catch {
         /* cae a cookie abajo */
       }
     }
-    // Sin sector en DB todavía: respeta la cookie si existe.
-    const slug = cookies().get(SECTOR_COOKIE)?.value;
-    return { sector: slug ? getSector(slug) ?? null : null, configured: configured || Boolean(slug) };
+    // Sin sector en DB todavía: respeta la cookie.
+    return { sector: cookieState.sector, configured: configuredDb || cookieState.configured };
   }
 
   // Modo demo: cookie.
-  const slug = cookies().get(SECTOR_COOKIE)?.value;
-  const sector = slug ? getSector(slug) ?? null : null;
-  return { sector, configured: Boolean(sector) };
+  return cookieState;
 }

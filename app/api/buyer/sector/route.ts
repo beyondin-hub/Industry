@@ -2,14 +2,47 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { getContext } from "@/lib/repos/context";
-import { getActiveSector, SECTOR_COOKIE, SECTOR_SLUGS } from "@/lib/sector/context";
+import { getActiveSector, SECTOR_COOKIE, SECTOR_GENERAL, SECTOR_SLUGS } from "@/lib/sector/context";
 
 export const runtime = "nodejs";
+
+const YEAR = 60 * 60 * 24 * 365;
 
 /** Sector actual del comprador autenticado. */
 export async function GET() {
   const { sector, configured } = await getActiveSector();
   return NextResponse.json({ sector, configured });
+}
+
+/**
+ * Persiste el sector del comprador en buyers (solo si hay sesión real).
+ * slug === null → manufactura general (sin sector, pero ya configurado).
+ */
+async function persistToDb(slug: string | null) {
+  const supabase = createClient();
+  const ctx = await getContext();
+  if (!supabase || ctx.isDemo || !ctx.userId) return;
+  try {
+    let sectorId: string | null = null;
+    if (slug) {
+      const { data: sec } = await supabase
+        .from("industry_sectors")
+        .select("id")
+        .eq("slug", slug)
+        .single();
+      sectorId = sec?.id ?? null;
+    }
+    await supabase
+      .from("buyers")
+      .update({
+        sector_id: sectorId,
+        sector_configurado: true,
+        sector_configurado_at: new Date().toISOString(),
+      })
+      .eq("id", ctx.userId);
+  } catch {
+    /* la cookie ya garantiza la experiencia; no rompemos la respuesta */
+  }
 }
 
 /** Actualiza (configura) el sector del comprador. */
@@ -22,9 +55,10 @@ export async function PUT(req: Request) {
     return NextResponse.json({ error: "Cuerpo inválido." }, { status: 400 });
   }
 
-  // 'general' limpia el sector (catálogo sin filtro).
-  if (slug === "general" || slug === null) {
-    cookies().set(SECTOR_COOKIE, "", { maxAge: 0, path: "/" });
+  // 'general': onboarding hecho pero sin filtro de sector (catálogo completo).
+  if (slug === SECTOR_GENERAL || slug === null) {
+    cookies().set(SECTOR_COOKIE, SECTOR_GENERAL, { maxAge: YEAR, path: "/", sameSite: "lax" });
+    await persistToDb(null);
     return NextResponse.json({ ok: true, sector: null });
   }
 
@@ -35,33 +69,8 @@ export async function PUT(req: Request) {
     );
   }
 
-  // Persiste en cookie (modo demo y fast-path) — 1 año.
-  cookies().set(SECTOR_COOKIE, slug, { maxAge: 60 * 60 * 24 * 365, path: "/", sameSite: "lax" });
-
-  // Persiste en DB si hay sesión real.
-  const supabase = createClient();
-  const ctx = await getContext();
-  if (supabase && !ctx.isDemo && ctx.userId) {
-    try {
-      const { data: sec } = await supabase
-        .from("industry_sectors")
-        .select("id")
-        .eq("slug", slug)
-        .single();
-      if (sec?.id) {
-        await supabase
-          .from("buyers")
-          .update({
-            sector_id: sec.id,
-            sector_configurado: true,
-            sector_configurado_at: new Date().toISOString(),
-          })
-          .eq("id", ctx.userId);
-      }
-    } catch {
-      /* la cookie ya garantiza la experiencia; no rompemos la respuesta */
-    }
-  }
+  cookies().set(SECTOR_COOKIE, slug, { maxAge: YEAR, path: "/", sameSite: "lax" });
+  await persistToDb(slug);
 
   const { sector } = await getActiveSector();
   return NextResponse.json({ ok: true, sector });
