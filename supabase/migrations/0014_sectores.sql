@@ -11,7 +11,7 @@ create table if not exists industry_sectors (
   nombre_brand      varchar(100) not null,         -- 'NOVAK Med' | 'NOVAK Electronics'
   tagline           varchar(200),
   descripcion       text,
-  color_primario    varchar(20),                   -- '#0E7490' médico / '#6D28D9' electrónica
+  color_primario    varchar(20),                   -- '#0E7490' médico / '#3D5A73' electrónica
   color_secundario  varchar(20),
   icono             varchar(50),                   -- emoji o nombre de ícono lucide
   activo            boolean default true,
@@ -27,7 +27,7 @@ values
    '#0E7490', '#06B6D4', '🏥', 1),
   ('electronics', 'Manufactura Electrónica', 'NOVAK Electronics',
    'Todo para tu línea SMT y ensamble electrónico',
-   '#6D28D9', '#8B5CF6', '💡', 2)
+   '#3D5A73', '#5B7B97', '💡', 2)
 on conflict (slug) do nothing;
 
 -- ─── Categorías por sector ─────────────────────────────────────
@@ -65,13 +65,13 @@ with elec as (select id from industry_sectors where slug = 'electronics')
 insert into sector_categories (sector_id, slug, nombre, descripcion, icono, color_badge, orden, destacada)
 select elec.id, c.slug, c.nombre, c.descripcion, c.icono, c.color, c.orden, c.destacada
 from elec, (values
-  ('esd-control',         'Control ESD',            'Bolsas, tapetes, pulseras, calzado antiestático ANSI S20.20',    '⚡', '#6D28D9', 1, true),
-  ('limpieza-electronica','Limpieza Electrónica',   'IPA 99%, wipes lint-free, limpiadores de flux y stencil',        '🧹', '#6D28D9', 2, true),
-  ('consumibles-smt',     'Consumibles SMT',        'Squeegee blades, Kapton tape, aceite de horno, soporte PCB',     '🔩', '#6D28D9', 3, true),
-  ('herramientas-rework', 'Herramientas de Rework', 'Puntas de soldadura, pinzas ESD, flux, malla desoldadora',       '🛠️', '#6D28D9', 4, true),
-  ('empaque-esd',         'Empaque ESD y Producto', 'Cajas, espuma antiestática, etiquetas RoHS, stretch film ESD',   '📦', '#6D28D9', 5, false),
-  ('conformal-coating',   'Conformal Coating',      'Recubrimientos protectores, solventes de remoción, aplicadores', '🎨', '#6D28D9', 6, false),
-  ('epp-electronica',     'EPP Manufactura',        'Guantes nitrilo fino, respiradores, googles para solventes',     '🥽', '#6D28D9', 7, false)
+  ('esd-control',         'Control ESD',            'Bolsas, tapetes, pulseras, calzado antiestático ANSI S20.20',    '⚡', '#3D5A73', 1, true),
+  ('limpieza-electronica','Limpieza Electrónica',   'IPA 99%, wipes lint-free, limpiadores de flux y stencil',        '🧹', '#3D5A73', 2, true),
+  ('consumibles-smt',     'Consumibles SMT',        'Squeegee blades, Kapton tape, aceite de horno, soporte PCB',     '🔩', '#3D5A73', 3, true),
+  ('herramientas-rework', 'Herramientas de Rework', 'Puntas de soldadura, pinzas ESD, flux, malla desoldadora',       '🛠️', '#3D5A73', 4, true),
+  ('empaque-esd',         'Empaque ESD y Producto', 'Cajas, espuma antiestática, etiquetas RoHS, stretch film ESD',   '📦', '#3D5A73', 5, false),
+  ('conformal-coating',   'Conformal Coating',      'Recubrimientos protectores, solventes de remoción, aplicadores', '🎨', '#3D5A73', 6, false),
+  ('epp-electronica',     'EPP Manufactura',        'Guantes nitrilo fino, respiradores, googles para solventes',     '🥽', '#3D5A73', 7, false)
 ) as c(slug, nombre, descripcion, icono, color, orden, destacada)
 on conflict (sector_id, slug) do nothing;
 

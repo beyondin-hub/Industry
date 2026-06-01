@@ -39,8 +39,8 @@ export const SECTORS: IndustrySector[] = [
     nombre_brand: "NOVAK Electronics",
     tagline: "Todo para tu línea SMT y ensamble electrónico",
     descripcion: "Todo para tu línea SMT y ensamble electrónico",
-    color_primario: "#6D28D9",
-    color_secundario: "#8B5CF6",
+    color_primario: "#3D5A73",
+    color_secundario: "#5B7B97",
     icono: "💡",
     industrias_ejemplo: ["Foxconn", "Samsung", "Plantronics", "Sanmina"],
     beneficios: [
@@ -86,7 +86,7 @@ function cat(
   orden: number,
   destacada: boolean,
 ): SectorCategory {
-  const color = sector_slug === "medical" ? "#0E7490" : "#6D28D9";
+  const color = sector_slug === "medical" ? "#0E7490" : "#3D5A73";
   return { id: `cat-${sector_slug}-${slug}`, sector_slug, slug, nombre, descripcion, icono, color_badge: color, orden, destacada };
 }
 
