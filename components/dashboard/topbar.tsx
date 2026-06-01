@@ -30,7 +30,7 @@ export function Topbar({
 
   return (
     <header className="sticky top-0 z-40 flex h-16 items-center gap-4 border-b bg-card/90 px-4 backdrop-blur lg:px-6">
-      <MobileNav isDemo={isDemo} />
+      <MobileNav isDemo={isDemo} sector={sector} />
       {/* Quick order / search — sector-aware */}
       <form
         action={sector ? `/catalogo/sector/${sector.slug}` : "/catalogo"}
