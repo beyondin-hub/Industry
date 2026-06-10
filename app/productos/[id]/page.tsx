@@ -8,7 +8,6 @@ import { ProductCard } from "@/components/catalog/product-card";
 import { PublicBuyBox } from "@/components/marketing/public-buybox";
 import { fetchProduct, fetchRelated } from "@/lib/repos/products";
 import { PRODUCTS } from "@/lib/data/products";
-import { photoForProduct } from "@/lib/catalog/images";
 import { categoriaNombre, categoriaEmoji } from "@/lib/constants";
 
 // Pre-renderiza (SSG) las fichas del catálogo demo para SEO y velocidad.
@@ -24,7 +23,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
     product.descripcion?.slice(0, 160) ??
     `${product.nombre} (${product.numero_parte}) — ${product.marca}. Precio, stock y entrega 24–48h en el norte de México.`;
   const url = `/productos/${product.id}`;
-  const img = photoForProduct(product.categoria, product.imagen_url);
+  const img = product.imagen_url;
 
   return {
     title: product.nombre,
@@ -64,7 +63,7 @@ export default async function ProductoPublicoPage({ params }: { params: { id: st
     brand: product.marca ? { "@type": "Brand", name: product.marca } : undefined,
     category: categoriaNombre(product.categoria),
     description: product.descripcion || undefined,
-    image: photoForProduct(product.categoria, product.imagen_url),
+    image: product.imagen_url || undefined,
     offers: {
       "@type": "Offer",
       priceCurrency: "MXN",

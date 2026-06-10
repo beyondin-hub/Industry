@@ -1,13 +1,9 @@
-"use client";
-
 import Image from "next/image";
-import { useState } from "react";
 import { categoriaEmoji } from "@/lib/constants";
 import { cn } from "@/lib/utils";
-import { photoForProduct } from "@/lib/catalog/images";
 import type { CategoriaMRO } from "@/types";
 
-// Gradiente sutil por categoría — fallback si no hay foto o falla la carga.
+// Gradiente sutil por categoría (identidad visual sin depender de fotos externas).
 const GRAD: Record<string, string> = {
   rodamientos: "from-ink-100 to-steel-200",
   epp: "from-amber-50 to-amber-100",
@@ -36,26 +32,18 @@ export function ProductImage({
   className?: string;
   size?: "card" | "detail";
 }) {
-  const [failed, setFailed] = useState(false);
-  const src = failed ? undefined : photoForProduct(categoria, imagenUrl);
-
-  // Foto real (propia o por categoría) con next/image; cae al placeholder si falla.
-  if (src) {
+  // Solo se muestra una foto si el producto tiene una imagen REAL en imagen_url.
+  // Si no, se usa el placeholder de marca (emoji + gradiente por categoría).
+  if (imagenUrl) {
     return (
       <div className={cn("relative h-full w-full overflow-hidden bg-steel-50", className)}>
         <Image
-          src={src}
-          alt={`${marca ? `${marca} ` : ""}${numeroParte ?? "Producto industrial"}`}
+          src={imagenUrl}
+          alt={`${marca ? `${marca} ` : ""}${numeroParte ?? "Producto"}`}
           fill
           sizes={size === "detail" ? "(max-width: 768px) 100vw, 640px" : "(max-width: 768px) 50vw, 320px"}
           className="object-cover"
-          onError={() => setFailed(true)}
         />
-        {numeroParte && (
-          <span className="absolute bottom-2 left-2 rounded bg-card/80 px-1.5 py-0.5 font-mono text-[10px] font-medium text-ink-600 backdrop-blur">
-            {marca ? `${marca} · ` : ""}{numeroParte}
-          </span>
-        )}
       </div>
     );
   }
