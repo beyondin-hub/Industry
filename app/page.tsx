@@ -120,7 +120,7 @@ export default async function LandingPage() {
           <div className="absolute inset-0 bg-noise opacity-40" />
           <div className="container relative py-16 lg:py-20">
             <div className="mx-auto max-w-3xl text-center">
-              <Badge variant="purplecow" className="mx-auto px-3 py-1 text-sm">
+              <Badge variant="secondary" className="mx-auto border border-gold/30 bg-gold/10 px-3 py-1 text-sm text-gold">
                 <Zap className="size-3.5" /> Cotización en 2h garantizada o 0% comisión
               </Badge>
               <h1 className="mt-5 font-display text-4xl font-extrabold leading-[1.05] tracking-tight text-balance sm:text-5xl lg:text-6xl">
@@ -360,7 +360,7 @@ export default async function LandingPage() {
           <div className="absolute inset-0 glow-accent" />
           <div className="container relative flex flex-col items-center gap-5 text-center">
             <h2 className="max-w-3xl font-display text-3xl font-bold tracking-tight text-balance sm:text-5xl">
-              Tu primera cotización va <span className="text-gradient">sin comisión</span>
+              Tu primera cotización va <span className="text-gold">sin comisión</span>
             </h2>
             <p className="max-w-xl text-ink-300">{content.garantia}</p>
             <div className="flex flex-wrap items-center justify-center gap-3">

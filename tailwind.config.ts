@@ -87,15 +87,14 @@ const config: Config = {
           900: "#151210",
           950: "#0A0908",
         },
-        // Acción/acento principal AHORA NEUTRO (hierro/negro, estilo Apple).
-        // El código usa `safety-*` en CTAs, links e iconos → se vuelven neutros.
+        // Acción/CTA: gris plomo / grafito (suave, premium — no negro sólido).
         safety: {
-          DEFAULT: "#1A1A1A", // iron
+          DEFAULT: "#3D3833", // lead graphite
           50: "#F3F1ED",
           100: "#E5E1DA",
           400: "#5A5650", // steel
-          500: "#1A1A1A",
-          600: "#0A0908", // void (hover)
+          500: "#3D3833",
+          600: "#2E2B27", // hover
         },
         // Bronce: acento cálido SUTIL, solo para lo más relevante. No abusar.
         purplecow: {
@@ -105,8 +104,8 @@ const config: Config = {
           500: "#6B5D4F",
           600: "#564A3E",
         },
-        // Ámbar reservado (uso muy puntual) + neutros cálidos decorativos.
-        gold: { DEFAULT: "#C99A52", 400: "#D9A24A", 500: "#C99A52" },
+        // Ámbar reservado: SOLO para 1-2 acentos clave (promesa de marca).
+        gold: { DEFAULT: "#D4843E", 400: "#E0A064", 500: "#D4843E" },
         magenta: { DEFAULT: "#8A7A66", 400: "#9C8B74", 500: "#8A7A66" },
         // Estados.
         success: "#1A6B3C",
