@@ -11,8 +11,8 @@ export function SpendChart({ data }: { data: readonly { mes: string; total: numb
         <BarChart data={[...data]} margin={{ top: 10, right: 8, left: 0, bottom: 0 }}>
           <defs>
             <linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#6D4AFF" />
-              <stop offset="100%" stopColor="#9B5CFF" />
+              <stop offset="0%" stopColor="#2E2B27" />
+              <stop offset="100%" stopColor="#6B5D4F" />
             </linearGradient>
           </defs>
           <XAxis dataKey="mes" tick={{ fontSize: 11, fill: "#6B6056" }} axisLine={false} tickLine={false} />

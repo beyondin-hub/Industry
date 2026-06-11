@@ -1,16 +1,18 @@
 import type { Metadata } from "next";
-import { Syne, DM_Sans, DM_Mono } from "next/font/google";
+import { Sora, Onest, DM_Mono } from "next/font/google";
 import { ToastProvider } from "@/components/ui/toast";
 import "./globals.css";
 
-const syne = Syne({
+// Display: Sora — limpia, geométrica y moderna (cercana a SF Pro, minimal Apple).
+const display = Sora({
   subsets: ["latin"],
   weight: ["600", "700", "800"],
   variable: "--font-display",
   display: "swap",
 });
 
-const dmSans = DM_Sans({
+// Cuerpo: Onest — diseñada para lectura cómoda y descansada.
+const sans = Onest({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
   variable: "--font-sans",
@@ -54,7 +56,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es-MX" className={`${syne.variable} ${dmSans.variable} ${dmMono.variable}`}>
+    <html lang="es-MX" className={`${display.variable} ${sans.variable} ${dmMono.variable}`}>
       <body className="font-sans">
         <ToastProvider>{children}</ToastProvider>
       </body>

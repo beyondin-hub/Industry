@@ -7,5 +7,14 @@
     "deploymentEnabled": {
       "main": true
     }
-  }
+  },
+  "crons": [
+    { "path": "/api/cron/check-rfq-guarantee", "schedule": "0 15 * * *" },
+    { "path": "/api/cron/sync-tracking", "schedule": "0 13 * * *" },
+    { "path": "/api/cron/check-dispatch-deadline", "schedule": "0 16 * * *" },
+    { "path": "/api/cron/check-credit-expiry", "schedule": "0 9 * * *" },
+    { "path": "/api/cron/check-auto-reorders", "schedule": "0 7 * * *" },
+    { "path": "/api/cron/check-cert-expiry", "schedule": "0 8 * * 1" },
+    { "path": "/api/cron/calculate-scores", "schedule": "0 6 1 * *" }
+  ]
 }

@@ -16,17 +16,17 @@ export const ADMIN_ROLES: { id: AdminRole; label: string; desc: string }[] = [
 
 // Secciones del panel (clave = identificador de permiso).
 export const ADMIN_SECTIONS = [
-  "dashboard", "finanzas", "rfq", "cotizador", "ordenes", "envios", "catalogo", "proveedores",
-  "compradores", "credito", "tesoreria", "soporte", "cms", "automatizaciones",
+  "dashboard", "finanzas", "rfq", "cotizador", "ordenes", "envios", "bodega", "catalogo", "proveedores",
+  "scoring", "compradores", "credito", "tesoreria", "soporte", "cms", "automatizaciones",
   "equipo", "auditoria", "config",
 ] as const;
 export type AdminSection = (typeof ADMIN_SECTIONS)[number];
 
 const PERMISOS: Record<AdminRole, AdminSection[]> = {
   super_admin: [...ADMIN_SECTIONS],
-  ops: ["dashboard", "rfq", "cotizador", "ordenes", "envios", "catalogo", "proveedores", "compradores", "soporte", "cms"],
+  ops: ["dashboard", "rfq", "cotizador", "ordenes", "envios", "bodega", "catalogo", "proveedores", "scoring", "compradores", "soporte", "cms"],
   finanzas: ["dashboard", "finanzas", "ordenes", "compradores", "credito", "tesoreria", "auditoria"],
-  soporte: ["dashboard", "rfq", "ordenes", "envios", "proveedores", "soporte"],
+  soporte: ["dashboard", "rfq", "ordenes", "envios", "bodega", "proveedores", "soporte"],
 };
 
 export function can(role: AdminRole, section: AdminSection): boolean {

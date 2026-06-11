@@ -49,64 +49,64 @@ const config: Config = {
           foreground: "hsl(var(--popover-foreground))",
         },
 
-        // ─── Marca MROLink ─────────────────────────────────────
-        // Papel cálido (no blanco puro) — estilo Apple.
+        // ─── Marca Novak — paleta neutral cálida (estilo Apple) ───
+        // Superficies claras: blanco → perla. Que destaque el producto, no el fondo.
         paper: {
-          DEFAULT: "#F7F4EF",
-          50: "#FDFCFA",
-          100: "#FBFAF7",
-          200: "#F7F4EF",
-          300: "#EEEBE4",
-          400: "#E4E0D7",
+          DEFAULT: "#FAF9F6",
+          50: "#FFFFFF",
+          100: "#FCFBF9",
+          200: "#F7F5F1",
+          300: "#F1EEE8",
+          400: "#E8E4DC", // pearl
         },
-        // Escala "ink": grises plomo cálidos, casi negro (warm Apple greys).
+        // Escala "ink": void → carbon → graphite → steel → pearl (neutros cálidos).
         ink: {
-          50: "#F2EEE7",
-          100: "#EAE5DC",
-          200: "#D9D2C6",
-          300: "#BBB2A4",
-          400: "#938A7D",
-          500: "#6B6056",
-          600: "#524A42",
-          700: "#3D3833",
-          800: "#29251F",
-          900: "#16130F",
-          950: "#0D0C0A",
+          50: "#F5F2EC",
+          100: "#E8E4DC", // pearl
+          200: "#D2CCC1",
+          300: "#B0A99D",
+          400: "#837D73",
+          500: "#5A5650", // steel
+          600: "#423E39",
+          700: "#2E2B27",
+          800: "#1E1C1A", // graphite
+          900: "#151210", // carbon
+          950: "#0A0908", // void
         },
-        // Alias: el código existente usa `steel-*`; lo mapeamos a la escala ink.
+        // Alias: el código usa `steel-*`; misma escala neutra.
         steel: {
-          50: "#F2EEE7",
-          100: "#EAE5DC",
-          200: "#D9D2C6",
-          300: "#BBB2A4",
-          400: "#938A7D",
-          500: "#6B6056",
-          600: "#524A42",
-          700: "#3D3833",
-          800: "#29251F",
-          900: "#16130F",
-          950: "#0D0C0A",
+          50: "#F5F2EC",
+          100: "#E8E4DC",
+          200: "#D2CCC1",
+          300: "#B0A99D",
+          400: "#837D73",
+          500: "#5A5650",
+          600: "#423E39",
+          700: "#2E2B27",
+          800: "#1E1C1A",
+          900: "#151210",
+          950: "#0A0908",
         },
-        // Acento principal: morado moderno y sutil.
-        // El código usa `safety-*` como acento → ahora es morado.
+        // Acción/CTA: gris plomo / grafito (suave, premium — no negro sólido).
         safety: {
-          DEFAULT: "#6D4AFF",
-          50: "#F2EEFF",
-          100: "#E7E0FF",
-          400: "#9B86FF",
-          500: "#6D4AFF",
-          600: "#5A35F0",
+          DEFAULT: "#3D3833", // lead graphite
+          50: "#F3F1ED",
+          100: "#E5E1DA",
+          400: "#5A5650", // steel
+          500: "#3D3833",
+          600: "#2E2B27", // hover
         },
+        // Bronce: acento cálido SUTIL, solo para lo más relevante. No abusar.
         purplecow: {
-          DEFAULT: "#7A5CFF",
-          50: "#F3EFFF",
-          100: "#E8E0FF",
-          500: "#7A5CFF",
-          600: "#6442E6",
+          DEFAULT: "#6B5D4F", // bronze
+          50: "#F2EFEA",
+          100: "#E6E0D8",
+          500: "#6B5D4F",
+          600: "#564A3E",
         },
-        // Decorativos para gradientes/texturas.
-        gold: { DEFAULT: "#E8B04B", 400: "#F0C36B", 500: "#E8B04B" },
-        magenta: { DEFAULT: "#E0529C", 400: "#EA6FAE", 500: "#E0529C" },
+        // Ámbar reservado: SOLO para 1-2 acentos clave (promesa de marca).
+        gold: { DEFAULT: "#D4843E", 400: "#E0A064", 500: "#D4843E" },
+        magenta: { DEFAULT: "#8A7A66", 400: "#9C8B74", 500: "#8A7A66" },
         // Estados.
         success: "#1A6B3C",
         danger: "#B91C1C",

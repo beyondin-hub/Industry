@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Loader2 } from "lucide-react";
+import { Loader2, FileText, Receipt } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Select } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
@@ -14,6 +15,7 @@ import type { EstadoOrden } from "@/types";
 export interface OrderVM {
   id: string; folio: string; empresa: string; proveedor: string; categoria: string;
   total: number; estado: EstadoOrden; es_credito: boolean; pagado: boolean; created_at: string;
+  cfdi_uuid?: string; empresa_rfc?: string;
 }
 
 const FILTROS: { k: string; label: string }[] = [
@@ -33,6 +35,8 @@ export function OrdersTable({ orders }: { orders: OrderVM[] }) {
 
   const visibles = filtro === "todas" ? rows : rows.filter((o) => o.estado === filtro);
 
+  const [timbrando, setTimbrando] = useState<string | null>(null);
+
   async function cambiar(o: OrderVM, estado: EstadoOrden) {
     setBusy(o.id);
     const res = await updateOrderStatus({ orderId: o.id, folio: o.folio, estado });
@@ -41,6 +45,31 @@ export function OrdersTable({ orders }: { orders: OrderVM[] }) {
       setRows((a) => a.map((x) => (x.id === o.id ? { ...x, estado } : x)));
       toast({ type: "success", title: `${o.folio} → ${estado.replace("_", " ")}` });
     } else toast({ type: "error", title: "No se pudo", description: res.error });
+  }
+
+  async function timbrar(o: OrderVM) {
+    setTimbrando(o.id);
+    try {
+      const res = await fetch("/api/cfdi/timbrar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          orderId: o.id,
+          folio: o.folio,
+          receptor_rfc: o.empresa_rfc ?? "XAXX010101000",
+          receptor_nombre: o.empresa,
+          conceptos: [{ descripcion: `Suministro MRO orden ${o.folio}`, cantidad: 1, valor_unitario: Math.round(o.total / 1.16) }],
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      setRows((a) => a.map((x) => (x.id === o.id ? { ...x, cfdi_uuid: data.uuid } : x)));
+      toast({ type: "success", title: "CFDI timbrado", description: `UUID ${String(data.uuid).slice(0, 8)}…${data.demo ? " (demo)" : ""}` });
+    } catch (e: any) {
+      toast({ type: "error", title: "No se pudo timbrar", description: e?.message });
+    } finally {
+      setTimbrando(null);
+    }
   }
 
   return (
@@ -65,6 +94,7 @@ export function OrdersTable({ orders }: { orders: OrderVM[] }) {
                   <th className="px-5 py-3 text-right font-medium">Total</th>
                   <th className="px-5 py-3 font-medium">Pago</th>
                   <th className="px-5 py-3 font-medium">Estado</th>
+                  <th className="px-5 py-3 font-medium">CFDI</th>
                   <th className="px-5 py-3 text-right font-medium">Cambiar estado</th>
                 </tr>
               </thead>
@@ -82,6 +112,17 @@ export function OrdersTable({ orders }: { orders: OrderVM[] }) {
                       {o.es_credito ? <Badge variant={o.pagado ? "success" : "warning"}>{o.pagado ? "Crédito pagado" : "A crédito"}</Badge> : <Badge variant="steel">Contado</Badge>}
                     </td>
                     <td className="px-5 py-3"><OrdenStatus estado={o.estado} /></td>
+                    <td className="px-5 py-3">
+                      {o.cfdi_uuid ? (
+                        <a href="#" className="inline-flex items-center gap-1 text-xs font-medium text-safety">
+                          <FileText className="size-3.5" /> {o.cfdi_uuid.slice(0, 8)}…
+                        </a>
+                      ) : (
+                        <Button variant="outline" size="sm" disabled={timbrando === o.id} onClick={() => timbrar(o)}>
+                          {timbrando === o.id ? <Loader2 className="size-3.5 animate-spin" /> : <Receipt className="size-3.5" />} Timbrar
+                        </Button>
+                      )}
+                    </td>
                     <td className="px-5 py-3 text-right">
                       <div className="flex items-center justify-end gap-2">
                         {busy === o.id && <Loader2 className="size-4 animate-spin text-ink-400" />}
@@ -92,7 +133,7 @@ export function OrdersTable({ orders }: { orders: OrderVM[] }) {
                     </td>
                   </tr>
                 ))}
-                {visibles.length === 0 && <tr><td colSpan={7} className="px-5 py-10 text-center text-ink-500">Sin órdenes en este filtro.</td></tr>}
+                {visibles.length === 0 && <tr><td colSpan={8} className="px-5 py-10 text-center text-ink-500">Sin órdenes en este filtro.</td></tr>}
               </tbody>
             </table>
           </div>

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { categoriaEmoji } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import type { CategoriaMRO } from "@/types";
@@ -31,11 +32,19 @@ export function ProductImage({
   className?: string;
   size?: "card" | "detail";
 }) {
-  // Si hay foto real, úsala.
+  // Solo se muestra una foto si el producto tiene una imagen REAL en imagen_url.
+  // Si no, se usa el placeholder de marca (emoji + gradiente por categoría).
   if (imagenUrl) {
     return (
-      // eslint-disable-next-line @next/next/no-img-element
-      <img src={imagenUrl} alt={numeroParte ?? "Producto"} className={cn("h-full w-full object-cover", className)} />
+      <div className={cn("relative h-full w-full overflow-hidden bg-steel-50", className)}>
+        <Image
+          src={imagenUrl}
+          alt={`${marca ? `${marca} ` : ""}${numeroParte ?? "Producto"}`}
+          fill
+          sizes={size === "detail" ? "(max-width: 768px) 100vw, 640px" : "(max-width: 768px) 50vw, 320px"}
+          className="object-cover"
+        />
+      </div>
     );
   }
 

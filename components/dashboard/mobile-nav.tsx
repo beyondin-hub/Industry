@@ -3,15 +3,26 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ClipboardCheck, Zap, BookOpen, ChevronRight } from "lucide-react";
 import { Logo } from "@/components/shared/logo";
 import { COMPRADOR_NAV } from "@/components/dashboard/nav-items";
 import { DemoViewSwitcher } from "@/components/shared/demo-view-switcher";
 import { cn } from "@/lib/utils";
+import type { IndustrySector } from "@/types";
 
-export function MobileNav({ isDemo = false }: { isDemo?: boolean }) {
+export function MobileNav({
+  isDemo = false,
+  sector = null,
+}: {
+  isDemo?: boolean;
+  sector?: IndustrySector | null;
+}) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const kit =
+    sector?.slug === "medical"
+      ? { href: "/herramientas/auditoria", label: "Kit de Auditoría", icon: ClipboardCheck }
+      : { href: "/herramientas/linea-smt", label: "Kit de Línea SMT", icon: Zap };
 
   return (
     <>
@@ -51,6 +62,28 @@ export function MobileNav({ isDemo = false }: { isDemo?: boolean }) {
                   </Link>
                 );
               })}
+
+              {sector && (
+                <div className="mt-3 border-t border-ink-800 pt-3">
+                  <p className="px-3 pb-1 text-[11px] font-semibold uppercase tracking-wider text-ink-500">
+                    {sector.icono} {sector.nombre_brand}
+                  </p>
+                  {[
+                    { href: `/catalogo/sector/${sector.slug}`, label: "Catálogo del sector", icon: ChevronRight },
+                    kit,
+                    { href: `/guias/${sector.slug}`, label: "Guías Técnicas", icon: BookOpen },
+                  ].map((l) => (
+                    <Link
+                      key={l.href}
+                      href={l.href}
+                      onClick={() => setOpen(false)}
+                      className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-ink-300 transition-colors hover:bg-ink-800/60 hover:text-white"
+                    >
+                      <l.icon className="size-4 shrink-0" /> {l.label}
+                    </Link>
+                  ))}
+                </div>
+              )}
             </nav>
             <DemoViewSwitcher current="comprador" show={isDemo} />
             <div className="border-t border-ink-800 p-3">

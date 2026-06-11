@@ -240,3 +240,79 @@ export interface ChatMessage {
   role: "user" | "assistant";
   content: string;
 }
+
+// ────────────────────────────────────────────────────────────
+// Módulo Sectores (NOVAK Med / NOVAK Electronics)
+// ────────────────────────────────────────────────────────────
+
+export type SectorSlug = "medical" | "electronics";
+
+export interface IndustrySector {
+  id: string;
+  slug: SectorSlug;
+  nombre: string;
+  nombre_brand: string;
+  tagline: string;
+  descripcion?: string;
+  color_primario: string;
+  color_secundario: string;
+  icono: string;
+  /** Industrias ejemplo que se muestran en el selector de onboarding. */
+  industrias_ejemplo?: string[];
+  /** Bullets de valor que se muestran en la card del selector. */
+  beneficios?: string[];
+  orden: number;
+}
+
+export interface SectorCategory {
+  id: string;
+  sector_slug: SectorSlug;
+  slug: string;
+  nombre: string;
+  descripcion: string;
+  icono: string;
+  color_badge: string;
+  orden: number;
+  destacada: boolean;
+}
+
+/** Producto del catálogo enriquecido con atributos del sector activo. */
+export interface SectorProduct {
+  id: string;
+  sector_slug: SectorSlug;
+  category_slug: string;
+  nombre: string;
+  sku: string;
+  marca?: string;
+  unidad: string;
+  precio: number;
+  /** Badges de certificación/atributo que se muestran en la tarjeta. */
+  badges: string[];
+  /** Texto de uso específico para este sector. */
+  uso_sector: string;
+  /** Atributos técnicos clave (etiqueta → valor) para la tabla de specs. */
+  atributos_tecnicos: Record<string, string>;
+  /** Casos de uso recomendados en la industria. */
+  usos_recomendados?: string[];
+  /** Documentos descargables (auditoría / cumplimiento). */
+  documentos?: { tipo: string; nombre: string }[];
+  stock_actual: number;
+  en_stock_tj: boolean;
+  tiempo_entrega_horas: number;
+  destacado_sector: boolean;
+  imagen_url?: string;
+}
+
+export type CategoriaGuia = "seleccion-producto" | "normativa" | "proceso" | "faq";
+
+export interface SectorGuide {
+  id: string;
+  sector_slug: SectorSlug;
+  titulo: string;
+  slug: string;
+  resumen: string;
+  contenido?: string;
+  categoria: CategoriaGuia;
+  tags: string[];
+  orden: number;
+}

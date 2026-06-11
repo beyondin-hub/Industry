@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Bell, Search, ShieldCheck, CreditCard, LogOut } from "lucide-react";
+import { Bell, ShieldCheck, CreditCard, LogOut } from "lucide-react";
+import { SmartSearch } from "@/components/catalog/smart-search";
+import { CartIndicator } from "@/components/catalog/cart-indicator";
 import { Badge } from "@/components/ui/badge";
 import { mxn } from "@/lib/utils";
 import {
@@ -12,42 +14,60 @@ import {
 } from "@/lib/data/account";
 import { logoutAction } from "@/app/(auth)/actions";
 import { MobileNav } from "@/components/dashboard/mobile-nav";
-import type { Buyer, Company } from "@/types";
+import type { Buyer, Company, IndustrySector } from "@/types";
 
 export function Topbar({
   buyer = CURRENT_BUYER,
   company = CURRENT_COMPANY,
   isDemo = false,
+  sector = null,
 }: {
   buyer?: Buyer;
   company?: Company;
   isDemo?: boolean;
+  sector?: IndustrySector | null;
 }) {
   const [open, setOpen] = useState(false);
   const noLeidas = NOTIFICATIONS.filter((n) => !n.leida).length;
 
   return (
     <header className="sticky top-0 z-40 flex h-16 items-center gap-4 border-b bg-card/90 px-4 backdrop-blur lg:px-6">
-      <MobileNav isDemo={isDemo} />
-      {/* Quick order / search */}
-      <form action="/catalogo" className="hidden flex-1 items-center gap-2 sm:flex">
-        <div className="relative w-full max-w-md">
-          <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-steel-400" />
-          <input
-            name="q"
-            placeholder="Quick order: pega número de parte o busca…"
-            className="h-9 w-full rounded-md border border-input bg-steel-50 pl-9 pr-3 text-sm outline-none focus:bg-card focus:ring-2 focus:ring-ring"
-          />
-        </div>
-      </form>
+      <MobileNav isDemo={isDemo} sector={sector} />
+      {/* Quick order / búsqueda inteligente */}
+      <div className="hidden flex-1 items-center sm:flex">
+        <SmartSearch
+          placeholder={
+            sector?.slug === "medical"
+              ? "Número de parte, certificación o descripción…"
+              : sector?.slug === "electronics"
+                ? "Número de parte, SKU o consumible…"
+                : "Quick order: pega número de parte o busca…"
+          }
+        />
+      </div>
 
       <div className="ml-auto flex items-center gap-3">
+        {sector && (
+          <Link
+            href="/onboarding/sector"
+            title={`Sector activo: ${sector.nombre_brand} · cambiar`}
+            className="hidden items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-semibold sm:flex"
+            style={{ color: sector.color_primario, backgroundColor: `${sector.color_primario}1A` }}
+          >
+            <span aria-hidden>{sector.icono}</span>
+            {sector.nombre_brand.replace(/^NOVAK\s*/i, "")}
+          </Link>
+        )}
+
         {company.credito_aprobado && (
           <div className="hidden items-center gap-1.5 rounded-lg bg-emerald-50 px-3 py-1.5 text-xs font-medium text-emerald-700 md:flex">
             <CreditCard className="size-3.5" />
             Crédito {mxn(company.limite_credito)} · {company.dias_credito}d
           </div>
         )}
+
+        {/* Carrito de cotización */}
+        <CartIndicator />
 
         {/* Notifications */}
         <div className="relative">

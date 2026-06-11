@@ -1,6 +1,5 @@
 import Link from "next/link";
 import {
-  Search,
   Clock,
   Truck,
   CreditCard,
@@ -9,36 +8,30 @@ import {
   MessageCircle,
   ArrowRight,
   Zap,
-  Timer,
-  PackageX,
-  HandCoins,
   Quote,
-  Check,
   Store,
-  FileSpreadsheet,
-  Repeat,
-  BarChart3,
-  Sparkles,
+  Flame,
+  Tag,
+  MapPin,
 } from "lucide-react";
 import { SiteHeader } from "@/components/marketing/site-header";
 import { SiteFooter } from "@/components/marketing/site-footer";
 import { DowntimeCalculator } from "@/components/marketing/downtime-calculator";
 import { SupplierScorecard } from "@/components/shared/supplier-scorecard";
+import { ProductCard } from "@/components/catalog/product-card";
+import { SmartSearch } from "@/components/catalog/smart-search";
 import { buttonVariants } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { CATEGORIAS, BRAND } from "@/lib/constants";
 import { fetchSiteContent } from "@/lib/repos/content";
+import { fetchProducts } from "@/lib/repos/products";
+import { firstVolumeBreak, socialProof } from "@/lib/catalog/signals";
 import { PROVIDERS } from "@/lib/data/providers";
 import { cn } from "@/lib/utils";
+import type { Product } from "@/types";
 
 const MARCAS = ["SKF", "SMC", "FESTO", "3M", "MOBIL", "SIEMENS", "BOSCH", "PARKER", "MITUTOYO", "SCHNEIDER", "NSK", "GATES"];
-
-const PROBLEMAS = [
-  { icon: Timer, t: "3–5 días por una cotización", d: "Mientras tu línea espera, mandas correos y haces llamadas a 4 distribuidores sin respuesta clara." },
-  { icon: PackageX, t: "Sin stock confirmado", d: "Te prometen disponibilidad y al final no hay pieza. La línea sigue parada y nadie responde." },
-  { icon: HandCoins, t: "Sin crédito ágil", d: "El distribuidor local no da crédito y compras tienen que aprobar la orden. Más demora." },
-];
 
 const PILARES = [
   { icon: Clock, t: "Cotización en 2 horas", d: "Garantía o tu siguiente orden con 0% comisión.", color: "text-purplecow" },
@@ -48,29 +41,70 @@ const PILARES = [
 ];
 
 const PASOS = [
-  { n: "01", t: "Solicita", d: "Pega números de parte, sube tu lista o describe el problema — incluso con una foto del componente." },
-  { n: "02", t: "Cotizamos", d: "Nuestra mesa de operaciones consigue precios de proveedores certificados en menos de 2 horas." },
-  { n: "03", t: "Recibes", d: "Aprueba con un clic, paga de contado o a crédito y recibe en planta en 24–48h con CFDI." },
+  { n: "01", t: "Busca o solicita", d: "Pega números de parte, sube tu lista o describe el problema — incluso con foto del componente." },
+  { n: "02", t: "Cotizamos en 2h", d: "Nuestra mesa consigue precios de proveedores certificados en menos de 2 horas hábiles." },
+  { n: "03", t: "Recibes en planta", d: "Aprueba con un clic, paga de contado o a crédito y recibe en 24–48h con CFDI." },
 ];
 
 const TESTIMONIOS = [
-  { quote: "Pasamos de esperar 3 días por cotización a tenerla antes de comer. Una válvula a tiempo evitó parar la línea de ensamble.", nombre: "Jorge Medina", cargo: "Gerente de Compras", empresa: "Proveedor automotriz Tier 1, Tijuana", ini: "JM" },
+  { quote: "Pasamos de esperar 3 días por cotización a tenerla antes de comer. Una válvula a tiempo evitó parar la línea de ensamble.", nombre: "Jorge Medina", cargo: "Gerente de Compras", empresa: "Automotriz Tier 1, Tijuana", ini: "JM" },
   { quote: "El crédito a 60 días nos cambió el flujo. Y todo llega con CFDI, sin perseguir facturas con cada distribuidor.", nombre: "Daniela Ruiz", cargo: "Jefa de Abastecimiento", empresa: "Electrónica, Mexicali", ini: "DR" },
   { quote: "El reorden automático de EPP y lubricantes nos quitó trabajo manual. Nunca más nos quedamos sin guantes a media producción.", nombre: "Carlos Esquivel", cargo: "Jefe de Mantenimiento", empresa: "Manufactura, Cd. Juárez", ini: "CE" },
 ];
 
-const CUENTA = [
-  { icon: FileSpreadsheet, t: "Cotiza en 2 horas", d: "Sube tu lista o pega números de parte y recibe cotización garantizada en 2h hábiles." },
-  { icon: Search, t: "Catálogo con precios y stock", d: "Ve precios por volumen y disponibilidad real sin llamadas ni esperas." },
-  { icon: CreditCard, t: "Crédito B2B 30/60/90", d: "Línea preaprobada para que compres hoy y pagues después, sin frenar la línea." },
-  { icon: Truck, t: "Órdenes con tracking", d: "Sigue tus pedidos en vivo y recibe en planta en 24–48h con CFDI." },
-  { icon: Repeat, t: "Reorden automático", d: "Programa tus insumos recurrentes y ahorra 5% sin volver a capturar." },
-  { icon: BarChart3, t: "Analytics de gasto", d: "Visibilidad por categoría y proveedor para negociar mejor cada trimestre." },
-];
+function Rail({
+  title,
+  sub,
+  icon: Icon,
+  products,
+  href,
+}: {
+  title: string;
+  sub: string;
+  icon: React.ComponentType<{ className?: string }>;
+  products: Product[];
+  href: string;
+}) {
+  if (products.length === 0) return null;
+  return (
+    <section>
+      <div className="mb-4 flex items-end justify-between gap-4">
+        <div>
+          <h2 className="flex items-center gap-2 font-display text-xl font-bold tracking-tight text-ink-950 sm:text-2xl">
+            <Icon className="size-5 text-safety" /> {title}
+          </h2>
+          <p className="mt-0.5 text-sm text-ink-600">{sub}</p>
+        </div>
+        <Link href={href} className="hidden shrink-0 items-center gap-1 text-sm font-semibold text-safety hover:underline sm:flex">
+          Ver todos <ArrowRight className="size-4" />
+        </Link>
+      </div>
+      <div className="-mx-1 flex gap-4 overflow-x-auto px-1 pb-2 [scrollbar-width:thin]">
+        {products.map((p) => (
+          <div key={p.id} className="w-[260px] shrink-0">
+            <ProductCard product={p} detailBase="/productos" quoteTo="/registro" />
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
 
 export default async function LandingPage() {
+  const [content, products] = await Promise.all([fetchSiteContent(), fetchProducts()]);
   const proveedores = PROVIDERS.slice(0, 6);
-  const content = await fetchSiteContent();
+
+  // Rieles de producto en vivo (datos reales del catálogo).
+  const masPedidosRaw = products.filter((p) => socialProof(p));
+  const masPedidos = (masPedidosRaw.length >= 4 ? masPedidosRaw : products).slice(0, 10);
+  const mejorVolumen = products
+    .map((p) => ({ p, vb: firstVolumeBreak(p) }))
+    .filter((x) => x.vb && x.vb.pct >= 10)
+    .sort((a, b) => b.vb!.pct - a.vb!.pct)
+    .map((x) => x.p)
+    .slice(0, 10);
+  const enStock = products.filter((p) => p.stock_actual > 100).slice(0, 10);
+  const countByCat = (slug: string) => products.filter((p) => p.categoria === slug).length;
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -79,127 +113,136 @@ export default async function LandingPage() {
       )}
       <SiteHeader />
       <main className="flex-1">
-        {/* ─── HERO ─── */}
-        <section className="relative overflow-hidden border-b">
-          <div className="absolute inset-0 bg-grid opacity-40" />
-          <div className="absolute inset-0 gradient-accent-soft" />
-          <div className="container relative py-20 lg:py-28">
+        {/* ─── HERO marketplace-first ─── */}
+        <section className="relative overflow-hidden bg-ink-950 text-white">
+          <div className="absolute inset-0 bg-grid opacity-20" />
+          <div className="absolute inset-0 glow-accent" />
+          <div className="absolute inset-0 bg-noise opacity-40" />
+          <div className="container relative py-16 lg:py-20">
             <div className="mx-auto max-w-3xl text-center">
-              <Badge variant="purplecow" className="mx-auto px-3 py-1 text-sm">
-                <Zap className="size-3.5" /> Garantía: cotización en 2h o 0% comisión
+              <Badge variant="secondary" className="mx-auto border border-gold/30 bg-gold/10 px-3 py-1 text-sm text-gold">
+                <Zap className="size-3.5" /> Cotización en 2h garantizada o 0% comisión
               </Badge>
-              <h1 className="mt-6 font-display text-4xl font-extrabold leading-[1.05] tracking-tight text-ink-950 text-balance sm:text-5xl lg:text-6xl">
-                {content.hero_titulo}{" "}
-                <span className="text-gradient">{content.hero_destacado}</span>
+              <h1 className="mt-5 font-display text-4xl font-extrabold leading-[1.05] tracking-tight text-balance sm:text-5xl lg:text-6xl">
+                El marketplace MRO de la{" "}
+                <span className="text-gradient">maquiladora mexicana</span>
               </h1>
-              <p className="mx-auto mt-5 max-w-xl text-lg text-ink-600">{content.hero_subtitulo}</p>
-
-              {/* Quick Order Box */}
-              <form
-                action="/catalogo"
-                className="mx-auto mt-8 flex w-full max-w-2xl flex-col gap-2 rounded-2xl border bg-card p-2 shadow-lg sm:flex-row sm:items-center"
-              >
-                <div className="flex flex-1 items-center gap-2 pl-2">
-                  <Search className="size-5 shrink-0 text-ink-400" />
-                  <input
-                    name="q"
-                    placeholder="Pega número de parte o describe lo que necesitas…"
-                    className="h-11 w-full bg-transparent text-sm outline-none placeholder:text-ink-400"
-                    aria-label="Buscar producto"
-                  />
-                </div>
-                <button type="submit" className={cn(buttonVariants({ variant: "gradient", size: "lg" }))}>
-                  Cotizar en 2h <ArrowRight className="size-4" />
-                </button>
-              </form>
-              <p className="mt-2 text-xs text-ink-500">
-                Respuesta garantizada o tu siguiente compra sin comisión · Sin registro para ver precios
+              <p className="mx-auto mt-4 max-w-xl text-lg text-ink-300">
+                Miles de insumos industriales con precio, stock y entrega reales. Busca, compara y cotiza
+                en minutos — sin registro para ver precios.
               </p>
 
-              {/* Métricas */}
-              <div className="mx-auto mt-10 grid max-w-2xl grid-cols-3 gap-4">
+              {/* Buscador protagonista */}
+              <div className="mx-auto mt-7 max-w-2xl [&_input]:h-12 [&_input]:!bg-white [&_input]:text-base">
+                <SmartSearch basePath="/productos" placeholder="Número de parte, descripción o marca… ej. 6205-2RS, guante nitrilo" />
+              </div>
+
+              {/* Pills de categorías */}
+              <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+                {CATEGORIAS.slice(0, 6).map((c) => (
+                  <Link
+                    key={c.slug}
+                    href={`/productos?categoria=${c.slug}`}
+                    className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-medium text-ink-200 transition-colors hover:border-safety hover:text-white"
+                  >
+                    {c.emoji} {c.nombre}
+                  </Link>
+                ))}
+              </div>
+
+              <div className="mx-auto mt-9 grid max-w-2xl grid-cols-3 gap-4">
                 {[
                   { v: "$8.4B", s: "mercado MRO México" },
                   { v: "6,000+", s: "maquiladoras activas" },
                   { v: "<2h", s: "cotización garantizada" },
                 ].map((m) => (
                   <div key={m.s}>
-                    <p className="font-display text-3xl font-extrabold text-ink-950">{m.v}</p>
-                    <p className="text-xs text-ink-500">{m.s}</p>
+                    <p className="font-display text-3xl font-extrabold">{m.v}</p>
+                    <p className="text-xs text-ink-400">{m.s}</p>
                   </div>
                 ))}
-              </div>
-
-              <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-                <Link href="/registro" className={cn(buttonVariants({ variant: "gradient", size: "lg" }))}>
-                  Crear cuenta gratis <ArrowRight className="size-4" />
-                </Link>
-                <Link href="/catalogo" className={cn(buttonVariants({ variant: "outline", size: "lg" }))}>
-                  Ver catálogo
-                </Link>
               </div>
             </div>
           </div>
         </section>
 
-        {/* ─── TRUST BAR ─── */}
-        <section className="border-b bg-card py-8">
+        {/* ─── TRUST marquee ─── */}
+        <section className="border-b bg-card py-7">
           <div className="container">
-            <p className="mb-5 text-center text-xs font-semibold uppercase tracking-widest text-ink-400">
-              Distribuimos marcas líderes · Proveedores certificados · CFDI garantizado · Crédito B2B · Entrega 24–48h
+            <p className="mb-4 text-center text-xs font-semibold uppercase tracking-widest text-ink-400">
+              Distribuimos marcas líderes · Proveedores certificados · CFDI garantizado · Crédito B2B
             </p>
             <div className="relative overflow-hidden">
               <div className="flex w-max animate-marquee items-center gap-12">
                 {[...MARCAS, ...MARCAS].map((m, i) => (
-                  <span key={i} className="font-display text-xl font-bold text-ink-300">
-                    {m}
-                  </span>
+                  <span key={i} className="font-display text-xl font-bold text-ink-300">{m}</span>
                 ))}
               </div>
             </div>
           </div>
         </section>
 
-        {/* ─── EL PROBLEMA ─── */}
-        <section className="border-b py-16">
+        {/* ─── CATEGORÍAS ─── */}
+        <section id="categorias" className="border-b py-12">
           <div className="container">
-            <div className="mb-10 max-w-2xl">
-              <Badge variant="danger">El problema</Badge>
-              <h2 className="mt-3 font-display text-3xl font-bold tracking-tight text-ink-950">
-                Un paro de línea no espera a tu proveedor
-              </h2>
+            <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+              <h2 className="font-display text-2xl font-bold tracking-tight text-ink-950">Compra por categoría</h2>
+              <Link href="/productos" className={cn(buttonVariants({ variant: "outline", size: "sm" }))}>
+                Ver catálogo completo <ArrowRight className="size-4" />
+              </Link>
             </div>
-            <div className="grid gap-5 md:grid-cols-3">
-              {PROBLEMAS.map((p) => (
-                <Card key={p.t} className="border-danger/15">
-                  <CardContent className="p-6">
-                    <span className="flex size-11 items-center justify-center rounded-lg bg-danger/10 text-danger">
-                      <p.icon className="size-5" />
-                    </span>
-                    <h3 className="mt-4 font-semibold text-ink-900">{p.t}</h3>
-                    <p className="mt-1.5 text-sm text-ink-600">{p.d}</p>
-                  </CardContent>
-                </Card>
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+              {CATEGORIAS.map((c) => (
+                <Link
+                  key={c.slug}
+                  href={`/productos?categoria=${c.slug}`}
+                  className="group rounded-xl border bg-card p-5 transition-all hover:-translate-y-0.5 hover:border-safety hover:shadow-md"
+                >
+                  <div className="mb-3 text-3xl">{c.emoji}</div>
+                  <h3 className="text-sm font-semibold text-ink-900 group-hover:text-safety">{c.nombre}</h3>
+                  <p className="mt-0.5 text-xs text-ink-500">{countByCat(c.slug)} productos</p>
+                </Link>
               ))}
             </div>
           </div>
         </section>
 
-        {/* ─── LA SOLUCIÓN ─── */}
-        <section className="border-b bg-paper-300 py-16">
+        {/* ─── RIELES DE PRODUCTO EN VIVO ─── */}
+        <section className="border-b bg-paper-300 py-12">
+          <div className="container space-y-10">
+            <Rail
+              title="Más pedidos esta semana"
+              sub="Lo que más compran las maquiladoras de la frontera"
+              icon={Flame}
+              products={masPedidos}
+              href="/productos"
+            />
+            <Rail
+              title="Mejores precios por volumen"
+              sub="Ahorra más comprando en cantidad — descuentos escalonados"
+              icon={Tag}
+              products={mejorVolumen}
+              href="/productos"
+            />
+            <Rail
+              title="En stock en Tijuana"
+              sub="Disponible para entrega 24–48h"
+              icon={MapPin}
+              products={enStock}
+              href="/productos"
+            />
+          </div>
+        </section>
+
+        {/* ─── GARANTÍA strip ─── */}
+        <section className="border-b py-12">
           <div className="container">
-            <div className="mb-10 max-w-2xl">
-              <Badge variant="success">La solución</Badge>
-              <h2 className="mt-3 font-display text-3xl font-bold tracking-tight text-ink-950">
-                Cuatro promesas que cambian tu operación
-              </h2>
-            </div>
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {PILARES.map((v) => (
                 <Card key={v.t} className="transition-shadow hover:shadow-md">
-                  <CardContent className="p-6">
-                    <v.icon className={cn("mb-4 size-9", v.color)} />
-                    <h3 className="mb-1.5 font-semibold text-ink-900">{v.t}</h3>
+                  <CardContent className="p-5">
+                    <v.icon className={cn("mb-3 size-8", v.color)} />
+                    <h3 className="mb-1 font-semibold text-ink-900">{v.t}</h3>
                     <p className="text-sm text-ink-600">{v.d}</p>
                   </CardContent>
                 </Card>
@@ -209,11 +252,9 @@ export default async function LandingPage() {
         </section>
 
         {/* ─── CÓMO FUNCIONA ─── */}
-        <section id="como-funciona" className="border-b py-16">
+        <section id="como-funciona" className="border-b bg-paper-300 py-12">
           <div className="container">
-            <h2 className="mb-12 font-display text-3xl font-bold tracking-tight text-ink-950">
-              Cómo funciona
-            </h2>
+            <h2 className="mb-8 font-display text-2xl font-bold tracking-tight text-ink-950">Cómo funciona</h2>
             <div className="grid gap-8 md:grid-cols-3">
               {PASOS.map((p, i) => (
                 <div key={p.n} className="relative">
@@ -229,73 +270,12 @@ export default async function LandingPage() {
           </div>
         </section>
 
-        {/* ─── CATEGORÍAS ─── */}
-        <section id="categorias" className="border-b bg-paper-300 py-16">
-          <div className="container">
-            <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
-              <div>
-                <h2 className="font-display text-3xl font-bold tracking-tight text-ink-950">
-                  Catálogo MRO por categoría
-                </h2>
-                <p className="mt-2 text-ink-600">Taxonomía industrial profunda — busca por uso, no solo por nombre.</p>
-              </div>
-              <Link href="/catalogo" className={cn(buttonVariants({ variant: "outline" }))}>
-                Ver catálogo completo <ArrowRight className="size-4" />
-              </Link>
-            </div>
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
-              {CATEGORIAS.map((c) => (
-                <Link
-                  key={c.slug}
-                  href={`/catalogo?categoria=${c.slug}`}
-                  className="group rounded-xl border bg-card p-5 transition-all hover:-translate-y-0.5 hover:border-safety hover:shadow-md"
-                >
-                  <div className="mb-3 text-3xl">{c.emoji}</div>
-                  <h3 className="text-sm font-semibold text-ink-900 group-hover:text-safety">{c.nombre}</h3>
-                  <p className="mt-1 line-clamp-2 text-xs text-ink-500">{c.descripcion}</p>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ─── QUICK ORDER DARK ─── */}
-        <section className="relative overflow-hidden bg-ink-950 py-16 text-white">
-          <div className="absolute inset-0 glow-accent" />
-          <div className="absolute inset-0 bg-noise opacity-50" />
-          <div className="container relative">
-            <div className="mx-auto max-w-2xl text-center">
-              <h2 className="font-display text-3xl font-bold tracking-tight text-balance sm:text-4xl">
-                ¿Sabes el número de parte?{" "}
-                <span className="text-gradient">Ordena en 60 segundos</span>
-              </h2>
-              <p className="mt-3 text-ink-300">
-                Pega tu SKU, confirmamos stock y precio al instante. Si no lo tenemos en catálogo,
-                nuestro equipo lo busca y cotiza en 2 horas.
-              </p>
-              <form
-                action="/catalogo"
-                className="mx-auto mt-7 flex w-full max-w-xl flex-col gap-2 rounded-2xl bg-white/5 p-2 ring-1 ring-white/10 backdrop-blur sm:flex-row"
-              >
-                <input
-                  name="q"
-                  placeholder="Ej. 6205-2RS, CIL-32-100, SEN-IND-M18…"
-                  className="h-11 flex-1 rounded-lg bg-transparent px-3 font-mono text-sm text-white outline-none placeholder:text-ink-400"
-                />
-                <button type="submit" className={cn(buttonVariants({ variant: "gradient", size: "lg" }))}>
-                  Buscar y cotizar
-                </button>
-              </form>
-            </div>
-          </div>
-        </section>
-
         {/* ─── CALCULADORA DE PARO ─── */}
-        <section className="border-b py-16">
+        <section className="border-b py-12">
           <div className="container">
-            <div className="mb-8 max-w-2xl">
+            <div className="mb-6 max-w-2xl">
               <Badge variant="accent">Herramienta</Badge>
-              <h2 className="mt-3 font-display text-3xl font-bold tracking-tight text-ink-950">
+              <h2 className="mt-3 font-display text-2xl font-bold tracking-tight text-ink-950">
                 ¿Cuánto te cuesta una hora de paro?
               </h2>
               <p className="mt-2 text-ink-600">
@@ -306,11 +286,32 @@ export default async function LandingPage() {
           </div>
         </section>
 
-        {/* ─── TESTIMONIALES ─── */}
-        <section className="border-b bg-paper-300 py-16">
+        {/* ─── PROVEEDORES VERIFICADOS ─── */}
+        <section id="proveedores-verificados" className="border-b bg-paper-300 py-12">
           <div className="container">
-            <h2 className="mb-10 font-display text-3xl font-bold tracking-tight text-ink-950">
-              Compradores de maquiladora que ya no paran su línea
+            <div className="mb-8 max-w-2xl">
+              <Badge variant="steel"><ShieldCheck className="size-3" /> Compra con confianza</Badge>
+              <h2 className="mt-3 font-display text-2xl font-bold tracking-tight text-ink-950">
+                Proveedores verificados, no desconocidos
+              </h2>
+              <p className="mt-2 text-ink-600">
+                Cada proveedor pasa validación de certificaciones y score real (calidad, velocidad,
+                comunicación y precio). Tú compras tranquilo; Novak responde.
+              </p>
+            </div>
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {proveedores.map((p) => (
+                <SupplierScorecard key={p.id} provider={p} />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ─── TESTIMONIOS ─── */}
+        <section className="border-b py-12">
+          <div className="container">
+            <h2 className="mb-8 font-display text-2xl font-bold tracking-tight text-ink-950">
+              Compradores que ya no paran su línea
             </h2>
             <div className="grid gap-5 md:grid-cols-3">
               {TESTIMONIOS.map((t) => (
@@ -334,65 +335,8 @@ export default async function LandingPage() {
           </div>
         </section>
 
-        {/* ─── PROVEEDORES VERIFICADOS ─── */}
-        <section id="proveedores-verificados" className="border-b py-16">
-          <div className="container">
-            <div className="mb-10 max-w-2xl">
-              <Badge variant="steel"><ShieldCheck className="size-3" /> Compra con confianza</Badge>
-              <h2 className="mt-3 font-display text-3xl font-bold tracking-tight text-ink-950">
-                Compras a proveedores verificados, no a desconocidos
-              </h2>
-              <p className="mt-2 text-ink-600">
-                Cada proveedor que te surte pasa validación de certificaciones y score real
-                (calidad, velocidad, comunicación y precio). Tú compras tranquilo; Novak responde.
-              </p>
-            </div>
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {proveedores.map((p) => (
-                <SupplierScorecard key={p.id} provider={p} />
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ─── LO QUE OBTIENES CON TU CUENTA (comprador) ─── */}
-        <section className="border-b bg-paper-300 py-16">
-          <div className="container">
-            <div className="mb-10 max-w-2xl">
-              <Badge variant="accent"><Sparkles className="size-3" /> Tu cuenta gratis</Badge>
-              <h2 className="mt-3 font-display text-3xl font-bold tracking-tight text-ink-950">
-                Todo lo que tu cuenta Novak pone en tus manos
-              </h2>
-              <p className="mt-2 text-ink-600">
-                Crea tu cuenta y prueba la plataforma — sin costo y sin compromiso.
-              </p>
-            </div>
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {CUENTA.map((f) => (
-                <div key={f.t} className="flex gap-4 rounded-xl border bg-card p-5">
-                  <div className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-ink-950 text-safety">
-                    <f.icon className="size-5" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-ink-900">{f.t}</h3>
-                    <p className="mt-1 text-sm text-ink-600">{f.d}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="mt-8 flex flex-wrap items-center gap-3">
-              <Link href="/registro" className={cn(buttonVariants({ variant: "gradient", size: "lg" }))}>
-                Crear mi cuenta gratis <ArrowRight className="size-4" />
-              </Link>
-              <Link href="/catalogo" className={cn(buttonVariants({ variant: "outline", size: "lg" }))}>
-                Explorar la plataforma
-              </Link>
-            </div>
-          </div>
-        </section>
-
-        {/* ─── BANDA PROVEEDORES (secundaria → /vender) ─── */}
-        <section className="border-b py-12">
+        {/* ─── BANDA PROVEEDORES ─── */}
+        <section className="border-b py-10">
           <div className="container">
             <div className="flex flex-col items-center justify-between gap-4 rounded-2xl border bg-card p-6 text-center sm:flex-row sm:text-left">
               <div className="flex items-center gap-3">
@@ -401,42 +345,37 @@ export default async function LandingPage() {
                 </span>
                 <div>
                   <p className="font-display font-semibold text-ink-900">¿Eres proveedor de insumos industriales?</p>
-                  <p className="text-sm text-ink-600">
-                    Vende a cientos de maquiladoras. Nosotros ponemos el crédito y protegemos tu cobro.
-                  </p>
+                  <p className="text-sm text-ink-600">Vende a cientos de maquiladoras. Nosotros ponemos el crédito y protegemos tu cobro.</p>
                 </div>
               </div>
               <Link href="/vender" className={cn(buttonVariants({ variant: "outline" }), "shrink-0")}>
-                Conoce el programa de proveedores <ArrowRight className="size-4" />
+                Conoce el programa <ArrowRight className="size-4" />
               </Link>
             </div>
           </div>
         </section>
 
         {/* ─── CTA FINAL ─── */}
-        <section className="relative overflow-hidden bg-ink-950 py-20 text-white">
+        <section className="relative overflow-hidden bg-ink-950 py-16 text-white">
           <div className="absolute inset-0 glow-accent" />
           <div className="container relative flex flex-col items-center gap-5 text-center">
             <h2 className="max-w-3xl font-display text-3xl font-bold tracking-tight text-balance sm:text-5xl">
-              Tu primera cotización va{" "}
-              <span className="text-gradient">sin comisión</span>
+              Tu primera cotización va <span className="text-gold">sin comisión</span>
             </h2>
             <p className="max-w-xl text-ink-300">{content.garantia}</p>
             <div className="flex flex-wrap items-center justify-center gap-3">
               <Link href="/registro" className={cn(buttonVariants({ variant: "gradient", size: "lg" }))}>
                 Crear mi cuenta gratis <ArrowRight className="size-4" />
               </Link>
-              <a
-                href={BRAND.whatsappLink}
-                className={cn(buttonVariants({ variant: "outline", size: "lg" }), "border-white/20 bg-transparent text-white hover:bg-white/10 hover:text-white")}
-              >
-                <MessageCircle className="size-4" /> Hablar por WhatsApp
-              </a>
+              <Link href="/productos" className={cn(buttonVariants({ variant: "outline", size: "lg" }), "border-white/20 bg-transparent text-white hover:bg-white/10 hover:text-white")}>
+                Explorar el catálogo
+              </Link>
             </div>
-            <div className="mt-4 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-ink-400">
+            <div className="mt-3 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-ink-400">
               <span className="flex items-center gap-1.5"><FileText className="size-4" /> CFDI automático</span>
               <span className="flex items-center gap-1.5"><CreditCard className="size-4" /> Crédito 30/60/90</span>
               <span className="flex items-center gap-1.5"><Truck className="size-4" /> Entrega 24–48h</span>
+              <a href={BRAND.whatsappLink} className="flex items-center gap-1.5 hover:text-white"><MessageCircle className="size-4" /> WhatsApp</a>
             </div>
           </div>
         </section>

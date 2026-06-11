@@ -22,6 +22,9 @@ import {
   Settings,
   FileText,
   MapPin,
+  Send,
+  Gauge,
+  Warehouse,
   type LucideIcon,
 } from "lucide-react";
 import type { AdminSection } from "@/lib/admin/permissions";
@@ -55,6 +58,7 @@ export const COMPRADOR_NAV: NavItem[] = [
 export const PROVEEDOR_NAV: NavItem[] = [
   { href: "/proveedor/dashboard", label: "Inicio", icon: LayoutDashboard },
   { href: "/proveedor/productos", label: "Mi catálogo", icon: Package },
+  { href: "/proveedor/despachos", label: "Despachos", icon: Send },
   { href: "/proveedor/mensajes", label: "Mensajes", icon: MessagesSquare },
   { href: "/proveedor/perfil", label: "Mi cuenta", icon: Building2 },
 ];
@@ -67,8 +71,10 @@ export const ADMIN_NAV: AdminNavItem[] = [
   { href: "/admin/cotizador", label: "Constructor de cotizaciones", icon: FileSpreadsheet, section: "cotizador" },
   { href: "/admin/ordenes", label: "Órdenes", icon: Truck, section: "ordenes" },
   { href: "/admin/envios", label: "Torre de envíos", icon: MapPin, section: "envios" },
+  { href: "/admin/bodega", label: "Bodega / Fulfillment", icon: Warehouse, section: "bodega" },
   { href: "/admin/catalogo", label: "Catálogo global", icon: PackageSearch, section: "catalogo" },
   { href: "/admin/proveedores", label: "Proveedores", icon: Store, section: "proveedores" },
+  { href: "/admin/scoring", label: "Scoring de proveedores", icon: Gauge, section: "scoring" },
   { href: "/admin/compradores", label: "Compradores", icon: Building, section: "compradores" },
   { href: "/admin/credito", label: "Solicitudes de crédito", icon: CreditCard, section: "credito" },
   { href: "/admin/tesoreria", label: "Tesorería", icon: Landmark, section: "tesoreria" },

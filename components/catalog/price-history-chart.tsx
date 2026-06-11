@@ -31,8 +31,8 @@ export function PriceHistoryChart({ base, id }: { base: number; id: string }) {
           <LineChart data={data} margin={{ top: 8, right: 8, left: 8, bottom: 0 }}>
             <defs>
               <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stopColor="#6D4AFF" />
-                <stop offset="100%" stopColor="#E0529C" />
+                <stop offset="0%" stopColor="#6B5D4F" />
+                <stop offset="100%" stopColor="#5A5650" />
               </linearGradient>
             </defs>
             <XAxis dataKey="mes" tick={{ fontSize: 11, fill: "#6B6056" }} axisLine={false} tickLine={false} />
@@ -42,7 +42,7 @@ export function PriceHistoryChart({ base, id }: { base: number; id: string }) {
               labelFormatter={(l) => `Mes: ${l}`}
               contentStyle={{ borderRadius: 12, border: "1px solid #D4CFC5", fontSize: 12, background: "#FBFAF7" }}
             />
-            <Line type="monotone" dataKey="precio" stroke="url(#lineGrad)" strokeWidth={3} dot={{ r: 3, fill: "#6D4AFF" }} />
+            <Line type="monotone" dataKey="precio" stroke="url(#lineGrad)" strokeWidth={3} dot={{ r: 3, fill: "#6B5D4F" }} />
           </LineChart>
         </ResponsiveContainer>
       </div>

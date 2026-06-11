@@ -1,16 +1,35 @@
 import Link from "next/link";
-import { Truck, ShieldCheck } from "lucide-react";
+import { Truck, ShieldCheck, AlertTriangle } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ProductImage } from "@/components/catalog/product-image";
-import { mxn, entregaLabel } from "@/lib/utils";
-import { getProvider } from "@/lib/data/providers";
+import { mxn } from "@/lib/utils";
+import { stockStatus, deliveryETA, firstVolumeBreak } from "@/lib/catalog/signals";
 import type { Product } from "@/types";
 
-export function ProductCard({ product }: { product: Product }) {
-  const prov = getProvider(product.provider_id);
-  const enStock = product.stock_actual > 0;
+const STOCK_VARIANT = {
+  success: "success",
+  warning: "warning",
+  danger: "danger",
+  muted: "secondary",
+} as const;
+
+export function ProductCard({
+  product,
+  detailBase = "/catalogo",
+  quoteTo,
+}: {
+  product: Product;
+  /** Base de la ruta de detalle (público: "/productos"). */
+  detailBase?: string;
+  /** Destino del botón Cotizar (público: "/registro"). */
+  quoteTo?: string;
+}) {
+  const stock = stockStatus(product);
+  const vol = firstVolumeBreak(product);
+  const detailHref = `${detailBase}/${product.id}`;
+  const quoteHref = quoteTo ?? `/cotizar?sku=${product.id}`;
   const ahorro =
     product.precio_base > product.precio_minimo
       ? Math.round((1 - product.precio_minimo / product.precio_base) * 100)
@@ -18,7 +37,7 @@ export function ProductCard({ product }: { product: Product }) {
 
   return (
     <Card className="flex flex-col transition-shadow hover:shadow-md">
-      <Link href={`/catalogo/${product.id}`} className="block">
+      <Link href={detailHref} className="block">
         <div className="h-36 overflow-hidden rounded-t-xl border-b">
           <ProductImage categoria={product.categoria} numeroParte={product.numero_parte} marca={product.marca} imagenUrl={product.imagen_url} />
         </div>
@@ -29,7 +48,7 @@ export function ProductCard({ product }: { product: Product }) {
           <span>·</span>
           <span className="font-mono">{product.numero_parte}</span>
         </div>
-        <Link href={`/catalogo/${product.id}`}>
+        <Link href={detailHref}>
           <h3 className="line-clamp-2 min-h-[2.5rem] text-sm font-semibold text-steel-900 hover:text-safety">
             {product.nombre}
           </h3>
@@ -53,23 +72,29 @@ export function ProductCard({ product }: { product: Product }) {
           )}
         </div>
 
-        <div className="mt-3 flex items-center gap-2">
-          {enStock ? (
-            <Badge variant="success" className="text-[10px]">
-              <Truck className="size-2.5" /> {entregaLabel(product.tiempo_entrega_horas, prov?.ciudad)}
-            </Badge>
-          ) : (
-            <Badge variant="warning" className="text-[10px]">Sobre pedido</Badge>
-          )}
+        {/* Precio por volumen siempre visible (táctica B2B) */}
+        {vol && (
+          <p className="mt-1 text-xs text-emerald-700">
+            Desde {vol.cantidad}: <span className="font-semibold">{mxn(vol.precio)}</span> (−{vol.pct}%)
+          </p>
+        )}
+
+        <div className="mt-3 flex flex-col gap-1.5">
+          <Badge variant={STOCK_VARIANT[stock.tone]} className="w-fit text-[10px]">
+            {stock.escaso ? <AlertTriangle className="size-2.5" /> : null} {stock.label}
+          </Badge>
+          <span className="flex items-center gap-1 text-[11px] text-steel-500">
+            <Truck className="size-3 shrink-0" /> {deliveryETA(product)}
+          </span>
         </div>
 
         <div className="mt-3 flex gap-2 border-t pt-3">
-          <Link href={`/catalogo/${product.id}`} className="flex-1">
+          <Link href={detailHref} className="flex-1">
             <Button variant="outline" size="sm" className="w-full">
               Ver detalle
             </Button>
           </Link>
-          <Link href={`/cotizar?sku=${product.id}`} className="flex-1">
+          <Link href={quoteHref} className="flex-1">
             <Button variant="accent" size="sm" className="w-full">
               Cotizar
             </Button>
