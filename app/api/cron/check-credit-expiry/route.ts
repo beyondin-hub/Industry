@@ -21,10 +21,10 @@ export async function GET(req: Request) {
     const en3dias = new Date(ahora.getTime() + 3 * 24 * 36e5).toISOString();
     const { data, error } = await supabase
       .from("orders")
-      .select("id, folio, company_id, fecha_vencimiento_credito, credito_estado")
+      .select("id, folio, company_id, fecha_vencimiento_credito, pagado")
       .eq("es_credito", true)
       .not("fecha_vencimiento_credito", "is", null)
-      .neq("credito_estado", "pagado")
+      .eq("pagado", false)
       .lt("fecha_vencimiento_credito", en3dias)
       .limit(300);
     if (error) throw error;
@@ -33,12 +33,8 @@ export async function GET(req: Request) {
     let vencidos = 0;
     for (const o of data ?? []) {
       const vencido = new Date(o.fecha_vencimiento_credito) < ahora;
-      if (vencido) {
-        await supabase.from("orders").update({ credito_estado: "vencido" }).eq("id", o.id);
-        vencidos++;
-      } else {
-        porVencer++;
-      }
+      if (vencido) vencidos++;
+      else porVencer++;
     }
     await logAudit({ accion: "credito.recordatorio", entidad: "orders", entidad_id: "*", detalle: `${porVencer} por vencer · ${vencidos} vencidos` });
     return NextResponse.json({ ok: true, por_vencer: porVencer, vencidos });

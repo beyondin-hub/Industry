@@ -43,7 +43,7 @@ export async function POST(req: Request) {
     const similar = catalog.find((p) => {
       const pn = norm(p.numero_parte);
       const pname = norm(p.nombre);
-      return (np && (pn.includes(np) || np.includes(pn))) || (desc && pname.includes(desc.slice(0, 8)));
+      return (np && pn && (pn.includes(np) || np.includes(pn))) || (desc && pname.includes(desc.slice(0, 8)));
     });
     if (similar) similares.push({ row, product: slim(similar) });
     else no_encontrados.push(row);

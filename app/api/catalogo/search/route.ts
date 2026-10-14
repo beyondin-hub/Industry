@@ -86,6 +86,7 @@ export async function GET(req: Request) {
   if (precioMin) list = list.filter((p) => p.precio_base >= precioMin);
   if (precioMax) list = list.filter((p) => p.precio_base <= precioMax);
 
+  list = [...list]; // no mutar el arreglo demo compartido (PRODUCTS) al ordenar
   if (sort === "precio_asc") list.sort((a, b) => a.precio_base - b.precio_base);
   else if (sort === "precio_desc") list.sort((a, b) => b.precio_base - a.precio_base);
   else if (sort === "entrega") list.sort((a, b) => a.tiempo_entrega_horas - b.tiempo_entrega_horas);

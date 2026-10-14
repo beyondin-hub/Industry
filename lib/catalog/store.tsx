@@ -54,7 +54,12 @@ export function CatalogStoreProvider({ children }: { children: React.ReactNode }
 
   // Persistir en cada cambio (tras hidratar).
   useEffect(() => {
-    if (hydrated) localStorage.setItem(KEY, JSON.stringify(state));
+    if (!hydrated) return;
+    try {
+      localStorage.setItem(KEY, JSON.stringify(state));
+    } catch {
+      /* incógnito / almacenamiento bloqueado o cuota excedida: ignorar */
+    }
   }, [state, hydrated]);
 
   const addToCart = useCallback((id: string, cantidad = 1, reorden = false) => {
