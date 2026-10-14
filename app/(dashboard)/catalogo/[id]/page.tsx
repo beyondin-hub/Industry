@@ -61,7 +61,7 @@ export default async function ProductPage({ params }: { params: { id: string } }
       <nav className="flex items-center gap-1.5 text-sm text-steel-500">
         <Link href="/catalogo" className="hover:text-safety">Catálogo</Link>
         <ChevronRight className="size-3.5" />
-        <Link href={`/catalogo?categoria=${product.categoria}`} className="hover:text-safety">
+        <Link href={`/catalogo/busqueda?categoria=${product.categoria}`} className="hover:text-safety">
           {categoriaNombre(product.categoria)}
         </Link>
         <ChevronRight className="size-3.5" />

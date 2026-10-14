@@ -28,6 +28,7 @@ import { getActiveSector } from "@/lib/sector/context";
 import { fetchSectorCategories } from "@/lib/repos/sectors";
 import { SectorBanner } from "@/components/sector/sector-banner";
 import { sectorAlerts, ALERT_TONE_CLASS } from "@/lib/sector/alerts";
+import { creditExposure } from "@/lib/credit/engine";
 import { mxn, tiempoRestante, fechaCorta, entregaLabel, num } from "@/lib/utils";
 import { categoriaNombre } from "@/lib/constants";
 
@@ -50,7 +51,7 @@ export default async function DashboardPage() {
       ];
   const activos = rfqs.filter((r) => r.estado === "en_proceso" || r.estado === "cotizado");
   const enTransito = orders.filter((o) => o.estado === "en_transito" || o.estado === "en_preparacion");
-  const creditoUsado = orders.filter((o) => o.es_credito).reduce((s, o) => s + o.total, 0);
+  const creditoUsado = creditExposure(orders);
 
   return (
     <div className="space-y-6">
