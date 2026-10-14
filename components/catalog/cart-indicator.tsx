@@ -7,7 +7,7 @@ import { useCatalogStore } from "@/lib/catalog/store";
 /** Indicador del carrito de cotización en el topbar. */
 export function CartIndicator() {
   const { cart } = useCatalogStore();
-  const count = cart.reduce((n, l) => n + 1, 0);
+  const count = cart.length; // productos distintos en la cotización
 
   return (
     <Link

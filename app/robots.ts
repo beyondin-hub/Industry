@@ -7,8 +7,29 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
-      // Áreas privadas / de aplicación fuera del índice.
-      disallow: ["/admin", "/dashboard", "/proveedor", "/cotizacion", "/api"],
+      // Áreas privadas / de aplicación fuera del índice. Los route groups no
+      // agregan segmento, así que las páginas autenticadas viven en la raíz.
+      disallow: [
+        "/admin",
+        "/dashboard",
+        "/proveedor",
+        "/api",
+        "/catalogo",
+        "/cotizar",
+        "/cotizacion",
+        "/cotizaciones",
+        "/ordenes",
+        "/credito",
+        "/analytics",
+        "/perfil",
+        "/listas",
+        "/reordenes",
+        "/notificaciones",
+        "/quick-order",
+        "/herramientas",
+        "/guias",
+        "/onboarding",
+      ],
     },
     sitemap: `${BASE}/sitemap.xml`,
   };

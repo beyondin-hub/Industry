@@ -13,7 +13,7 @@ export default function NotFound() {
       </div>
       <div className="flex gap-2">
         <Link href="/" className={buttonVariants({ variant: "outline" })}>Ir al inicio</Link>
-        <Link href="/catalogo" className={buttonVariants({ variant: "accent" })}>Ver catálogo</Link>
+        <Link href="/productos" className={buttonVariants({ variant: "accent" })}>Ver catálogo</Link>
       </div>
     </div>
   );

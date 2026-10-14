@@ -5,13 +5,15 @@ import { SHIPMENTS, type Shipment } from "@/lib/data/shipments";
 export async function fetchShipments(companyId?: string): Promise<Shipment[]> {
   const supabase = createClient();
   if (!supabase) {
-    return companyId ? SHIPMENTS.filter((s) => true) : SHIPMENTS; // demo: todos
+    return SHIPMENTS; // demo: envíos no tienen tenant; se devuelven todos
   }
   try {
     let query = supabase
       .from("shipments")
-      .select("*, orders(folio, company_id, provider_id)")
+      .select("*, orders!inner(folio, company_id, provider_id)")
       .order("created_at", { ascending: false });
+    // Comprador: acota a su empresa (defensa en profundidad, además de RLS).
+    if (companyId) query = query.eq("orders.company_id", companyId);
     const { data, error } = await query.limit(200);
     if (error || !data || data.length === 0) return SHIPMENTS;
     return data.map((s: any) => ({

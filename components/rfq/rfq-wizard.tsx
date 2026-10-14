@@ -35,10 +35,18 @@ const STEPS = ["Necesidad", "Especificaciones", "Comercial", "Confirmación"];
 export function RFQWizard({
   presetSku,
   presetQty,
+  presetDescripcion,
+  presetNumeroParte,
+  presetUnidad,
+  presetNota,
   company,
 }: {
   presetSku?: string;
   presetQty?: number;
+  presetDescripcion?: string;
+  presetNumeroParte?: string;
+  presetUnidad?: string;
+  presetNota?: string;
   company: { nombre: string; rfc: string; ciudad: string };
 }) {
   const { toast } = useToast();
@@ -47,18 +55,26 @@ export function RFQWizard({
 
   const [step, setStep] = useState(0);
   const [tipo, setTipo] = useState<Tipo>(preset ? "especifico" : "especifico");
-  const [items, setItems] = useState<Item[]>(
-    preset
-      ? [{ descripcion: preset.nombre, numero_parte: preset.numero_parte, cantidad: presetQty ?? 1, unidad: preset.unidad }]
-      : [],
-  );
+  const [items, setItems] = useState<Item[]>(() => {
+    if (preset)
+      return [{ descripcion: preset.nombre, numero_parte: preset.numero_parte, cantidad: presetQty ?? 1, unidad: preset.unidad }];
+    // Preset por texto (producto sectorial / número de parte / búsqueda sin match).
+    if (presetDescripcion || presetNumeroParte)
+      return [{
+        descripcion: presetDescripcion ?? presetNumeroParte ?? "",
+        numero_parte: presetNumeroParte ?? "",
+        cantidad: presetQty ?? 1,
+        unidad: presetUnidad ?? "pza",
+      }];
+    return [];
+  });
   const [urgencia, setUrgencia] = useState<Urgencia>("normal");
 
   // Paso 2
   const [certs, setCerts] = useState<string[]>([]);
   const [marca, setMarca] = useState("");
   const [norma, setNorma] = useState("");
-  const [notas, setNotas] = useState("");
+  const [notas, setNotas] = useState(presetNota ?? "");
   const [fichaTecnica, setFichaTecnica] = useState(false);
   const [visitaTecnica, setVisitaTecnica] = useState(false);
 
