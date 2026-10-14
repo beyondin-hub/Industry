@@ -42,7 +42,11 @@ function getRecent(): string[] {
 function pushRecent(q: string) {
   if (!q.trim()) return;
   const cur = getRecent().filter((x) => x.toLowerCase() !== q.toLowerCase());
-  localStorage.setItem(RECENT_KEY, JSON.stringify([q, ...cur].slice(0, 5)));
+  try {
+    localStorage.setItem(RECENT_KEY, JSON.stringify([q, ...cur].slice(0, 5)));
+  } catch {
+    /* localStorage no disponible (SSR / incógnito / cuota) */
+  }
 }
 
 export function SmartSearch({

@@ -31,7 +31,7 @@ export function DowntimeCalculator() {
   const horasDia = HORAS_TURNO[turnos] ?? 24;
   const riesgo3Dias = costoHora * horasDia * 3; // cotización tardada típica
   const conMrolink = costoHora * 2; // respuesta en 2h
-  const reduccion = Math.round((1 - conMrolink / riesgo3Dias) * 100);
+  const reduccion = riesgo3Dias > 0 ? Math.round((1 - conMrolink / riesgo3Dias) * 100) : 0;
 
   return (
     <div className="grid gap-6 rounded-2xl border bg-card p-6 shadow-sm md:grid-cols-2 md:p-8">
